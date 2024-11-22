@@ -1,0 +1,28 @@
+/* Applique la police Montserrat globalement */
+body, .logo, .nav-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  font-style: normal;
+  margin-top: 0;
+  
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Alignement horizontal optionnel */
+  min-height: 95px; /* Assure une hauteur cohérente */
+  padding: 0 20px; /* Optionnel pour des espacements internes */
+  box-sizing: border-box; /* Gère le padding dans la hauteur */
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+main {
+  margin-top: 0 !important 
+};

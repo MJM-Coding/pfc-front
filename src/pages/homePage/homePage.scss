@@ -1,0 +1,150 @@
+/* Variables de couleur */
+$background-dark: #141414;
+$text-color: white;
+$semi-transparent-dark: rgba(20, 40, 64, 0); /* Plus de transparence */
+
+
+/* Mobile-first styles */
+.home-container {
+  width: 100vw;
+  height: 100vh; /* Prend toute la hauteur de la fenêtre */
+  background-image: url('../../assets/images/img-homepage.webp');
+  background-size: cover; /* L'image occupe toute la largeur et hauteur sans se déformer */
+  background-repeat: no-repeat;
+  background-position: center; /* L'image est centrée */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Le titre reste en haut */
+
+}
+
+.home-title {
+  display: inline-block; /* Permet au fond de s'adapter à la largeur du texte */
+  text-align: center; /* Centrer le texte horizontalement */
+  margin-top: 2rem; /* Un peu d'espace en haut */
+  font-size: 2.5rem; /* Taille un peu plus grande pour mobile */
+  color: $text-color;
+  font-weight: bold; /* Ajout du gras pour plus d'impact */
+  background: #02011060; /* Fond semi-transparent autour du texte */
+  padding: 10px 20px; /* Ajoute du padding autour du texte pour un espacement agréable */
+  border-radius: 8px; /* Arrondir légèrement les coins */
+}
+
+
+
+.home-content {
+  display: flex;
+  flex-direction: column; /* Empile les éléments sur mobile */
+  align-items: center;
+  width: 100%;
+  height: auto;
+  justify-content: center; /* Centrer verticalement */
+ 
+}
+
+.home-content-wrapper {
+  display: flex;
+  width: 100%; /* Prend toute la largeur */
+  height: 100%; /* Prend toute la hauteur */
+  align-items: flex-start;
+}
+
+.home-text-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: $text-color;
+
+  border-radius: 25px; /* Arrondi plus doux pour un effet plus moderne */
+  padding: 20px;
+  width: 50%; /* Le texte occupe la moitié droite de l'écran */
+  height: 100%;
+  margin-left: 2rem;
+
+  backdrop-filter: blur(10px); /* Effet flou derrière le texte */
+}
+
+.home-content1,
+.home-content2 {
+  font-size: 1.1rem;
+  
+  line-height: 1.5; /* Espacement entre les lignes pour plus de lisibilité */
+}
+
+.bold-text {
+  font-weight: 700; /* Texte en gras */
+}
+
+/* Styles pour les écrans plus larges */
+@media (min-width: 768px) {
+  .home-title {
+    font-size: 3rem;
+    margin-top: 2rem;
+  }
+
+  .home-content {
+    flex-direction: row; /* Positionner l'image à gauche et le texte à droite */
+    margin-left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .home-content-wrapper {
+    width: 100%; /* Largeur complète */
+    height: 100%;
+  }
+
+  .home-text-right {
+    width: 50%; /* Le texte occupe 50% de l'écran */
+    margin-left: 2rem;
+
+  }
+
+  .home-content1,
+  .home-content2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-text-right {
+    border-radius: 30px; /* Bordure plus ronde pour un effet plus prononcé */
+    padding: 0;
+    margin-left: 65rem; /* Plus grande marge pour l'espacement sur desktop */
+    width: 40%; /* Réduit encore la largeur sur des écrans plus larges */
+
+    height: 350px;
+
+ 
+  }
+
+  .home-content{
+    margin-bottom: 10rem;
+  }
+
+  .home-content1,
+  .home-content2 {
+    font-size: 1.4rem;
+    padding-left: 10px;
+    
+  }
+
+  .home-content2{
+    padding-top: 1rem;
+  }
+
+  .home-title {
+   display: inline-block; /* Permet au fond de s'adapter à la largeur du texte */
+ width: 40vw;
+ align-self: center;
+  text-align: center; /* Centrer le texte horizontalement */
+  margin-top: 1rem; /* Un peu d'espace en haut */
+  font-size: 2.5rem; /* Taille un peu plus grande pour mobile */
+
+  font-weight: bold; /* Ajout du gras pour plus d'impact */
+  
+  padding: 10px 20px; /* Ajoute du padding autour du texte pour un espacement agréable */
+  border-radius: 8px; /* Arrondir légèrement les coins */
+}
+}

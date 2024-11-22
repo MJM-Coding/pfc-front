@@ -1,0 +1,159 @@
+// Définition des variables de couleurs
+$primary-color: #4E8696;
+$secondary-color: #6c757d;
+$danger-color: #dc3545;
+$background-color: #f8f9fa;
+$input-border-color: #ced4da;
+$button-bg-color: $primary-color;
+$button-hover-bg-color: darken($primary-color, 10%);
+$label-color: #495057;
+$error-color: $danger-color;
+
+//force a avoir les input en minuscule
+input {
+  text-transform: lowercase;
+}
+
+// Style global du formulaire
+.signup-fa {
+  background-color: $background-color;
+  padding: 40px 20px;
+height: 665px; // pousse le footer en bas
+
+
+  .signup_Header-fa {
+    text-align: center;
+    margin-bottom: 30px;
+
+    h1 {
+      color: $primary-color;
+      font-size: 2.5rem;
+    }
+  }
+
+  .subscribeFormContainer-fa {
+    display: flex;
+    justify-content: center;
+    
+    .formConnexionPage-fa {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1200px;
+
+      .formColumns {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 30px;
+        
+        // Colonne gauche
+        .formColumnLeft {
+          flex: 1;
+          min-width: 300px;
+          
+          .fieldContainer-fa {
+            margin-bottom: 20px;
+
+            label {
+              font-size: 1rem;
+              color: $label-color;
+              margin-bottom: 8px;
+              display: block;
+            }
+
+            input {
+              width: 100%;
+              padding: 12px;
+              font-size: 1rem;
+              border: 1px solid $input-border-color;
+              border-radius: 5px;
+              outline: none;
+
+              &:focus {
+                border-color: $primary-color;
+              }
+
+              &.error {
+                border-color: $danger-color;
+              }
+            }
+
+            .errorMessage-fa {
+              font-size: 0.875rem;
+              color: $error-color;
+              margin-top: 5px;
+            }
+          }
+        }
+
+        // Colonne droite
+        .formColumnRight {
+          flex: 1;
+          min-width: 300px;
+          
+          .fieldContainer-fa {
+            margin-bottom: 20px;
+
+            label {
+              font-size: 1rem;
+              color: $label-color;
+              margin-bottom: 8px;
+              display: block;
+            }
+
+            input {
+              width: 100%;
+              padding: 12px;
+              font-size: 1rem;
+              border: 1px solid $input-border-color;
+              border-radius: 5px;
+              outline: none;
+
+              &:focus {
+                border-color: $primary-color;
+              }
+
+              &.error {
+                border-color: $danger-color;
+              }
+            }
+
+            .errorMessage-fa {
+              font-size: 0.875rem;
+              color: $error-color;
+              margin-top: 5px;
+            }
+          }
+        }
+      }
+
+      // Bouton de soumission
+      button[type="submit"] {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.2rem;
+        background-color: $button-bg-color;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: $button-hover-bg-color;
+        }
+      }
+
+      // Message d'erreur général
+      .errorMessage-fa {
+        color: $danger-color;
+        font-size: 1rem;
+        margin-top: 15px;
+      }
+    }
+  }
+
+
+}

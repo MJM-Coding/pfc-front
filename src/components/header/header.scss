@@ -1,0 +1,133 @@
+/* Variables */
+$header-bg-color: #262e33;
+$header-text-color: white;
+$button-bg-color: #4e8696;
+$button-hover-color: #88ADB7;
+$link-actif:#88ADB7;
+
+
+/* Exemple de style pour le lien actif */
+.nav-link.active-link {
+  color: #0C1F3C; /* Couleur de votre choix */
+}
+
+.header {
+  background-color: $header-bg-color;
+  color: $header-text-color;
+}
+
+.header-title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  padding: 0 15px;
+  width: 100%;
+}
+
+.logo {
+  width: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+ 
+
+  .logo-img {
+    margin-right: 1rem;
+    height: 60px;
+    width: auto;
+  }
+
+  h1 {
+    width: 300px;
+    text-align: center;
+    font-size: 1.5rem;
+  
+    line-height: 1;
+  }
+}
+
+/* Centrer les liens dans le header */
+.header-links {
+  display: flex;
+  justify-content: flex-end; /* Centrer horizontalement les liens */
+  width: 90%; /* S'assurer que la section occupe toute la largeur */
+  margin-left: auto; /* Garder l'alignement à gauche pour la section logo et la section de déconnexion */
+  margin-right: 100px; /* Garder l'alignement à droite pour le bouton d'authentification */
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-left: 30px; /* Espacement entre les items */
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  text-decoration: none;
+  color: #ffffff; /* Couleur du texte */
+  padding: 8px 16px; /* Hauteur et largeur pour que les liens aient la même taille que le bouton */
+  border-radius: 5px; /* Bordures arrondies */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Transition pour fond et effet de transformation */
+  display: inline-block;
+  
+  cursor: pointer;
+}
+
+/* Style pour les liens actifs */
+.nav-link.active-link {
+  background-color: $link-actif; /* Couleur de fond du lien actif */
+  color: rgb(3, 3, 3); /* Texte blanc */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre autour du bouton */
+  transform: translateY(-2px); /* Effet de décalage pour simuler un clic */
+}
+
+/* Container de l'authentification aligné à droite */
+.auth-container {
+  margin-left: auto; /* Pousse l'élément vers la droite */
+  display: flex;
+  align-items: center;
+  
+}
+
+.auth-button {
+  width: 250px;
+  background-color: $button-bg-color;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $button-hover-color;
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.user-info span {
+  margin-right: 10px;
+}
+
+main {
+  margin-top: 30px;
+}
+
+.title {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 0;
+}
