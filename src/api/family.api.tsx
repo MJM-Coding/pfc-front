@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import { IFamily } from "../@types/family"; 
+import { IFamily } from "../@types/vieuxtypes/family"; 
 
 
 /**

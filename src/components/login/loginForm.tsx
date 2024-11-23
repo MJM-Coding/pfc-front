@@ -4,7 +4,7 @@
 
 import React, { useState } from "react";
 import { SigninUser } from "../../api/signin.api"; // Import de la fonction pour l'authentification
-import { IAuthContext } from "../../@types/signin"; // Import du type pour le contexte d'authentification
+import { IAuthContext } from "../../@types/auth"; // Import du type pour le contexte d'authentification
 
 const LoginForm = () => {
   //! États locaux pour gérer les champs de saisie, les erreurs, et le chargement

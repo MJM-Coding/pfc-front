@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import type { IAuthContext, ILoginCredentials } from "../@types/signin";
+import type { IAuthContext, ILoginCredentials } from "../@types/auth";
 
 /**
  * Fonction pour se connecter en utilisant les informations d'identification de l'utilisateur.

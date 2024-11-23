@@ -1,3 +1,4 @@
+//*Types importés dans user.api, signup_assoPage, signup_FaPage
 //! Type de rôle pour un utilisateur
 export type UserRole = "family" | "association";
 

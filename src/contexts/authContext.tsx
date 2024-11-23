@@ -1,73 +1,70 @@
-//! Context d'authentification - Gère la connexion, la déconnexion et la persistance de l'utilisateur avec le localStorage
+// src/context/AuthContext.tsx
 
 import React, { createContext, useState, ReactNode, useEffect } from "react";
-import { IAuthContext, IUser } from "../@types/user"; // Import du type pour le contexte d'authentification
+import { IUser, IAuthContext } from "../@types/auth"; // Assure-toi que les types sont correctement définis dans @types/signin.ts
 
-// Créer un contexte avec le bon type (AuthContext)
-// Le type d'AuthContext est IAuthContext, et on définit la valeur par défaut comme undefined (au cas où le contexte serait utilisé avant d'être initialisé)
-const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
-// Définir le type des props pour AuthProvider - Ce composant recevra des enfants sous forme de ReactNode
+
+
+// Création du contexte d'authentification
+const AuthContext = createContext<IAuthContext | null>(null);
+
 interface AuthProviderProps {
-  children: ReactNode;
+  children: ReactNode; // Type des props pour AuthProvider
 }
 
-//! Définir le composant AuthProvider qui englobe les enfants et gère l'état d'authentification
+// AuthProvider gère l'état de l'utilisateur et du token, ainsi que leur stockage
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Déclaration des états pour l'utilisateur et le token d'authentification
-  const [user, setUser] = useState<IUser | null>(null); // Initialisation de l'utilisateur à null
-  const [token, setToken] = useState<string | null>(null); // Initialisation du token à null
+  const [user, setUser] = useState<IUser | null>(null); // État pour l'utilisateur
+  const [token, setToken] = useState<string | null>(null); // État pour le token
 
-  // Utilisation de useEffect pour charger les données depuis le localStorage si elles sont disponibles
+  // Chargement des données utilisateur et du token depuis le localStorage au démarrage de l'application
   useEffect(() => {
-    // Vérification de la disponibilité de window (important pour le rendu côté serveur, SSR)
     if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("authToken"); // Récupérer le token du localStorage
-      const storedUser = localStorage.getItem("authUser"); // Récupérer les données utilisateur du localStorage
+      const storedToken = localStorage.getItem("authToken");
+      const storedUser = localStorage.getItem("authUser");
 
-      // Si un token est trouvé dans le localStorage, on le définit dans l'état
       if (storedToken) {
         setToken(storedToken);
       }
 
-      // Si des données utilisateur sont trouvées dans le localStorage, on les parse et les définit dans l'état
       if (storedUser) {
-        setUser(JSON.parse(storedUser));
+        try {
+          setUser(JSON.parse(storedUser)); // Si des données utilisateur sont présentes, les parser et les stocker dans l'état
+        } catch (error) {
+          console.error("Erreur lors du parsing des données utilisateur :", error);
+        }
       }
     }
-  }, []); // Le tableau vide signifie que cet effet ne s'exécutera qu'une seule fois au montage du composant
+  }, []);
 
-  // Fonction pour gérer la connexion - elle prend un nouveau token et les données utilisateur
+  // Fonction de connexion
   const login = (newToken: string, userData: IUser) => {
-    setToken(newToken); // Mettre à jour l'état du token
-    setUser(userData); // Mettre à jour l'état de l'utilisateur
+    setToken(newToken);
+    setUser(userData);
 
-    //! Sauvegarder le token et l'utilisateur dans le localStorage pour une persistance après rechargement de la page
     if (typeof window !== "undefined") {
-      localStorage.setItem("authToken", newToken); // Sauvegarder le token dans le localStorage
-      localStorage.setItem("authUser", JSON.stringify(userData)); // Sauvegarder les données utilisateur dans le localStorage
+      localStorage.setItem("authToken", newToken);
+      localStorage.setItem("authUser", JSON.stringify(userData)); // Sauvegarder les informations dans le localStorage
     }
   };
 
-  //! Fonction pour gérer la déconnexion - elle réinitialise les états et supprime les données du localStorage
+  // Fonction de déconnexion
   const logout = () => {
-    setToken(null); // Réinitialiser le token
-    setUser(null); // Réinitialiser l'utilisateur
+    setToken(null);
+    setUser(null);
 
-    //! Supprimer le token et les données utilisateur du localStorage
     if (typeof window !== "undefined") {
-      localStorage.removeItem("authToken"); // Supprimer le token du localStorage
-      localStorage.removeItem("authUser"); // Supprimer les données utilisateur du localStorage
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser"); // Supprimer les informations du localStorage lors de la déconnexion
     }
   };
 
-  // Retourne le contexte AuthContext avec les valeurs actuelles : user, login, logout, token, et children
   return (
-    <AuthContext.Provider value={{ user, login, logout, token, children }}>
+    <AuthContext.Provider value={{ user, login, logout, token }}>
       {children} {/* Rendre les enfants du composant AuthProvider */}
     </AuthContext.Provider>
   );
 };
-
 
 export default AuthContext;

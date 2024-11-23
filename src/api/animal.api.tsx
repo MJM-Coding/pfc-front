@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import { IAnimal } from "../@types/animal";
+import { IAnimal } from "../@types/vieuxtypes/animal2";
 
 /**
  *! Récupère la liste de tous les animaux.

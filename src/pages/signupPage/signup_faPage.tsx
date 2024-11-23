@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import "./signup_fa.scss";
 import { CreateUser } from "../../api/user.api";
-import type { IUserRegistrationFamily } from "../../@types/signupForm";
+import type { IUserRegistrationFamily } from "../../@types/vieuxtypes/signupForm";
 import Toast from "../../toast/toast"; // Importation du composant Toast pour afficher des messages
 import ModalLogin from "../../components/modalLogin/modalLogin";
 

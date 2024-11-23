@@ -56,23 +56,19 @@ try {
     resetForm(); // On réinitialise le formulaire
     navigate("/"); // On redirige vers la page d'accueil
   } else {
-    // Si pas de token, on affiche un message d'erreur
     setError("Nom d'utilisateur ou mot de passe incorrect");
   }
 } catch (error: any) {
   if (error.response) {
-    // Si l'erreur provient de l'API
-    const apiMessage = error.response.data?.message || "Erreur inconnue."; // On récupère le message de l'API
+    const apiMessage = error.response.data?.message || "Erreur inconnue.";
     setError(apiMessage); // On affiche le message renvoyé par l'API
   } else if (error.request) {
-    // Si l'erreur vient d'un problème réseau
     setError("Problème réseau. Veuillez réessayer.");
   } else {
-    // Pour toute autre erreur
     setError("Une erreur inattendue s'est produite.");
   }
 }
-  };
+};
 
   const handleRegisterRedirect = () => {
     onClose(); // Ferme la modal après avoir cliqué sur "S'inscrire"
