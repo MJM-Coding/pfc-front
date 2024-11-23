@@ -15,6 +15,7 @@ $link-actif:#88ADB7;
 .user-firstname {
   font-size: 0.9em; /* Augmentez légèrement la taille de la police */
   margin-top: 5px;
+  width: 100%;
   color: white;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Ajoutez une ombre pour améliorer la lisibilité */
   z-index: 1000;
@@ -28,7 +29,7 @@ $link-actif:#88ADB7;
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 200px;
+  min-width: 300px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   right: 0;
@@ -41,7 +42,7 @@ $link-actif:#88ADB7;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
-  text-align: left;
+  text-align: center;
   width: 100%;
   background: none;
   border: none;
@@ -57,6 +58,7 @@ $link-actif:#88ADB7;
 
 .dropdown.active .dropdown-content {
   display: block;
+  
 }
 /* Exemple de style pour le lien actif */
 .nav-link.active-link {
@@ -144,11 +146,16 @@ $link-actif:#88ADB7;
   margin-left: auto; /* Pousse l'élément vers la droite */
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  width: 300px;
   
 }
-
+.fa-house {
+  margin-bottom: 0.5rem;
+font-size: 1.5rem;
+}
 .auth-button {
-  width: 250px;
+  width: 300px;
   background-color: $button-bg-color;
   color: #fff;
   text-decoration: none;

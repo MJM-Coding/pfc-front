@@ -26,6 +26,7 @@ export interface IAssociation {
  *! Interface pour représenter un utilisateur avec le rôle "association".
  */
 export interface IUserAssociation extends IUser {
+  representative?: string | null | undefined;
   id: number; // ID unique de l'utilisateur
   firstname: string | null | undefined; // Prénom de l'utilisateur
   lastname: string | null | undefined; // Nom de famille de l'utilisateur

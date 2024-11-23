@@ -324,6 +324,7 @@ const signup_assoPage = () => {
                   value={formData.association.rna_number}
                   onChange={handleChange}
                   required
+                  style={{ textTransform: "uppercase" }}
                 />
                 {rnaNumberError && (
                   <p className="errorMessage-asso">{rnaNumberError}</p>

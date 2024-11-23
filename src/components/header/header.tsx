@@ -5,6 +5,7 @@ import logo from "../../assets/images/logosimple.png";
 import ModalLogin from "../modalLogin/modalLogin";
 import "../../styles/commun.scss";
 import AuthContext from "../../contexts/authContext";
+import type { IUserAssociation } from "../../@types/association";
 
 const Header: React.FC = () => {
  
@@ -52,6 +53,7 @@ const Header: React.FC = () => {
   console.log("User role:", user?.role);
   console.log("User firstname:", user?.firstname);
 
+
   return (
     <header className="header">
       <div className="header-title">
@@ -76,10 +78,15 @@ const Header: React.FC = () => {
         <div className="auth-container">
           {/* Dropdown pour les utilisateurs de type 'association' */}
           {isAuthenticated && user?.role === "association" && (
-            <div className={`dropdown ${activeDropdown === 'association' ? 'active' : ''}`}>
+            <div 
+              className={`dropdown ${activeDropdown === 'association' ? 'active' : ''}`}
+              onMouseEnter={() => toggleDropdown('association')} // Ajoutez cette ligne
+              onMouseLeave={() => toggleDropdown('')} // Ajoutez cette ligne
+            >
               <button className="dropbtn" onClick={() => toggleDropdown('association')}>
                 <i className="fa-solid fa-house"></i>
-                <span className="user-firstname">{user?.firstname}</span>
+                 {/* récupère le nom de l'association ou le prénom de l'utilisateur sous l'icone de connexion */}
+                <span className="user-firstname">{(user as unknown as IUserAssociation).representative || user.firstname}</span>
               </button>
               <div className="dropdown-content">
                 {/* Liens vers les pages spécifiques à l'association */}
@@ -95,10 +102,15 @@ const Header: React.FC = () => {
 
           {/* Dropdown pour les utilisateurs de type 'family' */}
           {isAuthenticated && user?.role === "family" && (
-            <div className={`dropdown ${activeDropdown === 'family' ? 'active' : ''}`}>
+            <div 
+              className={`dropdown ${activeDropdown === 'family' ? 'active' : ''}`}
+              onMouseEnter={() => toggleDropdown('family')} // Ajoutez cette ligne
+              onMouseLeave={() => toggleDropdown('')} // Ajoutez cette ligne
+            >
               <button className="dropbtn" onClick={() => toggleDropdown('family')}>
-                <i className="fa-solid fa-user"></i>
-                <span className="user-firstname">{user?.firstname || "Utilisateur"}</span>
+              <i className="fa-solid fa-house"></i>
+                {/* récupère le prénom de l'utilisateur sous l'icone de connexion */}
+                <span className="user-firstname">{user.firstname || "Utilisateur"}</span>
               </button>
               <div className="dropdown-content">
                 {/* Liens vers les pages spécifiques à la famille */}
