@@ -3,7 +3,7 @@ import { api, handleApiError } from "../api";
 import type { IAuthContext, ILoginCredentials } from "../@types/auth";
 
 /**
- * Fonction pour se connecter en utilisant les informations d'identification de l'utilisateur.
+ *! Fonction pour se connecter en utilisant les informations d'identification de l'utilisateur.
  * @param credentials Les informations d'identification de l'utilisateur (email et mot de passe).
  * @returns Une promesse qui résout avec l'objet contenant le token et les données utilisateur.
  */
@@ -19,7 +19,7 @@ export const SigninUser = async (
     );
     
     
-    // Récupérer et sauvegarder le token dans le localStorage ou sessionStorage
+    // Récupérer et sauvegarder le token dans le localStorage 
     const { token } = response.data;
     if (token) {
       localStorage.setItem("authToken", token); // Sauvegarde du token JWT
@@ -48,5 +48,39 @@ export const SigninUser = async (
       throw new Error("Une erreur inconnue s'est produite.");
     }
    
+  }
+};
+
+
+/**
+ *! Fonction pour rafraîchir le token JWT en cas d'expiration.
+ * @param currentToken Le token JWT actuel.
+ * @returns Une promesse qui résout avec un nouveau token.
+ */
+export const refreshToken = async (
+  currentToken: string
+): Promise<string> => {
+  try {
+    // Appel à l'endpoint /refresh-token pour obtenir un nouveau token
+    const response: AxiosResponse<{ token: string }> = await api.post(
+      "/refresh-token",
+      { token: currentToken }, // Le token actuel est envoyé dans le corps de la requête
+      {
+        headers: {
+          Authorization: `Bearer ${currentToken}`, // Ajouter le token dans l'en-tête si nécessaire
+        },
+      }
+    );
+
+    // Récupération du nouveau token
+    const { token: newToken } = response.data;
+
+    // Mettre à jour le localStorage 
+    localStorage.setItem("authToken", newToken);
+
+    return newToken;
+  } catch (error: any) {
+    handleApiError(error, "le rafraîchissement du token");
+    throw new Error("Erreur lors du rafraîchissement du token.");
   }
 };

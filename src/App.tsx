@@ -1,7 +1,8 @@
+// App.tsx
 
 import React from "react";
 import 'bulma/css/bulma.min.css';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import AnimalsListPage from "./pages/animalsListPage/animalsListPage"; // page de la liste des animaux
 import Signup_assoPage from "./pages/signupPage/signup_assoPage"; // page de l'inscription d'une association
@@ -12,7 +13,7 @@ import Footer from "./components/footer/footer";
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <>
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -23,7 +24,7 @@ const App: React.FC = () => {
         {/* Vous pouvez ajouter d'autres routes ici */}
       </Routes>
       <Footer />
-    </BrowserRouter>
+    </>
   );
 };
 

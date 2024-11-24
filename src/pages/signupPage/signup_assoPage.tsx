@@ -363,6 +363,7 @@ const signup_assoPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  style={{ textTransform: "lowercase" }}
                 />
               </div>
 

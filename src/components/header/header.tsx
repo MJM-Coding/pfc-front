@@ -50,8 +50,7 @@ const Header: React.FC = () => {
 
   // Affichage des valeurs dans la console pour déboguer
   console.log("AuthContext values:", { user, token });
-  console.log("User role:", user?.role);
-  console.log("User firstname:", user?.firstname);
+
 
 
   return (

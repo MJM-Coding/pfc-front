@@ -285,6 +285,7 @@ const Signup_faPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  style={{ textTransform: "lowercase" }}
                 />
               </div>
 
