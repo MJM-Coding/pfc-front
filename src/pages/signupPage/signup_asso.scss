@@ -9,21 +9,29 @@ $button-hover-bg-color: #375d68;
 $label-color: #495057;
 $error-color: $danger-color;
 
+.assoPage-container {
+  width: 100vw;
+  height: 83vh; /* Prend toute la hauteur de la fenêtre */
+  background: $background-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
 
-
+}
 
 // Style global du formulaire
 .signup-asso {
-  background-color: $background-color;
-  padding: 40px 20px;
+  padding: 10px 20px;
 
   .signup_Header-asso {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 
     h1 {
       color: $primary-color;
       font-size: 2.5rem;
+      margin-bottom: 70px;
     }
   }
 

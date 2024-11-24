@@ -155,6 +155,7 @@ const Signup_faPage = () => {
 
   //! Affichage du formulaire d'inscription
   return (
+    <div className="faPage-container">
     <section className="signup-fa">
       <div className="signup_Header-fa">
         <h1>Inscription famille d'accueil</h1>
@@ -355,6 +356,7 @@ const Signup_faPage = () => {
         />
       )}
     </section>
+    </div>
   );
 };
 

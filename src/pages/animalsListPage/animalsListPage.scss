@@ -10,12 +10,14 @@
   --textCard: #35261c;
 }
 
-
-
-main.Animals {
+.animals-container {
+  background-color: var(--background-color);
   width: 100vw;
   min-height: 100vh;
-  background-color: var(--background-color);
+  display: flex;
+}
+
+main.Animals {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

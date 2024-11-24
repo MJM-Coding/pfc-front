@@ -5,6 +5,15 @@ $button-bg-color: #4e8696;
 $button-hover-color: #88ADB7;
 $link-actif:#88ADB7;
 
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Alignement horizontal optionnel */
+  min-height: 95px; /* Assure une hauteur cohérente */
+  padding: 0 20px; /* Optionnel pour des espacements internes */
+  box-sizing: border-box; /* Gère le padding dans la hauteur */
+}
 .dropbtn {
   display: flex;
   flex-direction: column;
@@ -190,3 +199,4 @@ main {
   font-weight: bold;
   margin: 0;
 }
+

@@ -46,16 +46,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setShowLoginModal(true); // Affiche la modal après déconnexion
         logout(); // Appel de la fonction logout
         console.log("Utilisateur inactif après 1 heure");
-      }, 2 * 60 * 1000); // 1 heure sans activité
+      }, 60 * 60 * 1000); // 1 heure sans activité
     };
 
     let activityTimeout: NodeJS.Timeout;
     window.addEventListener("scroll", handleActivity);
     window.addEventListener("click", handleActivity);
+    window.addEventListener("mousemove", handleActivity);
 
     return () => {
       window.removeEventListener("scroll", handleActivity);
       window.removeEventListener("click", handleActivity);
+      window.removeEventListener("mousemove", handleActivity);
       clearTimeout(activityTimeout);
     };
   }, []);
@@ -71,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           console.log("Token expirant bientôt, rafraîchissement...");
           try {
             const newToken = await refreshToken(token);
-            const newExpirationTime = Date.now() + 2 * 60 * 1000; // Nouveau délai d'expiration (1h)
+            const newExpirationTime = Date.now() + 60 * 60 * 1000; // Nouveau délai d'expiration (1h)
             setToken(newToken);
             setTokenExpirationTime(newExpirationTime);
 
@@ -99,7 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setToken(newToken);
     setUser(userData);
 
-    const expirationTime = Date.now() + 2 * 60 * 1000; // Calcul de l'expiration du token (1 heure)
+    const expirationTime = Date.now() + 60 * 60 * 1000; // Calcul de l'expiration du token (1 heure)
     setTokenExpirationTime(expirationTime);
 
     localStorage.setItem("authToken", newToken);
@@ -125,7 +127,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Fonction pour reconnecter l'utilisateur après 1 heure d'inactivité
   const loginAgain = () => {
     setIsActive(true); // Réactive l'utilisateur
-    setTokenExpirationTime(Date.now() + 2 * 60 * 1000); // Réinitialise le délai d'expiration du token
+    setTokenExpirationTime(Date.now() + 60 * 60 * 1000); // Réinitialise le délai d'expiration du token
     setShowLoginModal(false); // Ferme la modal après reconnexion
 
     console.log("Utilisateur reconnecté après inactivité");

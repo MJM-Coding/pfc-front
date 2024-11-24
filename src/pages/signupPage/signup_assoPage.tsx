@@ -189,6 +189,7 @@ const signup_assoPage = () => {
 
   //! Affichage du formulaire d'inscription
   return (
+    <div className="assoPage-container">
     <section className="signup-asso">
       <div className="signup_Header-asso">
         <h1>Inscription association</h1>
@@ -433,6 +434,7 @@ const signup_assoPage = () => {
         />
       )}
     </section>
+    </div>
   );
 };
 

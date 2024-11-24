@@ -147,6 +147,7 @@ const AnimalsPage: React.FC = () => {
   );
 
   return (
+    <div className="animals-container">
     <main className="Animals">
       {isLoading && <p className="loading">Chargement...</p>}
       {error && <p className="error">{error}</p>}
@@ -227,6 +228,7 @@ const AnimalsPage: React.FC = () => {
           <p id="no-animals-found">Aucun animal trouvé</p>
         ))}
     </main>
+    </div>
   );
 };
 export default AnimalsPage;
