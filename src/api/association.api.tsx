@@ -9,10 +9,12 @@ import { IAnimal } from "../@types/vieuxtypes/animal2"; // Assurez-vous d'avoir 
  ** Cette fonction est accessible publiquement.
  * @returns Une promesse qui résout avec un tableau d'objets IAssociation.
  */
-export const GetAllAssociations = async (): Promise<IAssociation[]> => {
+export const GetAllAssociations = async (token: string): Promise<IAssociation[]> => {
   try {
     const response: AxiosResponse<IAssociation[]> = await api.get(
-      "/association"
+      "/association",{
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
     return response.data;
   } catch (error) {
@@ -27,20 +29,19 @@ export const GetAllAssociations = async (): Promise<IAssociation[]> => {
  * @param id L'identifiant unique de l'association.
  * @returns Une promesse qui résout avec un objet IAssociation.
  */
- export const GetAssociationById = async (id: string): Promise<IAssociation> => {
-  console.log(`Appel de GetAssociationById avec l'ID: ${id}`);
-  console.log(`URL de l'API : /association/${id}`);
-
+ export const GetAssociationById = async (
+  id: string,
+  token: string
+): Promise<IAssociation> => {
 
   try {
     const response: AxiosResponse<IAssociation> = await api.get(
-      `/association/${id}`
+      `/association/${id}`,{headers: { Authorization: `Bearer ${token}` 
+      }}
     );
     
-    console.log('Réponse de l\'API reçue:', response.data); // Log des données reçues
     return response.data;
   } catch (error) {
-    console.error(`Erreur lors de la récupération de l'association avec l'ID ${id}:`, error); // Log de l'erreur
     handleApiError(error, `la récupération de l'association avec l'ID ${id}`);
     throw error;
   }

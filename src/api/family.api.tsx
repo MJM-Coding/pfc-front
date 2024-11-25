@@ -31,6 +31,7 @@ export const GetFamilyById = async (
   id: string,
   token: string
 ): Promise<IFamily> => {
+  
   try {
     const response: AxiosResponse<IFamily> = await api.get(`/family/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
