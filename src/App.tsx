@@ -8,6 +8,8 @@ import AnimalsListPage from "./pages/animalsListPage/animalsListPage"; // page d
 import Signup_assoPage from "./pages/signupPage/signup_assoPage"; // page de l'inscription d'une association
 import Signup_faPage from "./pages/signupPage/signup_faPage"; // page de l'inscription d'une famille
 import HomePage from "./pages/homePage/homePage"; // page d'accueil
+import ProfilePageAsso from "./pages/spaceAssociation/profilePageAsso";
+import ProfilePageFamily from "./pages/spaceFamily/profilePageFamily";
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
 
@@ -20,6 +22,8 @@ const App: React.FC = () => {
         <Route path="/animaux" element={<AnimalsListPage />} />
         <Route path="/inscription-association" element={<Signup_assoPage />} />
         <Route path="/inscription-famille" element={<Signup_faPage />} />
+        <Route path="/profile-association" element={<ProfilePageAsso />} />
+        <Route path="/profile-famille" element={<ProfilePageFamily />} />
 
         {/* Vous pouvez ajouter d'autres routes ici */}
       </Routes>
