@@ -8,11 +8,10 @@ import AuthContext from "../../contexts/authContext";
 import type { IUserAssociation } from "../../@types/association";
 
 const Header: React.FC = () => {
- 
   const { user, token, login, logout } = useContext(AuthContext) || {}; // On récupère les valeurs du contexte d'authentification (user, token, login, logout)
-  const [isModalOpen, setIsModalOpen] = useState(false);  // Déclaration de l'état pour contrôler l'affichage du modal de connexion
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);  // Déclaration de l'état pour gérer l'ouverture et la fermeture des menus dropdown
-  const navigate = useNavigate();// Hook pour naviguer entre les pages
+  const [isModalOpen, setIsModalOpen] = useState(false); // Déclaration de l'état pour contrôler l'affichage du modal de connexion
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null); // Déclaration de l'état pour gérer l'ouverture et la fermeture des menus dropdown
+  const navigate = useNavigate(); // Hook pour naviguer entre les pages
 
   //! Fonction pour ouvrir le modal de connexion
   const openModal = () => setIsModalOpen(true);
@@ -51,8 +50,6 @@ const Header: React.FC = () => {
   // Affichage des valeurs dans la console pour déboguer
   console.log("AuthContext values:", { user, token });
 
-
-
   return (
     <header className="header">
       <div className="header-title">
@@ -65,11 +62,21 @@ const Header: React.FC = () => {
 
         <div className="header-links">
           {/* Lien vers la page d'accueil */}
-          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? "nav-link active-link" : "nav-link"
+            }
+          >
             Accueil
           </NavLink>
           {/* Lien vers la page des animaux */}
-          <NavLink to="/animaux" className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}>
+          <NavLink
+            to="/animaux"
+            className={({ isActive }) =>
+              isActive ? "nav-link active-link" : "nav-link"
+            }
+          >
             Animaux
           </NavLink>
         </div>
@@ -77,47 +84,74 @@ const Header: React.FC = () => {
         <div className="auth-container">
           {/* Dropdown pour les utilisateurs de type 'association' */}
           {isAuthenticated && user?.role === "association" && (
-            <div 
-              className={`dropdown ${activeDropdown === 'association' ? 'active' : ''}`}
-              onMouseEnter={() => toggleDropdown('association')} // Ajoutez cette ligne
-              onMouseLeave={() => toggleDropdown('')} // Ajoutez cette ligne
+            <div
+              className={`dropdown ${
+                activeDropdown === "association" ? "active" : ""
+              }`}
+              onMouseEnter={() => toggleDropdown("association")} 
+              onMouseLeave={() => toggleDropdown("")} 
             >
-              <button className="dropbtn" onClick={() => toggleDropdown('association')}>
-                <i className="fa-solid fa-house"></i>
-                 {/* récupère le nom de l'association ou le prénom de l'utilisateur sous l'icone de connexion */}
-                <span className="user-firstname">{(user as unknown as IUserAssociation).representative || user.firstname}</span>
+              <button
+                className="dropbtn"
+                onClick={() => toggleDropdown("association")}
+              >
+                <i className="fa-solid fa-user"></i>
+                {/* récupère le nom de l'association ou le prénom de l'utilisateur sous l'icone de connexion */}
+                <span className="user-firstname">
+                  {(user as unknown as IUserAssociation).representative ||
+                    user.firstname}
+                </span>
               </button>
               <div className="dropdown-content">
                 {/* Liens vers les pages spécifiques à l'association */}
                 <Link to="/espace-association/profil">Mon profil</Link>
-                <Link to="/espace-association/informations">Mes informations</Link>
+                <Link to="/espace-association/informations">
+                  Mes informations
+                </Link>
                 <Link to="/espace-association/animaux">Mes animaux</Link>
-                <Link to="/espace-association/demandes">Demandes d'accueil</Link>
+                <Link to="/espace-association/demandes">
+                  Demandes d'accueil
+                </Link>
                 {/* Bouton de déconnexion pour les utilisateurs de type 'association' */}
-                <button onClick={handleLogout} className="logout-button">Se déconnecter</button>
+                <button onClick={handleLogout} className="logout-button">
+                  Se déconnecter
+                </button>
               </div>
             </div>
           )}
 
           {/* Dropdown pour les utilisateurs de type 'family' */}
           {isAuthenticated && user?.role === "family" && (
-            <div 
-              className={`dropdown ${activeDropdown === 'family' ? 'active' : ''}`}
-              onMouseEnter={() => toggleDropdown('family')} // Ajoutez cette ligne
-              onMouseLeave={() => toggleDropdown('')} // Ajoutez cette ligne
+            <div
+              className={`dropdown ${
+                activeDropdown === "family" ? "active" : ""
+              }`}
+              onMouseEnter={() => toggleDropdown("family")} // Ajoutez cette ligne
+              onMouseLeave={() => toggleDropdown("")} // Ajoutez cette ligne
             >
-              <button className="dropbtn" onClick={() => toggleDropdown('family')}>
-              <i className="fa-solid fa-house"></i>
+              <button
+                className="dropbtn"
+                onClick={() => toggleDropdown("family")}
+              >
+                <i className="fa-solid fa-user"></i>
                 {/* récupère le prénom de l'utilisateur sous l'icone de connexion */}
-                <span className="user-firstname">{user.firstname || "Utilisateur"}</span>
+                <span className="user-firstname">
+                  {user.firstname || "Utilisateur"}
+                </span>
               </button>
               <div className="dropdown-content">
                 {/* Liens vers les pages spécifiques à la famille */}
                 <Link to="/espace-famille/profil">Mon profil</Link>
-                <Link to="/espace-famille/informations">Mes informations</Link>
-                <Link to="/espace-famille/demandes">Mes demandes d'accueil</Link>
+                <Link to="/espace-famille/informations">
+                  Mes informations
+                </Link>
+                <Link to="/espace-famille/demandes">
+                  Mes demandes d'accueil
+                </Link>
                 {/* Bouton de déconnexion pour les utilisateurs de type 'family' */}
-                <button onClick={handleLogout} className="logout-button">Se déconnecter</button>
+                <button onClick={handleLogout} className="logout-button">
+                  Se déconnecter
+                </button>
               </div>
             </div>
           )}
