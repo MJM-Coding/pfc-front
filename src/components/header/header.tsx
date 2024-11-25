@@ -72,7 +72,7 @@ const Header: React.FC = () => {
                 </>
               }
               links={[
-                { path: "/espace-association/profil", label: "Mon profil" },
+                { path: "/espace-association/profil-association", label: "Mon profil" },
                 {
                   path: "/espace-association/Informations-de-connexion",
                   label: "Informations de connexion",
@@ -93,7 +93,7 @@ const Header: React.FC = () => {
                 </>
               }
               links={[
-                { path: "/espace-famille/profil", label: "Mon profil" },
+                { path: "/espace-famille/profil-famille", label: "Mon profil" },
                 {
                   path: "/espace-famille/Informations-de-connexion",
                   label: "Informations de connexion",

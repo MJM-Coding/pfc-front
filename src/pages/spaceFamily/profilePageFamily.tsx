@@ -4,6 +4,7 @@ import "./profilePageFamily.scss";  // Importation du SCSS spécifique à la pag
 
 const ProfilPageFamily: React.FC = () => {
   return (
+    <div className="profilFa-container">
     <div className="profil-family">
       <h1>Mon Profil famille d'accueil</h1>
      
@@ -11,7 +12,7 @@ const ProfilPageFamily: React.FC = () => {
           <button className="button-update">Mettre à jour</button>
         </div>
       </div>
-  
+      </div>
   );
 };
 
