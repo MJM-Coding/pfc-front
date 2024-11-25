@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import { IUserRegistration, IUser, ICreateUserResponse } from "../@types/vieuxtypes/signupForm";
+import { IUserRegistration, IUser, ICreateUserResponse } from "../@types/signupForm";
 
 
 /**
@@ -24,9 +24,10 @@ export const GetAllUsers = async (): Promise<IUser[]> => {
  * @param id L'identifiant unique de l'utilisateur.
  * @returns Une promesse qui résout avec un objet IUser.
  */
-export const GetUserById = async (id: string): Promise<IUser> => {
+ export const GetUserById = async (id: string): Promise<IUser> => {
   try {
     const response: AxiosResponse<IUser> = await api.get(`/user/${id}`);
+    console.log(response.data); // Affiche les données reçues pour vérifier leur structure
     return response.data;
   } catch (error) {
     handleApiError(error, `la récupération de l'utilisateur avec l'ID ${id}`);

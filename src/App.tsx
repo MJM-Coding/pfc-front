@@ -22,10 +22,10 @@ const App: React.FC = () => {
         <Route path="/animaux" element={<AnimalsListPage />} />
 
         <Route path="/inscription-association" element={<Signup_assoPage />} />
-        <Route path="espace-association/profil-association" element={<ProfilePageAsso />} />
+        <Route path="/espace-association/profil-association/:id" element={<ProfilePageAsso />} />
         
         <Route path="/inscription-famille" element={<Signup_faPage />} />
-        <Route path="espace-famille/profil-famille" element={<ProfilePageFamily />} />
+        <Route path="/espace-famille/profil-famille/:id" element={<ProfilePageFamily />} />
 
         {/* Vous pouvez ajouter d'autres routes ici */}
       </Routes>

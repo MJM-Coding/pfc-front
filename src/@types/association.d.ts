@@ -1,9 +1,7 @@
-// src/@types/association.ts
-
 import { IUser } from "./user"; // Importez IUser si nécessaire
 
 /**
- *! Interface pour représenter une association dans le système.
+ * Interface pour représenter une association dans le système.
  */
 export interface IAssociation {
   id: number; // ID unique de l'association
@@ -14,7 +12,7 @@ export interface IAssociation {
   city: string; // Ville (obligatoire)
   phone?: string | null; // Numéro de téléphone (optionnel)
   description: string; // Description de l'association (obligatoire)
-  status: string; // Statut de l'association (par exemple, actif, inactif) (obligatoire)
+  status: string; // Statut de l'association (ex : actif, inactif)
   profile_photo?: string; // Photo de profil (optionnel)
   profile_file?: File | undefined; // Fichier de profil (optionnel)
   id_user: number; // ID utilisateur associé à cette association
@@ -23,57 +21,36 @@ export interface IAssociation {
 }
 
 /**
- *! Interface pour représenter un utilisateur avec le rôle "association".
+ * Interface pour représenter un utilisateur avec le rôle "association".
  */
 export interface IUserAssociation extends IUser {
   representative?: string | null | undefined;
   id: number; // ID unique de l'utilisateur
-  firstname: string | null | undefined; // Prénom de l'utilisateur
-  lastname: string | null | undefined; // Nom de famille de l'utilisateur
-  email: string | null | undefined; // Email de l'utilisateur
+  firstname: string | null | undefined;
+  lastname: string | null | undefined;
+  email: string | null | undefined;
   password: string; // Utilisé uniquement lors de l'inscription
   role: "association"; // Rôle spécifique
-  association: IAssociation;
-  
-
-  association: {
-    id: number; // ID unique de l'association
-    rna_number: string; // Numéro RNA
-    representative: string; // Nom du représentant
-    address: string; // Adresse de l'association
-    postal_code: string; // Code postal
-    city: string; // Ville
-    phone?: string | null; // Numéro de téléphone (optionnel)
-    description: string; // Description de l'association
-    status: string; // Statut de l'association (par exemple, actif, inactif)
-    profile_photo?: string; // URL ou chemin vers la photo de profil 
-    profile_file?: File | undefined; // Fichier à télécharger
-    id_user: number; // ID unique de l'utilisateur associé à cette association
-    profile_file?: File | undefined; // Fichier de profil (optionnel)
-    created_at: Date; // Date de création
-    updated_at: Date; // Date de mise à jour
-  };
+  association: IAssociation;  // <-- C'est ici que la propriété 'association' est définie
 }
 
 /**
- *! Interface pour représenter les données d'une association à afficher ou modifier.
+ * Interface pour les données de l'association à afficher ou modifier.
  */
 export interface IAssociationData {
-  id: number; // ID unique de l'association
-  rna_number: string; // Numéro RNA
-  representative: string; // Nom du représentant
-  address: string; // Adresse de l'association
-  postal_code: string; // Code postal
-  city: string; // Ville
-  phone?: string | null; // Numéro de téléphone (optionnel)
-  description: string; // Description de l'association
-  status: string; // Statut de l'association
-  profile_photo?: string; // Photo de profil (optionnel)
-
-  id_user: number; // ID unique utilisateur associé à cette association
-
+  id: number;
+  rna_number: string;
+  representative: string;
+  address: string;
+  postal_code: string;
+  city: string;
+  phone?: string | null;
+  description: string;
+  status: string;
+  profile_photo?: string;
+  id_user: number;
   user: {
-    id_user?: number; // ID unique de l'utilisateur associé à cette association (optionnel ici si déjà présent au niveau principal)
+    id_user?: number; // ID utilisateur associé à l'association
     email?: string | null;
     firstname?: string | null;
     lastname?: string | null;
@@ -81,23 +58,27 @@ export interface IAssociationData {
 }
 
 /**
- *! Interface pour le formulaire d'ajout ou de modification d'une association.
+ * Interface pour le formulaire d'ajout ou de modification d'une association.
  */
 export interface IAssociationForm {
-  rna_number?: string | null; // Numéro RNA (optionnel)
-  representative?: string | null; // Nom du représentant (optionnel)
-  address?: string | null; // Adresse de l'association (optionnel)
-  postal_code?: string | null; // Code postal (optionnel)
-  city?: string | null; // Ville (optionnel)
-  phone?: string | null; // Numéro de téléphone (optionnel)
-  description?: string | null; // Description de l'association (optionnel)
-  
-  profile_photo?: string | null; // URL ou chemin vers la photo de profil (optionnel)
-
-  user?: Partial<IUser> & { 
-    email?: string | null; // Email de l'utilisateur associé (optionnel)
+  lastname?: string | null;
+  firstname?: string | null;
+  email?: string | null;
+  password?: string | null;
+  role?: string | null;
+  profile_file?: File | null;
+  rna_number?: string | null;
+  representative?: string | null;
+  address?: string | null;
+  postal_code?: string | null;
+  city?: string | null;
+  phone?: string | null;
+  description?: string | null;
+  profile_photo?: string | null;
+  user?: Partial<IUser> & { // Extension des propriétés utilisateur pour gérer la conversion avec une association
+    email?: string | null;
     firstname?: string | null;
     lastname?: string | null;
     id_user?: number;
-   }; 
+  };
 }
