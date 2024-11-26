@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { GetAllAnimals } from "../../api/animal.api"; // appel la fonction getallanimals
-import type { IAnimal } from "../../@types/vieuxtypes/animal2";
+import type { IAnimal } from "../../@types/animal";
 import "./animalsListPage.scss";
 import "../../styles/commun.scss";
 

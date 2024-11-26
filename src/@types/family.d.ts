@@ -20,7 +20,7 @@ export interface IUser {
     number_of_children: number | null;
     phone: string;
     postal_code: string;
-    profile_photo: string;
+    profile_photo?: file |string | null;
   };
 }
 
@@ -37,8 +37,7 @@ export interface IFamily {
   number_of_animals: number | undefined;
   garden: boolean | undefined;
   description: string | undefined;
-  profile_photo: string | undefined;
-  profile_file: File | undefined;
+  profile_photo?: File | string | null;
   id_user: number;
   created_at?: string;
   updated_at?: string;
@@ -48,14 +47,14 @@ export interface IFamily {
 
 // Représente les données d'une famille sous forme de formulaire.
 export interface IFamilyForm {
-  address: string | null | undefined;
-  city: string | null | undefined;
-  postal_code: string | null | undefined;
-  phone: string | null | undefined;
-  number_of_children: number | null | undefined;
-  number_of_animals: number | null | undefined;
-  garden: boolean | null | undefined;
-  description: string | null | undefined;
-  profile_photo: string | null | undefined;
-  user: Partial<IUser> | null; // Utilisé pour indiquer que l'utilisateur est optionnel
+  address?: string | null | undefined;
+  city?: string | null | undefined;
+  postal_code?: string | null | undefined;
+  phone?: string | null | undefined;
+  number_of_children?: number | null | undefined;
+  number_of_animals?: number | null | undefined;
+  garden?: boolean | null | undefined;
+  description?: string | null | undefined;
+  profile_photo?: File | string | null ;
+  user?: Partial<IUser> | null; // Utilisé pour indiquer que l'utilisateur est optionnel
 }

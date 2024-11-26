@@ -1,21 +1,15 @@
-// src/pages/espaceAssociation/profil.tsx
-
 import React, { useEffect, useState, useContext } from "react";
 import "./profilePageFamily.scss"; // Importation du SCSS spécifique à la page Profil
-import fileToDataUrl from "../../utils/fileToDataUrl";
+import fileToDataUrl from "../../utils/fileToDataUrl"; // Fonction utilitaire pour convertir l'image en Data URL
 import type { IFamily, IFamilyForm } from "../../@types/family";
 import { GetFamilyById, PatchFamily } from "../../api/family.api";
 import AuthContext from "../../contexts/authContext";
 
 function FamilyProfile() {
-  // Récupération du contexte utilisateur
   const { user, token } = useContext(AuthContext) || {};
-
-  // States pour gérer les données de la famille et le formulaire
   const [familyData, setFamilyData] = useState<IFamily | null>(null);
   const [formData, setFormData] = useState<IFamilyForm | null>(null);
 
-  // ID de la famille lié à l'utilisateur connecté
   const familyId = user?.id_family;
 
   useEffect(() => {
@@ -24,14 +18,12 @@ function FamilyProfile() {
       return;
     }
 
-    // Fonction asynchrone pour récupérer les données de la famille
     const fetchFamilyData = async () => {
       try {
         const response = await GetFamilyById(Number(familyId), token);
+        console.log("Données de la famille récupérées :", response);
 
-        // Extraction des données nécessaires depuis la réponse API
         const {
-          profile_file,
           id_user,
           address,
           city,
@@ -41,28 +33,26 @@ function FamilyProfile() {
           number_of_children,
           phone,
           postal_code,
-          profile_photo,
+          profile_photo, // URL de la photo de profil
           user: { email, firstname, lastname },
         } = response;
 
         const familyData: IFamily = {
-          profile_file,
           id_user,
           address,
           city,
           description: description || "",
-          garden: garden || false, // valeur par défaut pour garden
-          number_of_animals: number_of_animals || 0, // valeur par défaut pour number_of_animals
-          number_of_children: number_of_children || 0, // valeur par défaut pour number_of_children
+          garden: garden || false,
+          number_of_animals: number_of_animals || 0,
+          number_of_children: number_of_children || 0,
           phone,
           postal_code,
-          profile_photo,
+          profile_photo, // Sauvegarde de l'URL de la photo
           user: { email, firstname, lastname },
         };
-        
+
         setFamilyData(familyData);
         setFormData(familyData);
-        
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       }
@@ -71,46 +61,91 @@ function FamilyProfile() {
     fetchFamilyData();
   }, [familyId, token]);
 
-  // Gestion des modifications d'image
-  const previewImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Gestion de la prévisualisation de l'image
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
-
-    try {
-      const dataUrl = await fileToDataUrl(file);
-      setFormData(
-        (prevData) =>
-          ({
-            ...prevData,
-            profile_photo: dataUrl,
-          } as IFamilyForm)
-      );
-    } catch (error) {
-      console.error("Erreur lors de la prévisualisation de l'image :", error);
+    if (file) {
+      setFormData({
+        ...formData,
+        profile_photo: file, // Sauvegarde le fichier sélectionné dans le state
+      });
     }
   };
 
-  // Gestion de la soumission du formulaire
+  //! Fonction pour prévisualiser l'image et gérer le cas où il s'agit d'une URL
+  async function previewImage(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Si un fichier est sélectionné, convertissons-le en Data URL pour la prévisualisation
+    const dataUrl = await fileToDataUrl(file);
+
+    // Mettez à jour l'état du formulaire avec l'URL temporaire de l'image en prévisualisation
+    setFormData((prevData) => ({
+      ...prevData,
+      profile_photo: dataUrl, // Mettre à jour avec le Data URL pour la prévisualisation
+    }));
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!familyId || !formData || !token) return;
+
+    if (!formData?.profile_photo) {
+      console.log("Erreur : profile_photo est vide");
+      return;
+    }
+
+    let imageUrl: string | File = formData.profile_photo;
+
+    // Si c'est un fichier, vous devrez le télécharger sur un serveur ou un service comme Cloudinary
+    if (formData.profile_photo instanceof File) {
+      // Exemple d'appel à un service Cloudinary ou à votre backend pour télécharger l'image
+      const formDataForUpload = new FormData();
+      formDataForUpload.append("file", formData.profile_photo);
+      formDataForUpload.append("upload_preset", "your_upload_preset"); // Si vous utilisez Cloudinary
+
+      try {
+        const uploadResponse = await fetch(
+          "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
+          {
+            method: "POST",
+            body: formDataForUpload,
+          }
+        );
+
+        const uploadData = await uploadResponse.json();
+        imageUrl = uploadData.secure_url; // URL retournée par Cloudinary
+      } catch (error) {
+        console.error("Erreur lors de l'upload de l'image", error);
+        return;
+      }
+    }
+
+    const updatedData = {
+      ...formData,
+      profile_photo: imageUrl, // Met à jour l'URL de la photo dans les données à envoyer
+    };
+
+    console.log("Données envoyées au backend : ", updatedData);
 
     try {
-      const response = await PatchFamily(Number(familyId), formData, token);
-      console.log("Données mises à jour :", response);
+      const response = await PatchFamily(
+        Number(familyId),
+        updatedData,
+        token || ""
+      );
+      console.log("Données mises à jour avec succès :", response);
     } catch (error) {
       console.error("Erreur lors de la mise à jour des données :", error);
     }
   };
 
-  // Réinitialisation du formulaire
   const handleReset = () => {
     if (familyData) {
       setFormData({ ...familyData });
     }
   };
 
-  // Si l'utilisateur n'est pas connecté ou aucune donnée de famille n'est chargée
   if (!user)
     return <div>Veuillez vous connecter pour accéder à cette page.</div>;
   if (!familyData) return <div>Chargement des données...</div>;
@@ -123,19 +158,39 @@ function FamilyProfile() {
       <div className="infoBody">
         <form className="forms" onSubmit={handleSubmit} onReset={handleReset}>
           {/* Photo de profil */}
-          <div className="profileImgWrap">
-            <img src={formData?.profile_photo || ""} alt="Photo de profil" />
-          </div>
-          <div className="profileImgBtns">
-            <label className="profilImgBtn" htmlFor="profile_photo">
-              Choisir une photo
-            </label>
-            <input
-              type="file"
-              id="profile_photo"
-              accept="image/*"
-              onChange={previewImage}
-            />
+          <div>
+            <div className="profileImgWrap">
+              {/* Affichage de l'image de profil avec la logique de prévisualisation */}
+              <img
+                src={
+                  typeof formData?.profile_photo === "string" &&
+                  formData.profile_photo.startsWith("http")
+                    ? formData.profile_photo // Si c'est une URL complète
+                    : formData?.profile_photo instanceof File
+                    ? URL.createObjectURL(formData.profile_photo) // Si c'est un fichier, générer une URL temporaire pour la prévisualisation
+                    : `${import.meta.env.VITE_STATIC_URL}${
+                        formData?.profile_photo
+                      }` // Sinon, on concatène l'URL de base pour l'image locale
+                }
+                alt="Family Profile"
+                className="family-photo"
+              />
+            </div>
+
+            <div className="profileImgBtns">
+              <div className="profileImgUploadBtn">
+                <label className="profilImgBtn" htmlFor="profile_photo">
+                  Choisir une photo
+                </label>
+                <input
+                  type="file"
+                  id="profile_photo"
+                  name="profile_photo"
+                  accept="image/*" // Limite les types de fichiers acceptés aux images
+                  onChange={previewImage} // Gérer la prévisualisation de l'image
+                />
+              </div>
+            </div>
           </div>
 
           {/* Champs du formulaire */}
@@ -151,13 +206,10 @@ function FamilyProfile() {
                 id="lastName"
                 value={formData?.user?.lastname || ""}
                 onChange={(e) =>
-                  setFormData(
-                    (prevData) =>
-                      ({
-                        ...prevData,
-                        user: { ...prevData?.user, lastname: e.target.value },
-                      } as IFamilyForm)
-                  )
+                  setFormData({
+                    ...formData,
+                    user: { ...formData?.user, lastname: e.target.value },
+                  })
                 }
               />
             </div>
@@ -173,20 +225,17 @@ function FamilyProfile() {
                 id="firstname"
                 value={formData?.user?.firstname || ""}
                 onChange={(e) =>
-                  setFormData(
-                    (prevData) =>
-                      ({
-                        ...prevData,
-                        user: { ...prevData?.user, firstname: e.target.value },
-                      } as IFamilyForm)
-                  )
+                  setFormData({
+                    ...formData,
+                    user: { ...formData?.user, firstname: e.target.value },
+                  })
                 }
               />
             </div>
           </div>
 
+          {/* Autres champs de formulaire */}
           <div className="fieldsWrap">
-            {/* Adresse */}
             <div className="infoFieldContainer">
               <label className="infoLabel" htmlFor="address">
                 Adresse
@@ -197,18 +246,14 @@ function FamilyProfile() {
                 id="address"
                 value={formData?.address || ""}
                 onChange={(e) =>
-                  setFormData(
-                    (prevData) =>
-                      ({
-                        ...prevData,
-                        address: e.target.value,
-                      } as IFamilyForm)
-                  )
+                  setFormData({
+                    ...formData,
+                    address: e.target.value,
+                  })
                 }
               />
             </div>
 
-            {/* Code Postal */}
             <div className="infoFieldContainer">
               <label className="infoLabel" htmlFor="postal_code">
                 Code Postal
@@ -219,134 +264,34 @@ function FamilyProfile() {
                 id="postal_code"
                 value={formData?.postal_code || ""}
                 onChange={(e) =>
-                  setFormData(
-                    (prevData) =>
-                      ({
-                        ...prevData,
-                        postal_code: e.target.value,
-                      } as IFamilyForm)
-                  )
+                  setFormData({
+                    ...formData,
+                    postal_code: e.target.value,
+                  })
                 }
               />
             </div>
 
-            {/* city */}
-            <div className="fieldsWrap">
-              <div className="infoFieldContainer">
-                <label className="infoLabel" htmlFor="city">
-                  Ville
-                </label>
-                <input
-                  className="infoInput"
-                  type="text"
-                  id="city"
-                  value={formData?.city || ""}
-                  onChange={(e) =>
-                    setFormData(
-                      (prevData) =>
-                        ({
-                          ...prevData,
-                          city: e.target.value,
-                        } as IFamilyForm)
-                    )
-                  }
-                />
-              </div>
-            </div>
-
-            {/* Nombre d'enfants */}
             <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="number_of_children">
-                Nombre d'enfants
-              </label>
-              <input
-                className="infoInput"
-                type="number"
-                id="number_of_children"
-                value={formData?.number_of_children || ""}
-                onChange={(e) =>
-                  setFormData(
-                    (prevData) =>
-                      ({
-                        ...prevData,
-                        number_of_children: parseInt(e.target.value, 10) || 0,
-                      } as IFamilyForm)
-                  )
-                }
-              />
-            </div>
-
-            {/* Nombre d'animaux */}
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="number_of_animals">
-                Nombre d'animaux
-              </label>
-              <input
-                className="infoInput"
-                type="number"
-                id="number_of_animals"
-                value={formData?.number_of_animals || ""}
-                onChange={(e) =>
-                  setFormData(
-                    (prevData) =>
-                      ({
-                        ...prevData,
-                        number_of_animals: parseInt(e.target.value, 10) || 0,
-                      } as IFamilyForm)
-                  )
-                }
-              />
-            </div>
-          </div>
-
-          {/* garden */}
-          <div className="fieldsWrap">
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="garden">
-                Jardin
-              </label>
-              <input
-                className="infoInput"
-                type="checkbox"
-                id="garden"
-                checked={formData?.garden || false}
-                onChange={(e) =>
-                  setFormData(
-                    (prevData) =>
-                      ({
-                        ...prevData,
-                        garden: e.target.checked,
-                      } as IFamilyForm)
-                  )
-                }
-              />
-            </div>
-          </div>
-
- 
-          {/*  phone */}
-          <div className="fieldsWrap">
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="phone">
-                Téléphone
+              <label className="infoLabel" htmlFor="city">
+                Ville
               </label>
               <input
                 className="infoInput"
                 type="text"
-                id="phone"
-                value={formData?.phone || ""}
+                id="city"
+                value={formData?.city || ""}
                 onChange={(e) =>
-                  setFormData(
-                    (prevData) =>
-                      ({
-                        ...prevData,
-                        phone: e.target.value,
-                      } as IFamilyForm)
-                  )
+                  setFormData({
+                    ...formData,
+                    city: e.target.value,
+                  })
                 }
               />
             </div>
           </div>
+
+          {/* Boutons */}
           <div className="formBtnsWrap">
             <button type="reset">Réinitialiser</button>
             <button type="submit">Sauvegarder</button>
