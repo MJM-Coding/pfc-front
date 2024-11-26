@@ -17,8 +17,6 @@ function FamilyProfile() {
       console.log("Aucun familyId ou token trouvé !");
       return;
     }
-  
-
 
     const fetchFamilyData = async () => {
       try {
@@ -63,36 +61,21 @@ function FamilyProfile() {
   
     fetchFamilyData();
   }, [familyId, token]);
-  
 
+  //! Fonction pour prévisualiser l'image et gérer le cas où il s'agit d'une URL
+  async function previewImage(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-// Gestion de la prévisualisation de l'image
-const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    setFormData({
-      ...formData,
-      profile_photo: file, // Sauvegarde le fichier sélectionné dans le state
-    });
+    // Si un fichier est sélectionné, convertissons-le en Data URL pour la prévisualisation
+    const dataUrl = await fileToDataUrl(file);
+
+    // Mettez à jour l'état du formulaire avec l'URL temporaire de l'image en prévisualisation
+    setFormData((prevData) => ({
+      ...prevData,
+      profile_photo: dataUrl, // Mettre à jour avec le Data URL pour la prévisualisation
+    }));
   }
-};
-
- //! Fonction pour prévisualiser l'image et gérer le cas où il s'agit d'une URL
- async function previewImage(event: React.ChangeEvent<HTMLInputElement>) {
-  const file = event.target.files?.[0];
-  if (!file) return;
-
-  // Si un fichier est sélectionné, convertissons-le en Data URL pour la prévisualisation
-  const dataUrl = await fileToDataUrl(file);
-
-  // Mettez à jour l'état du formulaire avec l'URL temporaire de l'image en prévisualisation
-  setFormData((prevData) => ({
-    ...prevData,
-    profile_photo: dataUrl, // Mettre à jour avec le Data URL pour la prévisualisation
-  }));
-}
-
-
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -114,10 +97,7 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         lastname: formData?.user?.lastname || ''
       }
     };
-    
-    
 
-    
     try {
       const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string);
       console.log("Mise à jour réussie:", updatedFamily);
@@ -129,8 +109,6 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       alert("Erreur lors de la mise à jour des données.");
     }
   };
-  
-  
 
   const handleReset = () => {
     if (familyData) {
@@ -145,30 +123,27 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
   return (
     <section className="infoSection">
-    <div className="infoTitle">
-      <h3>Informations Personnelles</h3>
-    </div>
-    <div className="infoBody">
-      <form className="forms" onSubmit={handleSubmit} onReset={handleReset}>
-        {/* Photo de profil */}
-        <div>
-          <div className="profileImgWrap">
-            {/* Affichage de l'image de profil avec la logique de prévisualisation */}
-            <img
-              src={
-                typeof formData?.profile_photo === "string" &&
-                formData.profile_photo.startsWith("http")
-                  ? formData.profile_photo // Si c'est une URL complète
-                  : typeof formData?.profile_photo === "object"
-                  ? URL.createObjectURL(formData.profile_photo) // Si c'est un fichier, générer une URL temporaire pour la prévisualisation
-                  : `${import.meta.env.VITE_STATIC_URL}${
-                      formData?.profile_photo
-                    }` // Sinon, on concatène l'URL de base pour l'image locale
-              }
-              alt="Family Profile"
-              className="family-photo"
-            />
-          </div>
+      <div className="infoTitle">
+        <h3>Informations Personnelles</h3>
+      </div>
+      <div className="infoBody">
+        <form className="forms" onSubmit={handleSubmit} onReset={handleReset}>
+          {/* Photo de profil */}
+          <div>
+            <div className="profileImgWrap">
+              <img
+                src={
+                  typeof formData?.profile_photo === "string" &&
+                  formData.profile_photo.startsWith("http")
+                    ? formData.profile_photo // Si c'est une URL complète
+                    : formData?.profile_photo !== null && typeof formData?.profile_photo === "object"
+                      ? URL.createObjectURL(formData.profile_photo) // Si c'est un fichier, générer une URL temporaire pour la prévisualisation
+                      : `${import.meta.env.VITE_STATIC_URL}${formData?.profile_photo}` // Sinon, on concatène l'URL de base pour l'image locale
+                }
+                alt="Family Profile"
+                className="family-photo"
+              />
+            </div>
 
             <div className="profileImgBtns">
               <div className="profileImgUploadBtn">
@@ -180,7 +155,7 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                   id="profile_photo"
                   name="profile_photo"
                   accept="image/*"
-                  onChange={handleImageChange} // Gérer l'upload de l'image
+                  onChange={previewImage} // Gérer l'upload de l'image
                 />
               </div>
             </div>
@@ -188,11 +163,9 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
           {/* Champs du formulaire */}
           <div className="fieldsWrap">
+            {/* Nom */}
             <div className="infoFieldContainer row">
-              {/* lastname */}
-              <label className="infoLabel" htmlFor="lastName">
-                Nom
-              </label>
+              <label className="infoLabel" htmlFor="lastName">Nom</label>
               <input
                 className="infoInput"
                 type="text"
@@ -207,11 +180,9 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
               />
             </div>
 
-            {/* firstname */}
+            {/* Prénom */}
             <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="firstname">
-                Prénom
-              </label>
+              <label className="infoLabel" htmlFor="firstname">Prénom</label>
               <input
                 className="infoInput"
                 type="text"
@@ -226,11 +197,9 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
               />
             </div>
 
-            {/* phone */}
+            {/* Téléphone */}
             <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="phone">
-                Téléphone
-              </label>
+              <label className="infoLabel" htmlFor="phone">Téléphone</label>
               <input
                 className="infoInput"
                 type="tel"
@@ -244,13 +213,132 @@ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 }
               />
             </div>
+
+            {/* Adresse */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="address">Adresse</label>
+              <input
+                className="infoInput"
+                type="text"
+                id="address"
+                value={formData?.address || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    address: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            {/* Ville */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="city">Ville</label>
+              <input
+                className="infoInput"
+                type="text"
+                id="city"
+                value={formData?.city || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    city: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            {/* Code postal */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="postal_code">Code Postal</label>
+              <input
+                className="infoInput"
+                type="text"
+                id="postal_code"
+                value={formData?.postal_code || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    postal_code: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            {/* Description */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="description">Description</label>
+              <textarea
+                className="infoTextArea"
+                id="description"
+                value={formData?.description || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            {/* Nombre d'animaux */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="number_of_animals">Nombre d'animaux</label>
+              <input
+                className="infoInput"
+                type="number"
+                id="number_of_animals"
+                value={formData?.number_of_animals || 0}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    number_of_animals: Number(e.target.value),
+                  })
+                }
+              />
+            </div>
+
+            {/* Nombre d'enfants */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="number_of_children">Nombre d'enfants</label>
+              <input
+                className="infoInput"
+                type="number"
+                id="number_of_children"
+                value={formData?.number_of_children || 0}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    number_of_children: Number(e.target.value),
+                  })
+                }
+              />
+            </div>
+
+            {/* Jardin */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="garden">Jardin</label>
+              <input
+                className="infoInput"
+                type="checkbox"
+                id="garden"
+                checked={formData?.garden || false}
+                onChange={() =>
+                  setFormData({
+                    ...formData,
+                    garden: !formData?.garden,
+                  })
+                }
+              />
+            </div>
           </div>
-          <div className="formFooter">
-            <button type="submit" className="submitBtn">
-              Enregistrer
+
+          <div className="formBtns">
+            <button type="submit" className="infoSubmitBtn">
+              Sauvegarder
             </button>
-            <button type="reset" className="resetBtn">
-              Annuler
+            <button type="reset" className="infoResetBtn">
+              Réinitialiser
             </button>
           </div>
         </form>

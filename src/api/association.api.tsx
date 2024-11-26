@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
 import { IAssociation } from "../@types/association";
-import { IAnimal } from "../@types/vieuxtypes/animal2"; // Assurez-vous d'avoir défini ce type
+import { IAnimal } from "../@types//animal"; // Assurez-vous d'avoir défini ce type
  import { IUser } from "../@types/user";  
 
 /**
