@@ -9,7 +9,7 @@ function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {};
   const [familyData, setFamilyData] = useState<IFamily | null>(null);
   const [formData, setFormData] = useState<IFamilyForm | null>(null);
-
+  const [imageUrl, setImageUrl] = useState<string | null>(null); // Nouveau champ pour l'URL de l'image
   const familyId = user?.id_family;
 
   useEffect(() => {
@@ -17,12 +17,14 @@ function FamilyProfile() {
       console.log("Aucun familyId ou token trouvé !");
       return;
     }
+  
+
 
     const fetchFamilyData = async () => {
       try {
         const response = await GetFamilyById(Number(familyId), token);
         console.log("Données de la famille récupérées :", response);
-
+  
         const {
           id_user,
           address,
@@ -36,7 +38,7 @@ function FamilyProfile() {
           profile_photo, // URL de la photo de profil
           user: { email, firstname, lastname },
         } = response;
-
+  
         const familyData: IFamily = {
           id_user,
           address,
@@ -50,99 +52,90 @@ function FamilyProfile() {
           profile_photo, // Sauvegarde de l'URL de la photo
           user: { email, firstname, lastname },
         };
-
-        setFamilyData(familyData);
+  
+        setFamilyData(familyData); // Mise à jour de l'état de familyData
         setFormData(familyData);
+        setImageUrl(profile_photo || null); // Met à jour l'URL de l'image de profil initiale
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       }
     };
-
+  
     fetchFamilyData();
   }, [familyId, token]);
+  
 
-  // Gestion de la prévisualisation de l'image
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setFormData({
-        ...formData,
-        profile_photo: file, // Sauvegarde le fichier sélectionné dans le state
-      });
-    }
-  };
 
-  //! Fonction pour prévisualiser l'image et gérer le cas où il s'agit d'une URL
-  async function previewImage(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Si un fichier est sélectionné, convertissons-le en Data URL pour la prévisualisation
-    const dataUrl = await fileToDataUrl(file);
-
-    // Mettez à jour l'état du formulaire avec l'URL temporaire de l'image en prévisualisation
-    setFormData((prevData) => ({
-      ...prevData,
-      profile_photo: dataUrl, // Mettre à jour avec le Data URL pour la prévisualisation
-    }));
+// Gestion de la prévisualisation de l'image
+const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    setFormData({
+      ...formData,
+      profile_photo: file, // Sauvegarde le fichier sélectionné dans le state
+    });
   }
+};
+
+ //! Fonction pour prévisualiser l'image et gérer le cas où il s'agit d'une URL
+ async function previewImage(event: React.ChangeEvent<HTMLInputElement>) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  // Si un fichier est sélectionné, convertissons-le en Data URL pour la prévisualisation
+  const dataUrl = await fileToDataUrl(file);
+
+  // Mettez à jour l'état du formulaire avec l'URL temporaire de l'image en prévisualisation
+  setFormData((prevData) => ({
+    ...prevData,
+    profile_photo: dataUrl, // Mettre à jour avec le Data URL pour la prévisualisation
+  }));
+}
+
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!formData?.profile_photo) {
-      console.log("Erreur : profile_photo est vide");
-      return;
-    }
-
-    let imageUrl: string | File = formData.profile_photo;
-
-    // Si c'est un fichier, vous devrez le télécharger sur un serveur ou un service comme Cloudinary
-    if (formData.profile_photo instanceof File) {
-      // Exemple d'appel à un service Cloudinary ou à votre backend pour télécharger l'image
-      const formDataForUpload = new FormData();
-      formDataForUpload.append("file", formData.profile_photo);
-      formDataForUpload.append("upload_preset", "your_upload_preset"); // Si vous utilisez Cloudinary
-
-      try {
-        const uploadResponse = await fetch(
-          "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
-          {
-            method: "POST",
-            body: formDataForUpload,
-          }
-        );
-
-        const uploadData = await uploadResponse.json();
-        imageUrl = uploadData.secure_url; // URL retournée par Cloudinary
-      } catch (error) {
-        console.error("Erreur lors de l'upload de l'image", error);
-        return;
-      }
-    }
-
-    const updatedData = {
-      ...formData,
+  
+    const updatedFamilyData: Partial<IFamily> = {
+      address: formData?.address || '',
+      city: formData?.city || '',
+      description: formData?.description || '',
+      garden: formData?.garden || false,
+      number_of_animals: formData?.number_of_animals || 0,
+      number_of_children: formData?.number_of_children || 0,
+      phone: formData?.phone || '',
+      postal_code: formData?.postal_code || '',
       profile_photo: imageUrl, // Met à jour l'URL de la photo dans les données à envoyer
+      ...(imageUrl && { profile_photo: imageUrl }),  // Assure-toi que `imageUrl` est bien passé
+      user: {
+        email: formData?.user?.email || '',
+        firstname: formData?.user?.firstname || '',
+        lastname: formData?.user?.lastname || ''
+      }
     };
+    
+    
 
-    console.log("Données envoyées au backend : ", updatedData);
-
+    
     try {
-      const response = await PatchFamily(
-        Number(familyId),
-        updatedData,
-        token || ""
-      );
-      console.log("Données mises à jour avec succès :", response);
+      const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string);
+      console.log("Mise à jour réussie:", updatedFamily);
+  
+      setFamilyData(updatedFamily);
+      setImageUrl(updatedFamily.profile_photo || null);
     } catch (error) {
-      console.error("Erreur lors de la mise à jour des données :", error);
+      console.error("Erreur lors de la mise à jour:", error);
+      alert("Erreur lors de la mise à jour des données.");
     }
   };
+  
+  
 
   const handleReset = () => {
     if (familyData) {
       setFormData({ ...familyData });
+      setImageUrl(familyData.profile_photo || null); // Réinitialiser l'URL de l'image
     }
   };
 
@@ -152,30 +145,30 @@ function FamilyProfile() {
 
   return (
     <section className="infoSection">
-      <div className="infoTitle">
-        <h3>Informations Personnelles</h3>
-      </div>
-      <div className="infoBody">
-        <form className="forms" onSubmit={handleSubmit} onReset={handleReset}>
-          {/* Photo de profil */}
-          <div>
-            <div className="profileImgWrap">
-              {/* Affichage de l'image de profil avec la logique de prévisualisation */}
-              <img
-                src={
-                  typeof formData?.profile_photo === "string" &&
-                  formData.profile_photo.startsWith("http")
-                    ? formData.profile_photo // Si c'est une URL complète
-                    : formData?.profile_photo instanceof File
-                    ? URL.createObjectURL(formData.profile_photo) // Si c'est un fichier, générer une URL temporaire pour la prévisualisation
-                    : `${import.meta.env.VITE_STATIC_URL}${
-                        formData?.profile_photo
-                      }` // Sinon, on concatène l'URL de base pour l'image locale
-                }
-                alt="Family Profile"
-                className="family-photo"
-              />
-            </div>
+    <div className="infoTitle">
+      <h3>Informations Personnelles</h3>
+    </div>
+    <div className="infoBody">
+      <form className="forms" onSubmit={handleSubmit} onReset={handleReset}>
+        {/* Photo de profil */}
+        <div>
+          <div className="profileImgWrap">
+            {/* Affichage de l'image de profil avec la logique de prévisualisation */}
+            <img
+              src={
+                typeof formData?.profile_photo === "string" &&
+                formData.profile_photo.startsWith("http")
+                  ? formData.profile_photo // Si c'est une URL complète
+                  : typeof formData?.profile_photo === "object"
+                  ? URL.createObjectURL(formData.profile_photo) // Si c'est un fichier, générer une URL temporaire pour la prévisualisation
+                  : `${import.meta.env.VITE_STATIC_URL}${
+                      formData?.profile_photo
+                    }` // Sinon, on concatène l'URL de base pour l'image locale
+              }
+              alt="Family Profile"
+              className="family-photo"
+            />
+          </div>
 
             <div className="profileImgBtns">
               <div className="profileImgUploadBtn">
@@ -186,8 +179,8 @@ function FamilyProfile() {
                   type="file"
                   id="profile_photo"
                   name="profile_photo"
-                  accept="image/*" // Limite les types de fichiers acceptés aux images
-                  onChange={previewImage} // Gérer la prévisualisation de l'image
+                  accept="image/*"
+                  onChange={handleImageChange} // Gérer l'upload de l'image
                 />
               </div>
             </div>
@@ -232,69 +225,33 @@ function FamilyProfile() {
                 }
               />
             </div>
-          </div>
 
-          {/* Autres champs de formulaire */}
-          <div className="fieldsWrap">
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="address">
-                Adresse
+            {/* phone */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="phone">
+                Téléphone
               </label>
               <input
                 className="infoInput"
-                type="text"
-                id="address"
-                value={formData?.address || ""}
+                type="tel"
+                id="phone"
+                value={formData?.phone || ""}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    address: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="postal_code">
-                Code Postal
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="postal_code"
-                value={formData?.postal_code || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    postal_code: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="city">
-                Ville
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="city"
-                value={formData?.city || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    city: e.target.value,
+                    phone: e.target.value,
                   })
                 }
               />
             </div>
           </div>
-
-          {/* Boutons */}
-          <div className="formBtnsWrap">
-            <button type="reset">Réinitialiser</button>
-            <button type="submit">Sauvegarder</button>
+          <div className="formFooter">
+            <button type="submit" className="submitBtn">
+              Enregistrer
+            </button>
+            <button type="reset" className="resetBtn">
+              Annuler
+            </button>
           </div>
         </form>
       </div>

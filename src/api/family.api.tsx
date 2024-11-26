@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import { IFamily } from "../@types/vieuxtypes/family"; 
+import { IFamily } from "../@types/family"; 
 
 
 /**
@@ -52,7 +52,10 @@ export const PatchFamily = async (
 ): Promise<IFamily> => {
   try {
     const response = await api.patch<IFamily>(`/family/${id}`, familyData, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json', // Indique que nous envoyons des données JSON
+      },
     });
     return response.data;
   } catch (error) {
