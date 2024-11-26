@@ -57,9 +57,12 @@ const ModalLogin: React.FC<IModalLogin> = ({ show, onClose, login }) => {
       
       // Enregistrement de l'ID de l'utilisateur dans localStorage
       if (user && user.id) {
-        localStorage.setItem('userId', user.id.toString()); // Enregistrer l'ID de l'utilisateur dans le localStorage
-      }
-
+        localStorage.setItem('userId', user.id.toString()); // Enregistrer l'ID de l'utilisateur
+        if (user.id_association) {
+            localStorage.setItem('id_association', user.id_association.toString()); // Enregistrer l'ID d'association
+        }
+    }
+    console.log('Données utilisateur après connexion :', { token, user });
       navigate("/"); // On redirige vers la page d'accueil
     } else {
       setError("Nom d'utilisateur ou mot de passe incorrect");

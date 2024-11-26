@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
 import { IAssociation } from "../@types/association";
 import { IAnimal } from "../@types/vieuxtypes/animal2"; // Assurez-vous d'avoir défini ce type
-/* import { IAsk } from "../@types/ask";  */
+ import { IUser } from "../@types/user";  
 
 /**
  *! Récupère la liste de toutes les associations.
@@ -23,6 +23,32 @@ export const GetAllAssociations = async (token: string): Promise<IAssociation[]>
   }
 };
 
+//! Récupérer à la fois l'utilisateur et l'association
+export const GetUserAndAssociationById = async (
+  userId: string,
+  token: string
+): Promise<{ user: IUser; association: IAssociation }> => {
+  try {
+    const userResponse: AxiosResponse<IUser> = await api.get(`/user/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const associationResponse: AxiosResponse<IAssociation> = await api.get(
+      `/association/user/${userId}`, // Supposons qu'il existe un endpoint pour récupérer l'association d'un utilisateur.
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    return {
+      user: userResponse.data,
+      association: associationResponse.data,
+    };
+  } catch (error) {
+    handleApiError(error, `la récupération du profil de l'utilisateur avec l'ID ${userId}`);
+    throw error;
+  }
+};
 /**
  *! Récupère une association spécifique par son ID.
  ** Cette fonction est accessible publiquement.
@@ -56,23 +82,28 @@ export const GetAllAssociations = async (token: string): Promise<IAssociation[]>
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec l'objet IAssociation modifié.
  */
-export const UpdateAssociation = async (
+ export const UpdateAssociation = async (
   id: string,
-  associationData: Partial<IAssociation>,
+  data: Partial<IAssociation>, // Permet des mises à jour partielles
   token: string
 ): Promise<IAssociation> => {
   try {
+    // Envoi de la requête PATCH à l'API
     const response: AxiosResponse<IAssociation> = await api.patch(
       `/association/${id}`,
-      associationData,
+      data,
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`, // Authentification avec le token
+        },
       }
     );
-    return response.data;
+
+    return response.data; // Retourne les données mises à jour
   } catch (error) {
-    handleApiError(error, `la modification de l'association avec l'ID ${id}`);
-    throw error;
+    // Gestion des erreurs avec un message personnalisé
+    handleApiError(error, `la mise à jour de l'association avec l'ID ${id}`);
+    throw error; // Relance l'erreur pour traitement ultérieur
   }
 };
 

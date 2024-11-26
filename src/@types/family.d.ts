@@ -1,82 +1,59 @@
-// src/@types/family.ts
+// Représente un utilisateur dans l'application.
+export interface IUser {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  role: 'family';
+  id_family: number;
+  created_at: string;
+  updated_at: string;
+  family?: {
+    id: number;
+    address: string;
+    city: string;
+    description: string;
+    garden: false;
+    id_user: number;
+    number_of_animals: number | null;
+    number_of_children: number | null;
+    phone: string;
+    postal_code: string;
+    profile_photo: string;
+  };
+}
 
-import { IUser } from "./user";
-
-
-/**
- *! Interface pour représenter une famille dans le système.
- */
+// Représente les données complètes d'une famille.
 export interface IFamily {
-   id:number; 
-   address:string; 
-   postal_code:string; 
-   city:string; 
-   phone?:string|null; 
-   number_of_children?:number|null; 
-   number_of_animals?:number|null; 
-   garden?:boolean|null; 
-   description?:string|null; 
-   profile_photo?:string|null;
-   profile_file?: File | undefined; // Fichier de profil (optionnel)
-   id_user:number; // ID utilisateur associé à la famille.
-   created_at:Date; 
-   updated_at:Date;
+  id: number;
+  address: string | undefined;
+  city: string | undefined;
+  postal_code: string | undefined;
+  phone: string | undefined;
+  number_of_children: number | undefined;
+  number_of_animals: number | undefined;
+  garden: boolean | undefined;
+  description: string | undefined;
+  profile_photo: string | undefined;
+  profile_file: File | undefined;
+  id_user: number;
+  created_at: string;
+  updated_at: string;
+  animalsFamily: [] | undefined;
+  user:  Partial<IUser>;
 }
 
-/**
- *! Interface pour représenter un utilisateur avec le rôle "family".
- */
-export interface IUserFamily extends IUser {
-   id:number;
-   firstname:string|null|undefined;
-   lastname:string|null|undefined;
-   email:string|null|undefined;
-   password:string; 
-   role:"family"; 
-   id_family:number;
-   family:IFamily;
-
-}
-
-/**
- *! Interface pour les données d'une famille à afficher ou à modifier.
- */
-export interface IFamilyData {
-   id:number;
-   address:string;
-   postal_code:string;
-   city:string;
-   phone?:string|null;
-   number_of_children?:number|null;
-   number_of_animals?:number|null;
-   garden?:boolean|null;
-
-   id_user:number;
-
-   user:{
-       email:string|null|undefined,
-       firstname:string|null|undefined,
-       lastname:string|null|undefined,
-       // Pas besoin d'ajouter id_user ici si déjà présent au niveau principal.
-       id_user:number;// ID unique utilisateur associé à cette famille.
-   };
-}
-
-/**
- *! Interface pour le formulaire d'ajout ou de modification d'une famille.
- */
+// Représente les données d'une famille sous forme de formulaire.
 export interface IFamilyForm {
-   address?:string|null|undefined,
-   postal_code?:string|null|undefined,
-   city?:string|null|undefined,
-   phone?:string|null|undefined,
-   garden?:boolean|null|undefined,
-   description?:string|null|undefined,
-   
-   user?:
-       Partial<IUser> & {
-           email? :string|null|undefined,
-           firstname? :string|null|undefined,
-           lastname? :string|null|undefined,
-       }; 
+  address: string | null | undefined;
+  city: string | null | undefined;
+  postal_code: string | null | undefined;
+  phone: string | null | undefined;
+  number_of_children: number | null | undefined;
+  number_of_animals: number | null | undefined;
+  garden: boolean | null | undefined;
+  description: string | null | undefined;
+  profile_photo: string | null | undefined;
+  user: Partial<IUser> | null; // Utilisé pour indiquer que l'utilisateur est optionnel
 }

@@ -3,16 +3,20 @@ import { IUser, IAuthContext } from "../@types/auth";
 import { refreshToken } from "../api/signin.api"; // Fonction pour rafraîchir le token
 import ModalLogin from "../components/modalLogin/modalLogin"; // Assurez-vous que le chemin est correct
 
+
+
 const AuthContext = createContext<IAuthContext | null>(null);
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isActive, setIsActive] = useState<boolean>(true); // Par défaut, l'utilisateur est actif
+  const [_isActive, setIsActive] = useState<boolean>(true); // Par défaut, l'utilisateur est actif
   const [tokenExpirationTime, setTokenExpirationTime] = useState<number | null>(null);
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
@@ -20,24 +24,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     const storedUser = localStorage.getItem("authUser");
-
+  
     if (storedToken) {
-      setToken(storedToken);
       const expiration = parseInt(localStorage.getItem("tokenExpirationTime") || "0", 10);
-      setTokenExpirationTime(expiration);
+      if (Date.now() < expiration) {
+        setToken(storedToken);
+        setTokenExpirationTime(expiration);
+      } else {
+        console.warn("Token expiré !");
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("tokenExpirationTime");
+      }
     }
-
+  
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
       } catch (error) {
         console.error("Erreur lors du parsing des données utilisateur :", error);
       }
     }
   }, []);
+  
 
   // Détection de l'activité de l'utilisateur
   useEffect(() => {
+    let activityTimeout: NodeJS.Timeout;
     const handleActivity = () => {
       setIsActive(true);
       clearTimeout(activityTimeout);
@@ -49,7 +62,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }, 60 * 60 * 1000); // 1 heure sans activité
     };
 
-    let activityTimeout: NodeJS.Timeout;
     window.addEventListener("scroll", handleActivity);
     window.addEventListener("click", handleActivity);
     window.addEventListener("mousemove", handleActivity);
@@ -65,7 +77,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Rafraîchissement du token avant son expiration
   useEffect(() => {
     const refreshBeforeExpiration = async () => {
-      if (token && isActive && tokenExpirationTime) {
+      if (token && tokenExpirationTime) {
         const currentTime = Date.now();
         const timeLeft = tokenExpirationTime - currentTime;
 
@@ -88,19 +100,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
 
-    if (isActive && token) {
+    if (token && tokenExpirationTime) {
       refreshBeforeExpiration();
       const refreshInterval = setInterval(refreshBeforeExpiration, 60 * 1000); // Vérification chaque minute
 
       return () => clearInterval(refreshInterval);
     }
-  }, [token, isActive, tokenExpirationTime]);
+  }, [token, tokenExpirationTime]);
 
-  // Fonction pour connecter l'utilisateur et stocker ses données
   const login = (newToken: string, userData: IUser) => {
     setToken(newToken);
     setUser(userData);
-
     const expirationTime = Date.now() + 60 * 60 * 1000; // Calcul de l'expiration du token (1 heure)
     setTokenExpirationTime(expirationTime);
 
@@ -111,7 +121,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     console.log("Utilisateur connecté");
   };
 
-  // Fonction pour déconnecter l'utilisateur et effacer ses données
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -124,7 +133,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     console.log("Utilisateur déconnecté");
   };
 
-  // Fonction pour reconnecter l'utilisateur après 1 heure d'inactivité
   const loginAgain = () => {
     setIsActive(true); // Réactive l'utilisateur
     setTokenExpirationTime(Date.now() + 60 * 60 * 1000); // Réinitialise le délai d'expiration du token
@@ -137,7 +145,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     <AuthContext.Provider value={{ user, login, logout, token }}>
       {children}
 
-      {/* Affichage de la modal de login après inactivité ou expiration du token */}
       {showLoginModal && (
         <ModalLogin 
           show={showLoginModal} 
