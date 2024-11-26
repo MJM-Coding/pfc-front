@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./profilePageFamily.scss"; // Importation du SCSS spécifique à la page Profil
 import fileToDataUrl from "../../utils/fileToDataUrl";
-import type {  IFamily, IFamilyForm } from "../../@types/family";
+import type { IFamily, IFamilyForm } from "../../@types/family";
 import { GetFamilyById, PatchFamily } from "../../api/family.api";
 import AuthContext from "../../contexts/authContext";
 
@@ -45,7 +45,7 @@ function FamilyProfile() {
           phone,
           postal_code,
           profile_photo,
-          user: { email, firstname, lastname }
+          user: { email, firstname, lastname },
         } = response;
 
         const familyData: IFamily = {
@@ -64,7 +64,7 @@ function FamilyProfile() {
           postal_code,
           profile_photo,
           user: { email, firstname, lastname },
-          animalsFamily: [] // Ajout si nécessaire
+          animalsFamily: [], // Ajout si nécessaire
         };
 
         setFamilyData(familyData);
@@ -84,10 +84,13 @@ function FamilyProfile() {
 
     try {
       const dataUrl = await fileToDataUrl(file);
-      setFormData((prevData) => ({
-        ...prevData,
-        profile_photo: dataUrl
-      }) as IFamilyForm);
+      setFormData(
+        (prevData) =>
+          ({
+            ...prevData,
+            profile_photo: dataUrl,
+          } as IFamilyForm)
+      );
     } catch (error) {
       console.error("Erreur lors de la prévisualisation de l'image :", error);
     }
@@ -114,7 +117,8 @@ function FamilyProfile() {
   };
 
   // Si l'utilisateur n'est pas connecté ou aucune donnée de famille n'est chargée
-  if (!user) return <div>Veuillez vous connecter pour accéder à cette page.</div>;
+  if (!user)
+    return <div>Veuillez vous connecter pour accéder à cette page.</div>;
   if (!familyData) return <div>Chargement des données...</div>;
 
   return (
@@ -143,6 +147,7 @@ function FamilyProfile() {
           {/* Champs du formulaire */}
           <div className="fieldsWrap">
             <div className="infoFieldContainer row">
+              {/* lastname */}
               <label className="infoLabel" htmlFor="lastName">
                 Nom
               </label>
@@ -152,13 +157,18 @@ function FamilyProfile() {
                 id="lastName"
                 value={formData?.user?.lastname || ""}
                 onChange={(e) =>
-                  setFormData((prevData) => ({
-                    ...prevData,
-                    user: { ...prevData?.user, lastname: e.target.value }
-                  }) as IFamilyForm)
+                  setFormData(
+                    (prevData) =>
+                      ({
+                        ...prevData,
+                        user: { ...prevData?.user, lastname: e.target.value },
+                      } as IFamilyForm)
+                  )
                 }
               />
             </div>
+
+            {/* firstname */}
             <div className="infoFieldContainer row">
               <label className="infoLabel" htmlFor="firstname">
                 Prénom
@@ -169,14 +179,157 @@ function FamilyProfile() {
                 id="firstname"
                 value={formData?.user?.firstname || ""}
                 onChange={(e) =>
-                  setFormData((prevData) => ({
-                    ...prevData,
-                    user: { ...prevData?.user, firstname: e.target.value }
-                  }) as IFamilyForm)
+                  setFormData(
+                    (prevData) =>
+                      ({
+                        ...prevData,
+                        user: { ...prevData?.user, firstname: e.target.value },
+                      } as IFamilyForm)
+                  )
                 }
               />
             </div>
           </div>
+
+          <div className="fieldsWrap">
+            {/* Adresse */}
+            <div className="infoFieldContainer">
+              <label className="infoLabel" htmlFor="address">
+                Adresse
+              </label>
+              <input
+                className="infoInput"
+                type="text"
+                id="address"
+                value={formData?.address || ""}
+                onChange={(e) =>
+                  setFormData(
+                    (prevData) =>
+                      ({
+                        ...prevData,
+                        address: e.target.value,
+                      } as IFamilyForm)
+                  )
+                }
+              />
+            </div>
+
+            {/* Code Postal */}
+            <div className="infoFieldContainer">
+              <label className="infoLabel" htmlFor="postal_code">
+                Code Postal
+              </label>
+              <input
+                className="infoInput"
+                type="text"
+                id="postal_code"
+                value={formData?.postal_code || ""}
+                onChange={(e) =>
+                  setFormData(
+                    (prevData) =>
+                      ({
+                        ...prevData,
+                        postal_code: e.target.value,
+                      } as IFamilyForm)
+                  )
+                }
+              />
+            </div>
+
+            {/* city */}
+            <div className="fieldsWrap">
+              <div className="infoFieldContainer">
+                <label className="infoLabel" htmlFor="city">
+                  Ville
+                </label>
+                <input
+                  className="infoInput"
+                  type="text"
+                  id="city"
+                  value={formData?.city || ""}
+                  onChange={(e) =>
+                    setFormData(
+                      (prevData) =>
+                        ({
+                          ...prevData,
+                          city: e.target.value,
+                        } as IFamilyForm)
+                    )
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Nombre d'enfants */}
+            <div className="infoFieldContainer">
+              <label className="infoLabel" htmlFor="number_of_children">
+                Nombre d'enfants
+              </label>
+              <input
+                className="infoInput"
+                type="number"
+                id="number_of_children"
+                value={formData?.number_of_children || ""}
+                onChange={(e) =>
+                  setFormData(
+                    (prevData) =>
+                      ({
+                        ...prevData,
+                        number_of_children: parseInt(e.target.value, 10) || 0,
+                      } as IFamilyForm)
+                  )
+                }
+              />
+            </div>
+
+            {/* Nombre d'animaux */}
+            <div className="infoFieldContainer">
+              <label className="infoLabel" htmlFor="number_of_animals">
+                Nombre d'animaux
+              </label>
+              <input
+                className="infoInput"
+                type="number"
+                id="number_of_animals"
+                value={formData?.number_of_animals || ""}
+                onChange={(e) =>
+                  setFormData(
+                    (prevData) =>
+                      ({
+                        ...prevData,
+                        number_of_animals: parseInt(e.target.value, 10) || 0,
+                      } as IFamilyForm)
+                  )
+                }
+              />
+            </div>
+          </div>
+
+          {/* garden */}
+          <div className="fieldsWrap">
+            <div className="infoFieldContainer">
+              <label className="infoLabel" htmlFor="garden">
+                Jardin
+              </label>
+              <input
+                className="infoInput"
+                type="checkbox"
+                id="garden"
+                checked={formData?.garden || false}
+                onChange={(e) =>
+                  setFormData(
+                    (prevData) =>
+                      ({
+                        ...prevData,
+                        garden: e.target.checked,
+                      } as IFamilyForm)
+                  )
+                }
+              />
+            </div>
+          </div>
+
+          {/* email */}
           <div className="fieldsWrap">
             <div className="infoFieldContainer">
               <label className="infoLabel" htmlFor="email">
@@ -191,6 +344,8 @@ function FamilyProfile() {
               />
             </div>
           </div>
+
+          {/*  phone */}
           <div className="fieldsWrap">
             <div className="infoFieldContainer">
               <label className="infoLabel" htmlFor="phone">
@@ -202,10 +357,13 @@ function FamilyProfile() {
                 id="phone"
                 value={formData?.phone || ""}
                 onChange={(e) =>
-                  setFormData((prevData) => ({
-                    ...prevData,
-                    phone: e.target.value
-                  }) as IFamilyForm)
+                  setFormData(
+                    (prevData) =>
+                      ({
+                        ...prevData,
+                        phone: e.target.value,
+                      } as IFamilyForm)
+                  )
                 }
               />
             </div>
