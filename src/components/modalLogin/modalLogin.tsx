@@ -45,31 +45,39 @@ const ModalLogin: React.FC<IModalLogin> = ({ show, onClose, login }) => {
     }
 
     //! Appel API pour la connexion
-try {
-  const data = await SigninUser({ email, password });
+  try {
+    const data = await SigninUser({ email, password });
 
-  const { token, user } = data; // On récupère le token et l'utilisateur de la réponse
-  if (token) {
-    // Si un token est présent, la connexion est réussie
-    login(token, user); // On appelle la fonction login passée en prop
-    onClose(); // On ferme la modal
-    resetForm(); // On réinitialise le formulaire
-    navigate("/"); // On redirige vers la page d'accueil
-  } else {
-    setError("Nom d'utilisateur ou mot de passe incorrect");
+    const { token, user } = data; // On récupère le token et l'utilisateur de la réponse
+    if (token) {
+      // Si un token est présent, la connexion est réussie
+      login(token, user); // On appelle la fonction login passée en prop
+      onClose(); // On ferme la modal
+      resetForm(); // On réinitialise le formulaire
+      
+      // Enregistrement de l'ID de l'utilisateur dans localStorage
+      if (user && user.id) {
+        localStorage.setItem('userId', user.id.toString()); // Enregistrer l'ID de l'utilisateur
+        if (user.id_association) {
+            localStorage.setItem('id_association', user.id_association.toString()); // Enregistrer l'ID d'association
+        }
+    }
+    console.log('Données utilisateur après connexion :', { token, user });
+      navigate("/"); // On redirige vers la page d'accueil
+    } else {
+      setError("Nom d'utilisateur ou mot de passe incorrect");
+    }
+  } catch (error: any) {
+    if (error.response) {
+      const apiMessage = error.response.data?.message || "Erreur inconnue.";
+      setError(apiMessage); // On affiche le message renvoyé par l'API
+    } else if (error.request) {
+      setError("Problème réseau. Veuillez réessayer.");
+    } else {
+      setError("Une erreur inattendue s'est produite.");
+    }
   }
-} catch (error: any) {
-  if (error.response) {
-    const apiMessage = error.response.data?.message || "Erreur inconnue.";
-    setError(apiMessage); // On affiche le message renvoyé par l'API
-  } else if (error.request) {
-    setError("Problème réseau. Veuillez réessayer.");
-  } else {
-    setError("Une erreur inattendue s'est produite.");
-  }
-}
 };
-
   const handleRegisterRedirect = () => {
     onClose(); // Ferme la modal après avoir cliqué sur "S'inscrire"
     resetForm(); // Réinitialise le formulaire
@@ -79,6 +87,9 @@ try {
       navigate("/inscription-famille");
     }
   };
+
+  
+  
 
   return (
     <div className="modal">

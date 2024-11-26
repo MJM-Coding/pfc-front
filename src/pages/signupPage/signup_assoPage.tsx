@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import "./signup_asso.scss";
 import { CreateUser } from "../../api/user.api";
-import type { IUserRegistrationAssociation } from "../../@types/vieuxtypes/signupForm";
+import type { IUserRegistrationAssociation } from "../../@types/signupForm";
 import Toast from "../../toast/toast";
 import ModalLogin from "../../components/modalLogin/modalLogin";
 
@@ -189,6 +189,7 @@ const signup_assoPage = () => {
 
   //! Affichage du formulaire d'inscription
   return (
+    <div className="assoPage-container">
     <section className="signup-asso">
       <div className="signup_Header-asso">
         <h1>Inscription association</h1>
@@ -433,6 +434,7 @@ const signup_assoPage = () => {
         />
       )}
     </section>
+    </div>
   );
 };
 

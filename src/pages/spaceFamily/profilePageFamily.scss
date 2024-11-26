@@ -1,0 +1,19 @@
+/* Variables */
+/* $header-bg-color: #262e33; 
+$header-text-color: white; 
+$button-bg-color: #4e8696; 
+$button-hover-color: #88ADB7; 
+$link-actif: #88ADB7;  */
+$bg-color: #536570;
+
+.profilFa-container {
+    width: 100vw;
+    height: 83vh; /* Prend toute la hauteur de la fenêtre */
+    background: $bg-color;
+}
+
+h1 {
+
+    font-size: 2rem;
+    text-align: center;
+}

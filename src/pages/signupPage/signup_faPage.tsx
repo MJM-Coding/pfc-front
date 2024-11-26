@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import "./signup_fa.scss";
 import { CreateUser } from "../../api/user.api";
-import type { IUserRegistrationFamily } from "../../@types/vieuxtypes/signupForm";
+import type { IUserRegistrationFamily } from "../../@types/signupForm";
 import Toast from "../../toast/toast"; // Importation du composant Toast pour afficher des messages
 import ModalLogin from "../../components/modalLogin/modalLogin";
 
@@ -155,6 +155,7 @@ const Signup_faPage = () => {
 
   //! Affichage du formulaire d'inscription
   return (
+    <div className="faPage-container">
     <section className="signup-fa">
       <div className="signup_Header-fa">
         <h1>Inscription famille d'accueil</h1>
@@ -355,6 +356,7 @@ const Signup_faPage = () => {
         />
       )}
     </section>
+    </div>
   );
 };
 

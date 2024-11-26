@@ -6,52 +6,74 @@ import ModalLogin from "../modalLogin/modalLogin";
 import "../../styles/commun.scss";
 import AuthContext from "../../contexts/authContext";
 import type { IUserAssociation } from "../../@types/association";
+import DropdownMenu from "../dopdownMenu/dropdownMenu";
 
 const Header: React.FC = () => {
- 
-  const { user, token, login, logout } = useContext(AuthContext) || {}; // On récupère les valeurs du contexte d'authentification (user, token, login, logout)
-  const [isModalOpen, setIsModalOpen] = useState(false);  // Déclaration de l'état pour contrôler l'affichage du modal de connexion
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);  // Déclaration de l'état pour gérer l'ouverture et la fermeture des menus dropdown
-  const navigate = useNavigate();// Hook pour naviguer entre les pages
+  const { user, token, login, logout } = useContext(AuthContext) || {};
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-  //! Fonction pour ouvrir le modal de connexion
   const openModal = () => setIsModalOpen(true);
-
-  //! Fonction pour fermer le modal de connexion
   const closeModal = () => setIsModalOpen(false);
-
-  //! Si login est défini, on l'utilise. Sinon, on crée une fonction vide pour éviter les erreurs.
-  const safeLogin = login ? login : () => {};
-
-  // Vérification si l'utilisateur est authentifié (en vérifiant que user et token existent)
+  const safeLogin = login || (() => {});
   const isAuthenticated = !!user && !!token;
 
-  //! Fonction pour basculer entre les menus déroulants (dropdown)
-  const toggleDropdown = (dropdownName: string) => {
-    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
-  };
+  console.log("Utilisateur authentifié ?", isAuthenticated);
+  console.log("User:", user);
+  console.log("Token:", token);
 
-  //! Fonction de déconnexion
+  //! Gestion de la déconnexion
   const handleLogout = () => {
     try {
-      // Appel de la fonction logout si elle existe
       logout && logout();
-      // Suppression du token d'authentification du localStorage
       localStorage.removeItem("authToken");
-      // Redirection vers la page d'accueil après la déconnexion
       navigate("/");
-      // Fermeture du menu déroulant après la déconnexion
-      setActiveDropdown(null);
     } catch (error) {
-      //! En cas d'erreur lors de la déconnexion, on l'affiche dans la console
       console.error("Erreur lors de la déconnexion :", error);
     }
   };
 
-  // Affichage des valeurs dans la console pour déboguer
-  console.log("AuthContext values:", { user, token });
+  // Fonction pour générer les liens en fonction du rôle de l'utilisateur
+  // Modifie la fonction getUserLinks pour générer les bons liens
+  const getUserLinks = (role: string | undefined, userId: string | undefined) => {
+    console.log("Rôle de l'utilisateur :", role);
+    console.log("ID utilisateur passé :", userId);
+
+    if (!userId) {
+      console.log("Pas d'ID utilisateur trouvé, retour d'un tableau vide.");
+      return [];  // Si pas d'ID utilisateur, on retourne un tableau vide
+    }
+
+    // On définit les IDs de l'association ou de la famille selon le rôle
+    const associationId = (user?.role === "association" && user?.id_association) || ''; 
+    const familyId = (user?.role === "family" && user?.id_family) || '';
+
+    console.log("ID de l'association :", associationId);
+    console.log("ID de la famille :", familyId);
+    console.log("Objet user complet : ", user);
 
 
+    if (role === "association") {
+      console.log("Génération des liens pour une association");
+      return [
+        { path: `/espace-association/profil-association/${associationId || userId}`, label: "Mon Profil" },
+        { path: "/espace-association/Informations-de-connexion", label: "Informations de connexion" },
+        { path: "/espace-association/animaux", label: "Mes animaux" },
+        { path: "/espace-association/demandes", label: "Demandes d'accueil" },
+      ];
+    } else if (role === "family") {
+      console.log("Génération des liens pour une famille");
+      return [
+        { path: `/espace-famille/profil-famille/${familyId || userId}`, label: "Mon profil" },
+        { path: "/espace-famille/Informations-de-connexion", label: "Informations de connexion" },
+        { path: "/espace-famille/demandes", label: "Mes demandes d'accueil" },
+      ];
+    }
+
+    console.log("Rôle non reconnu, retour d'un tableau vide.");
+    return [];  // Retourne un tableau vide si le rôle ne correspond pas
+  };
 
   return (
     <header className="header">
@@ -64,65 +86,43 @@ const Header: React.FC = () => {
         </div>
 
         <div className="header-links">
-          {/* Lien vers la page d'accueil */}
-          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? "nav-link active-link" : "nav-link"
+            }
+          >
             Accueil
           </NavLink>
-          {/* Lien vers la page des animaux */}
-          <NavLink to="/animaux" className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}>
+          <NavLink
+            to="/animaux"
+            className={({ isActive }) =>
+              isActive ? "nav-link active-link" : "nav-link"
+            }
+          >
             Animaux
           </NavLink>
         </div>
 
         <div className="auth-container">
-          {/* Dropdown pour les utilisateurs de type 'association' */}
-          {isAuthenticated && user?.role === "association" && (
-            <div 
-              className={`dropdown ${activeDropdown === 'association' ? 'active' : ''}`}
-              onMouseEnter={() => toggleDropdown('association')} // Ajoutez cette ligne
-              onMouseLeave={() => toggleDropdown('')} // Ajoutez cette ligne
-            >
-              <button className="dropbtn" onClick={() => toggleDropdown('association')}>
-                <i className="fa-solid fa-house"></i>
-                 {/* récupère le nom de l'association ou le prénom de l'utilisateur sous l'icone de connexion */}
-                <span className="user-firstname">{(user as unknown as IUserAssociation).representative || user.firstname}</span>
-              </button>
-              <div className="dropdown-content">
-                {/* Liens vers les pages spécifiques à l'association */}
-                <Link to="/espace-association/profil">Mon profil</Link>
-                <Link to="/espace-association/informations">Mes informations</Link>
-                <Link to="/espace-association/animaux">Mes animaux</Link>
-                <Link to="/espace-association/demandes">Demandes d'accueil</Link>
-                {/* Bouton de déconnexion pour les utilisateurs de type 'association' */}
-                <button onClick={handleLogout} className="logout-button">Se déconnecter</button>
-              </div>
-            </div>
+          {/* Dropdown pour les utilisateurs authentifiés */}
+          {isAuthenticated && user && (
+            <DropdownMenu
+              label={
+                <>
+                  <i className="fa-solid fa-user"></i>
+                  <span className="user-firstname">
+                    {/* Affiche le nom du représentant ou du prénom */}
+                    {(user?.role === "association" && (user as unknown as IUserAssociation).representative) || user.firstname}
+                  </span>
+                </>
+              }
+              links={getUserLinks(user?.role, user?.id?.toString())}  /* Appel à la fonction pour générer les liens */
+              onLogout={handleLogout}  /* Appel à la fonction de déconnexion */
+            />
           )}
 
-          {/* Dropdown pour les utilisateurs de type 'family' */}
-          {isAuthenticated && user?.role === "family" && (
-            <div 
-              className={`dropdown ${activeDropdown === 'family' ? 'active' : ''}`}
-              onMouseEnter={() => toggleDropdown('family')} // Ajoutez cette ligne
-              onMouseLeave={() => toggleDropdown('')} // Ajoutez cette ligne
-            >
-              <button className="dropbtn" onClick={() => toggleDropdown('family')}>
-              <i className="fa-solid fa-house"></i>
-                {/* récupère le prénom de l'utilisateur sous l'icone de connexion */}
-                <span className="user-firstname">{user.firstname || "Utilisateur"}</span>
-              </button>
-              <div className="dropdown-content">
-                {/* Liens vers les pages spécifiques à la famille */}
-                <Link to="/espace-famille/profil">Mon profil</Link>
-                <Link to="/espace-famille/informations">Mes informations</Link>
-                <Link to="/espace-famille/demandes">Mes demandes d'accueil</Link>
-                {/* Bouton de déconnexion pour les utilisateurs de type 'family' */}
-                <button onClick={handleLogout} className="logout-button">Se déconnecter</button>
-              </div>
-            </div>
-          )}
-
-          {/* Si l'utilisateur n'est pas authentifié, afficher un bouton pour se connecter */}
+          {/* Bouton pour se connecter si l'utilisateur n'est pas authentifié */}
           {!isAuthenticated && (
             <button className="auth-button" onClick={openModal}>
               Connexion / Inscription
@@ -131,7 +131,7 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal de connexion (si l'utilisateur n'est pas authentifié) */}
+      {/* Modal de connexion */}
       <ModalLogin show={isModalOpen} onClose={closeModal} login={safeLogin} />
     </header>
   );

@@ -1,75 +1,24 @@
 /* Variables */
-$header-bg-color: #262e33;
-$header-text-color: white;
-$button-bg-color: #4e8696;
-$button-hover-color: #88ADB7;
-$link-actif:#88ADB7;
+$header-bg-color: #262e33; // Couleur de fond de l'en-tête
+$header-text-color: white; // Couleur du texte de l'en-tête
+$button-bg-color: #4e8696; // Couleur de fond des boutons
+$button-hover-color: #88ADB7; // Couleur de fond des boutons au survol
+$link-actif: #88ADB7; // Couleur des liens actifs
 
-.dropbtn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px; /* Ajoutez du padding pour plus d'espace */
-}
-
-.user-firstname {
-  font-size: 0.9em; /* Augmentez légèrement la taille de la police */
-  margin-top: 5px;
-  width: 100%;
-  color: white;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Ajoutez une ombre pour améliorer la lisibilité */
-  z-index: 1000;
-}
-
-.dropdown {
-  position: relative;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 300px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  right: 0;
-  top: 100%;
-}
-
-.dropdown-content a,
-.dropdown-content button {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: center;
-  width: 100%;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1em;
-  font-family: inherit; /* Assure que la police est la même que pour les liens */
-}
-
-.dropdown-content a:hover,
-.dropdown-content button:hover {
-  background-color: #f1f1f1;
-}
-
-.dropdown.active .dropdown-content {
-  display: block;
-  
-}
-/* Exemple de style pour le lien actif */
-.nav-link.active-link {
-  color: #0C1F3C; /* Couleur de votre choix */
-}
-
+// Styles pour le conteneur de l'en-tête
 .header {
-  background-color: $header-bg-color;
-  color: $header-text-color;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // Aligne les éléments horizontalement
+  min-height: 95px; // Hauteur minimale cohérente
+  padding: 0 20px; // Ajoute un espace interne
+  box-sizing: border-box; // Inclut le padding dans les dimensions
+  background-color: $header-bg-color; // Couleur de fond de l'en-tête
+  color: $header-text-color; // Couleur du texte de l'en-tête
 }
 
+// Conteneur pour le titre de l'en-tête
 .header-title {
   display: flex;
   justify-content: flex-start;
@@ -79,37 +28,37 @@ $link-actif:#88ADB7;
   width: 100%;
 }
 
+// Style pour le logo dans l'en-tête
 .logo {
   width: 30%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
- 
 
   .logo-img {
-    margin-right: 1rem;
-    height: 60px;
-    width: auto;
+    margin-right: 1rem; // Espace entre l'image et le texte
+    height: 60px; // Hauteur de l'image
+    width: auto; // Ajuste automatiquement la largeur
   }
 
   h1 {
-    width: 300px;
-    text-align: center;
+    width: 300px; // Largeur maximale du texte
+    text-align: center; // Centre le texte
     font-size: 1.5rem;
-  
     line-height: 1;
   }
 }
 
-/* Centrer les liens dans le header */
+// Alignement central des liens dans l'en-tête
 .header-links {
   display: flex;
-  justify-content: center; /* Centrer horizontalement les liens */
-  width: 90%; /* S'assurer que la section occupe toute la largeur */
-  margin-left: auto; /* Garder l'alignement à gauche pour la section logo et la section de déconnexion */
-  margin-right: 100px; /* Garder l'alignement à droite pour le bouton d'authentification */
+  justify-content: center;
+  width: 90%;
+  margin-left: auto;
+  margin-right: 100px;
 }
 
+// Conteneur de la liste de navigation
 .nav-list {
   display: flex;
   align-items: center;
@@ -117,43 +66,47 @@ $link-actif:#88ADB7;
   padding: 0;
 }
 
+// Espacement entre les items de navigation
 .nav-item {
-  margin-left: 30px; /* Espacement entre les items */
+  margin-left: 30px;
 }
 
+// Style des liens de navigation
 .nav-link {
   font-size: 1.2rem;
   text-decoration: none;
-  color: #ffffff; /* Couleur du texte */
-  padding: 8px 16px; /* Hauteur et largeur pour que les liens aient la même taille que le bouton */
-  border-radius: 5px; /* Bordures arrondies */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Transition pour fond et effet de transformation */
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   display: inline-block;
-  
   cursor: pointer;
 }
 
-/* Style pour les liens actifs */
+// Style des liens actifs avec effet visuel
 .nav-link.active-link {
-  background-color: $link-actif; /* Couleur de fond du lien actif */
-  color: rgb(3, 3, 3); /* Texte blanc */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre autour du bouton */
-  transform: translateY(-2px); /* Effet de décalage pour simuler un clic */
+   background-color:$link-actif; 
+   color :rgb(3,3,3);
+   box-shadow :0,4px,8px,rgba(0,0,0,0.1);
+   transform :translateY(-2px);
 }
 
-/* Container de l'authentification aligné à droite */
+// Conteneur pour l'authentification aligné à droite
 .auth-container {
-  margin-left: auto; /* Pousse l'élément vers la droite */
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 300px;
-  
+   margin-left:auto ;
+   display:flex ;
+   align-items:center ;
+   justify-content:flex-end ;
+   width :300px ; // Ajustement pour permettre une largeur dynamique 
 }
-.fa-house {
-  margin-bottom: 0.5rem;
-font-size: 1.5rem;
+
+// Style de l'icône utilisateur
+.fa-user {
+   margin-bottom :0.5rem ;
+   font-size :1.5rem ;
 }
+
+// Style pour les boutons d'authentification 
 .auth-button {
   width: 300px;
   background-color: $button-bg-color;
@@ -161,32 +114,201 @@ font-size: 1.5rem;
   text-decoration: none;
   border: none;
   border-radius: 5px;
-  padding: 8px 16px;
+  padding: 8px 16px; // Assurez-vous que cette ligne est bien appliquée
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: $button-hover-color;
+      background-color: $button-hover-color;
   }
 }
 
+// Conteneur pour afficher les informations de l'utilisateur 
 .user-info {
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
+   display:flex ;
+   align-items:center ;
+   margin-right :20px ; 
 }
 
 .user-info span {
-  margin-right: 10px;
+   margin-right :10px ; 
 }
 
-main {
-  margin-top: 30px;
+// Style pour le bouton déroulant 
+.dropbtn {
+   display:flex ;
+   flex-direction :column ;
+   align-items:center ;
+   padding :10px ; // Espace interne supplémentaire 
 }
 
+// Style pour le prénom de l'utilisateur affiché 
+.user-firstname {
+   font-size :0.9em ; // Taille de police légèrement augmentée 
+   margin-top :5px ; // Espace au-dessus 
+   width :100% ; 
+   color:white ; 
+   text-shadow :1px ,1px ,2px rgba(0 ,0 ,0 ,0.5); // Améliore la lisibilité avec une ombre 
+}
+
+// Conteneur principal du menu déroulant 
+.dropdown {
+    position :relative ; 
+    
+}
+
+// Contenu du menu déroulant, caché par défaut 
+.dropdown-content {
+    display:none ; 
+    position:absolute ; 
+    background-color:#f9f9f9 ; 
+    min-width :300px ; 
+    box-shadow :0px ,8px ,16px ,0px rgba(0 ,0 ,0 ,0.2); // Ombre pour un effet flottant 
+    z-index :20 ; 
+    right :0 ; 
+    top :100% ; 
+    
+}
+
+// Style des liens et des boutons dans le menu déroulant  
+.dropdown-content a,
+.dropdown-content button {
+    z-index :1000 ; 
+    color:black ; 
+    padding :12px 16px; 
+    text-decoration:none ; 
+    display:block ; 
+    text-align:center ; 
+    width :100% ; 
+    background:none ; 
+    border:none ; 
+    cursor:pointer ; 
+    font-size :1em ; 
+    font-family :inherit ;  
+}
+
+// Style au survol des liens ou boutons dans le menu  
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+     background-color:#252E33 ;
+     color: white;
+}
+
+// Affiche le contenu du menu déroulant quand la classe active est appliquée  
+.dropdown.active .dropdown-content {
+     display:block ;
+}
+
+// Style pour les titres principaux  
 .title {
-  font-size: 1.8em;
-  font-weight: bold;
-  margin: 0;
+     font-size :1.8em ;
+     font-weight:bold ;
+     margin :0 ;
+}
+
+// Style pour le contenu principal  
+main {
+     margin-top :30px ;
+}
+
+// Styles pour le bouton burger (menu mobile)  
+.burger-menu {
+     display:none ;
+     background:none ;
+     border:none ;
+     font-size :2rem ;
+     color:$header-text-color ;
+     cursor:pointer ;
+}
+
+//! Media queries pour ajuster le design à différentes tailles d'écran  
+@media screen and (max-width :1024px) {
+     // Ajustements à venir pour les écrans inférieurs à1024px  
+}
+
+@media screen and (max-width :768px) {
+     // Styles pour le conteneur de l'en-tête sur mobile
+     .header {
+      flex-direction: row; // Alignement horizontal
+      flex-wrap: wrap; // Permet le passage à la ligne
+      justify-content: space-between; // Répartition de l'espace
+      align-items: center; // Centrage vertical
+      min-height: 95px; // Hauteur minimale conservée
+      padding: 10px;
+     }
+
+     .header-title {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+  }
+     // Ajustement du logo pour qu'il ne soit pas écrasé
+     .logo {
+         width: 100%;
+         justify-content: center;
+         align-items: center;
+ ;
+
+         .logo-img {
+             height: 50px; // Réduction légère de la taille du logo
+         }
+
+         h1 {
+             display: none;
+         }
+        
+     }
+
+     //* efface le nom sous icone sur mobile
+     .user-firstname {
+      display: none !important;
+  }
+
+     //* Ajustement des liens de navigation
+     .header-links {
+         width: 100%;
+         margin: 10px 0;
+         justify-content: center;
+     }
+
+     //* Ajustement du conteneur d'authentification
+     .auth-container {
+         width: 100%;
+         justify-content: center;
+         margin-top: 10px;
+     }
+
+     //* Ajustement du bouton d'authentification
+     .auth-button {
+        /*  width: auto; */
+         padding: 8px 16px;
+     }
+
+     //* Affichage du bouton burger
+     .burger-menu {
+         display: block;
+         position: absolute;
+         top: 10px;
+         right: 10px;
+     }
+
+     //* Masquer les liens de navigation par défaut
+     .nav-list {
+         display: none;
+     }
+
+     //* Afficher les liens de navigation lorsqu'ils sont actifs
+     .nav-list.active {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+     }
+
+     //* Ajustement des items de navigation
+     .nav-item {
+         margin: 5px 0;
+     }
 }

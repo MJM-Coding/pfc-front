@@ -24,6 +24,7 @@ export interface IAssociation {
 
 //! Type utilisateur commun (utilisé pour le backend)
 export interface IUser {
+  id_association: any;
   id: number; // Identifiant unique de l'utilisateur
   firstname: string; // Prénom de l'utilisateur
   lastname: string; // Nom de l'utilisateur
@@ -58,7 +59,6 @@ export interface ICreateUserResponse {
   user: IUser; // Utilisateur créé
   token: string; // Token d'authentification
 }
-
 
 
 

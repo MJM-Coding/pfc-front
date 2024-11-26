@@ -6,16 +6,18 @@
   --white: #ffffff;
   --gray: #a39789;
   --blue-hover: #276e47;
-  --background-color: rgb(194, 201, 209);
+  --background-color: #88ADB7;
   --textCard: #35261c;
 }
 
-
-
-main.Animals {
+.animals-container {
+  background-color: var(--background-color);
   width: 100vw;
   min-height: 100vh;
-  background-color: var(--background-color);
+  display: flex;
+}
+
+main.Animals {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
