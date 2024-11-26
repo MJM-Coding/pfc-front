@@ -24,9 +24,11 @@ export interface IUser {
   };
 }
 
+
+
 // Représente les données complètes d'une famille.
 export interface IFamily {
-  id: number;
+  id?: number;
   address: string | undefined;
   city: string | undefined;
   postal_code: string | undefined;
@@ -38,9 +40,9 @@ export interface IFamily {
   profile_photo: string | undefined;
   profile_file: File | undefined;
   id_user: number;
-  created_at: string;
-  updated_at: string;
-  animalsFamily: [] | undefined;
+  created_at?: string;
+  updated_at?: string;
+  animalsFamily?: [] | undefined;
   user:  Partial<IUser>;
 }
 

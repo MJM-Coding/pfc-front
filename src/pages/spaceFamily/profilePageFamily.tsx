@@ -31,11 +31,8 @@ function FamilyProfile() {
 
         // Extraction des données nécessaires depuis la réponse API
         const {
-          id,
           profile_file,
           id_user,
-          created_at,
-          updated_at,
           address,
           city,
           description,
@@ -49,26 +46,23 @@ function FamilyProfile() {
         } = response;
 
         const familyData: IFamily = {
-          id,
           profile_file,
           id_user,
-          created_at,
-          updated_at,
           address,
           city,
           description: description || "",
-          garden,
-          number_of_animals,
-          number_of_children,
+          garden: garden || false, // valeur par défaut pour garden
+          number_of_animals: number_of_animals || 0, // valeur par défaut pour number_of_animals
+          number_of_children: number_of_children || 0, // valeur par défaut pour number_of_children
           phone,
           postal_code,
           profile_photo,
           user: { email, firstname, lastname },
-          animalsFamily: [], // Ajout si nécessaire
         };
-
+        
         setFamilyData(familyData);
         setFormData(familyData);
+        
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       }
@@ -329,22 +323,7 @@ function FamilyProfile() {
             </div>
           </div>
 
-          {/* email */}
-          <div className="fieldsWrap">
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="email">
-                Email
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="email"
-                value={formData?.user?.email || ""}
-                readOnly
-              />
-            </div>
-          </div>
-
+ 
           {/*  phone */}
           <div className="fieldsWrap">
             <div className="infoFieldContainer">
