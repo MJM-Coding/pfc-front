@@ -5,6 +5,7 @@ import AuthContext from "../../contexts/authContext"; // Importation du contexte
 import type { IFamily, IFamilyForm } from "../../@types/family"; // Importation des types pour les données de famille
 import ImageUpload from "../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
 import Toast from "../../toast/toast"; // Importation du composant Toast pour les notifications
+import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de_succès
 
 function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
@@ -15,7 +16,6 @@ function FamilyProfile() {
   const familyId = user?.id_family; // Récupération de l'ID de la famille de l'utilisateur
 
   // State pour les messages d'erreur et de succès
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
 
@@ -75,7 +75,7 @@ function FamilyProfile() {
     fetchFamilyData();
   }, [familyId, token]);
 
-  // Fonction qui gère le changement d'image
+  //! Fonction qui gère le changement d'image
   const handleImageChange = (image: string | File | null) => {
     if (image instanceof File) {
       console.log("Nouveau fichier sélectionné :", image);
@@ -88,9 +88,13 @@ function FamilyProfile() {
     setImage(image);
   };
 
-  // Fonction de gestion de la soumission du formulaire
+  //! Fonction de gestion de la soumission du formulaire
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Réinitialiser les messages d'erreur avant la soumission
+    setPhoneError("");
+    setPostalCodeError("");
 
     let formIsValid = true;
     const newErrors: Record<string, string> = {};
@@ -106,7 +110,6 @@ function FamilyProfile() {
       newErrors.phone = "Le numéro de téléphone doit comporter 10 chiffres.";
       formIsValid = false;
     }
-
 
     if (!formIsValid) {
       setPhoneError(newErrors.phone || "");
@@ -133,7 +136,12 @@ function FamilyProfile() {
     };
 
     try {
-      const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string);
+      //! Appel API pour mettre à jour les données de la famille
+      const updatedFamily = await PatchFamily(
+        familyId as number,
+        updatedFamilyData,
+        token as string
+      );
       console.log("Mise à jour réussie:", updatedFamily);
       setFamilyData(updatedFamily);
       setImageUrl(updatedFamily.profile_photo || null);
@@ -141,6 +149,8 @@ function FamilyProfile() {
       setToastMessage("Mise à jour réussie !");
       setToastType("success");
       setShowToast(true);
+
+
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error);
       alert("Erreur lors de la mise à jour des données.");
@@ -151,7 +161,8 @@ function FamilyProfile() {
     }
   };
 
-  if (!user) return <div>Veuillez vous connecter pour accéder à cette page.</div>;
+  if (!user)
+    return <div>Veuillez vous connecter pour accéder à cette page.</div>;
   if (!familyData) return <div>Chargement des données...</div>;
 
   return (
@@ -172,7 +183,6 @@ function FamilyProfile() {
             {/* Champs du formulaire */}
             <div className="fieldsWrap-fa">
               <div className="infoFieldContainer row-fa">
-
                 {/* Nom */}
                 <label className="infoLabel-fa" htmlFor="lastName">
                   Nom
@@ -188,7 +198,6 @@ function FamilyProfile() {
                       ...formData,
                       user: { ...formData?.user, lastname: e.target.value },
                     })
-                    
                   }
                 />
               </div>
@@ -231,8 +240,7 @@ function FamilyProfile() {
                     })
                   }
                 />
-            {phoneError && <p className="errorMessage-fa">{phoneError}</p>}
-
+                {phoneError && <Message message={phoneError} type="error" />}
               </div>
 
               {/* address */}
@@ -293,8 +301,9 @@ function FamilyProfile() {
                     })
                   }
                 />
-        {postalCodeError && <p className="errorMessage-fa">{postalCodeError}</p>}
-
+                {postalCodeError && (
+                  <Message message={postalCodeError} type="error" />
+                )}
               </div>
 
               {/* number_of_children */}
@@ -305,8 +314,8 @@ function FamilyProfile() {
                 <select
                   className="infoInput-fa"
                   id="number_of_children-fa"
-                  value={formData?.number_of_children ?? ""} 
-                  required// utiliser "" si `undefined` ou `null`
+                  value={formData?.number_of_children ?? ""}
+                  required // utiliser "" si `undefined` ou `null`
                   onChange={(e) => {
                     const value = e.target.value;
                     // Si "4 ou plus" est sélectionné, on attribue 5 (vous pouvez ajuster cette valeur si nécessaire)
@@ -339,8 +348,8 @@ function FamilyProfile() {
                 <select
                   className="infoInput-fa"
                   id="number_of_animals-fa"
-                  value={formData?.number_of_animals ?? ""} 
-                  required// Utilise "" si `undefined` ou `null`
+                  value={formData?.number_of_animals ?? ""}
+                  required // Utilise "" si `undefined` ou `null`
                   onChange={(e) => {
                     const value = e.target.value;
                     // Si "4+" est sélectionné, on attribue 5 (vous pouvez ajuster cette valeur si nécessaire)
@@ -357,6 +366,7 @@ function FamilyProfile() {
                 >
                   <option value="">Sélectionner</option>{" "}
                   {/* Option par défaut */}
+                  <option value="1">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -422,7 +432,6 @@ function FamilyProfile() {
                 value={formData?.description || ""}
                 required
                 onChange={(e) =>
-                  
                   setFormData({
                     ...formData,
                     description: e.target.value,
@@ -442,27 +451,14 @@ function FamilyProfile() {
           </form>
         </div>
 
-
-      {/* Affichage du Toast avec le message */}
-      {showToast && (
-        <Toast
-          setToast={setShowToast}
-          message={toastMessage}
-          type={toastType}
-        />
-      )}
-
-
-
-
-
-
-
-
-
-
-
-
+        {/* Affichage du Toast avec le message */}
+        {showToast && (
+          <Toast
+            setToast={setShowToast}
+            message={toastMessage}
+            type={toastType}
+          />
+        )}
       </section>
     </div>
   );

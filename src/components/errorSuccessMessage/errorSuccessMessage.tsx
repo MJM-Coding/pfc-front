@@ -1,7 +1,7 @@
 //! Composant Message : Ce composant affiche un message d'erreur ou de_succès
 
 import React from "react";
-import "./message.scss"; // Assurez-vous d'ajouter un fichier CSS adapté
+import "./errorSuccessMessage.scss"; // Assurez-vous d'ajouter un fichier CSS adapté
 
 type MessageProps = {
   type: "error" | "success"; // Type du message (erreur ou succès)

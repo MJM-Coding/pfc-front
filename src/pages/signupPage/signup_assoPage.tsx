@@ -3,7 +3,7 @@ import "./signup_asso.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationAssociation } from "../../@types/signupForm";
 import Toast from "../../toast/toast";
-import Message from "../../components/Message/message";
+import Message from "../../components/errorSuccessMessage/errorSuccessMessage";
 import ModalLogin from "../../components/modalLogin/modalLogin";
 
 const signup_assoPage = () => {
@@ -136,6 +136,7 @@ const signup_assoPage = () => {
 
     // Permet de ne pas envoyer les données si le formulaire n'est pas valide
     if (!formIsValid) {
+
       return;
     }
 

@@ -7,6 +7,8 @@ import {
 import AuthContext from "../../contexts/authContext"; // Importation du contexte d'authentification
 import type { IAssociation, IAssociationForm } from "../../@types/association"; // Importation des types pour les données de l'association
 import ImageUpload from "../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
+import Message from "../../components/errorSuccessMessage/errorSuccessMessage";
+import Toast from "../../toast/toast";
 
 function AssociationProfile() {
   // Récupération des informations de l'utilisateur et du token depuis le contexte d'authentification
@@ -17,11 +19,22 @@ function AssociationProfile() {
     null
   );
 
-  //* Etat pour les données de l'association, initialisé à null
+  //*Etat pour les données de l'association, initialisé à null
   const [formData, setFormData] = useState<IAssociationForm | null>(null); // Etat pour les données du formulaire, initialisé à null
   const [imageUrl, setImageUrl] = useState<string | null>(null); // Etat pour l'URL de l'image de profil, initialisé à null
   const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL), initialisé à null
   const associationId = user?.id_association; // Récupération de l'ID de l'association de l'utilisateur connecté
+
+ // State pour les messages d'erreur et de succès
+ const [phoneError, setPhoneError] = useState<string>("");
+ const [postalCodeError, setPostalCodeError] = useState<string>("");
+ const [RNANumberError, setRNANumberError] = useState<string>("");
+
+// State pour gérer l'affichage de Toast
+const [showToast, setShowToast] = useState<boolean>(false);
+const [toastMessage, setToastMessage] = useState<string>("");
+const [toastType, setToastType] = useState<"success" | "error">("success");
+
 
   //! Utilisation d'un effet secondaire pour charger les données de l'association
   useEffect(() => {
@@ -86,13 +99,10 @@ function AssociationProfile() {
   //! Fonction qui gère le changement d'image
   const handleImageChange = (image: string | File | null) => {
     if (image instanceof File) {
-      // Si l'image est un fichier
       console.log("Nouveau fichier sélectionné :", image); // Log du nouveau fichier sélectionné
     } else if (typeof image === "string") {
-      // Si l'image est une URL
       console.log("Nouvelle URL d'image :", image); // Log de la nouvelle URL d'image
     } else {
-      // Si l'image est null
       console.log("Aucune image sélectionnée"); // Log quand aucune image n'est sélectionnée
     }
 
@@ -102,6 +112,43 @@ function AssociationProfile() {
   //! Fonction de gestion de la soumission du formulaire
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Empêche le comportement par défaut de soumission du formulaire
+
+ // Réinitialiser les messages d'erreur avant la soumission
+ setPhoneError("");
+ setPostalCodeError("");
+ setRNANumberError("");
+
+ let formIsValid = true;
+ const newErrors: Record<string, string> = {};
+
+ // Validation du code postal
+ if (!/^\d{5}$/.test(formData?.postal_code || "")) {
+   newErrors.postal_code = "Le code postal doit être composé de 5 chiffres.";
+   formIsValid = false;
+ }
+
+ // Validation du numéro de téléphone
+ if (!/^\d{10}$/.test(formData?.phone || "")) {
+   newErrors.phone = "Le numéro de téléphone doit comporter 10 chiffres.";
+   formIsValid = false;
+ }
+
+// Vérification du RNA
+if (!/^W\d{9}$/.test(formData?.rna_number || "")) {
+  newErrors.rna_number = (
+    "Le numéro RNA doit commencer par W suivi de 9 chiffres."
+  );
+  formIsValid = false;
+}
+
+
+ if (!formIsValid) {
+   setPhoneError(newErrors.phone || "");
+   setPostalCodeError(newErrors.postal_code || "");
+   setRNANumberError(newErrors.rna_number || "");
+   return;
+ }
+
 
     //* Création d'un objet mis à jour pour l'association
     // Les valeurs de l'image sont prises en compte seulement si elle est définie
@@ -132,9 +179,19 @@ function AssociationProfile() {
       console.log("Mise à jour réussie:", updatedAssociation); // Log des données mises à jour
       setAssociationData(updatedAssociation); // Mise à jour de l'état avec les nouvelles données
       setImageUrl(updatedAssociation.profile_photo || null); // Mise à jour de l'URL de l'image de profil
+    
+      setToastMessage("Mise à jour réussie !");
+      setToastType("success");
+      setShowToast(true);
+    
+    
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error); // Gestion des erreurs lors de la mise à jour
       alert("Erreur lors de la mise à jour des données."); // Affichage d'une alerte en cas d'erreur
+    
+      setToastMessage("Erreur lors de la mise à jour des données.");
+      setToastType("error");
+      setShowToast(true);
     }
   };
 
@@ -194,7 +251,7 @@ function AssociationProfile() {
                   })
                 }
               />
-           
+            {RNANumberError && <Message message={RNANumberError} type="error" />}
           </div>
 
           {/* Champs du formulaire */}
@@ -293,6 +350,7 @@ function AssociationProfile() {
                     })
                 }
               />
+              {postalCodeError && <Message message={postalCodeError} type="error" />}
             </div>
                     {/* phone */}
                     <div className="infoFieldContainer row-asso">
@@ -311,6 +369,8 @@ function AssociationProfile() {
                           })
                         }
                       />
+    {phoneError && <Message message={phoneError} type="error" />}
+
                     </div>
 
             {/* description */}
@@ -342,6 +402,14 @@ function AssociationProfile() {
           </div>
         </form>
       </div>
+         {/* Affichage du Toast avec le message */}
+         {showToast && (
+          <Toast
+            setToast={setShowToast}
+            message={toastMessage}
+            type={toastType}
+          />
+        )}
     </section>
     </div>
   );
