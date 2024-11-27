@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"; // Importation de React et des hooks nécessaires (useState et useEffect)
 import fileToDataUrl from "../../utils/fileToDataUrl"; // Importation d'une fonction utilitaire pour convertir un fichier image en Data URL
+import "./imageUpload.scss"; // Importation du fichier SCSS pour les styles
 
 //! Définition des propriétés attendues par le composant ImageUpload
 interface ImageUploadProps {
@@ -48,7 +49,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ initialImageUrl, onImageChang
       <img
         src={imagePreview || `${import.meta.env.VITE_STATIC_URL}${initialImageUrl}`} 
         alt="Profile" // Texte alternatif pour l'image
-        className="family-photo" // Classe CSS pour l'image
+        className="family-asso-photo" // Classe CSS pour l'image
       />
       <div className="profileImgBtns">
         {/* Label qui permet de déclencher le champ de saisie de fichier */}

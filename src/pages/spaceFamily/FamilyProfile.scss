@@ -1,30 +1,294 @@
-/* Variables */
-/* $header-bg-color: #262e33; 
-$header-text-color: white; 
-$button-bg-color: #4e8696; 
-$button-hover-color: #88ADB7; 
-$link-actif: #88ADB7;  */
-$bg-color: #536570;
+// Variables de couleur
+$primary-color: #4a90e2;
+$primary-hover: #357ab8;
+$background-color: #cdd0d6;
+$form-background: linear-gradient(135deg, #ffffff, #eaeef5);
+$border-color: #d1d9e6;
+$text-color: #555;
+$input-background: #f9fbfe;
 
-.profilFa-container {
-    width: 100vw;
-    height: 83vh; /* Prend toute la hauteur de la fenêtre */
-    background: $bg-color;
-}
 
-h1 {
+// Styles généraux
+.containerProfilFamily {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: $background-color;
+  color: $text-color;
+  padding: 20px;
 
-    font-size: 2rem;
-    text-align: center;
-}
+  .infoSection-fa {
+    flex: 1;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1000px; // Agrandir le formulaire pour une meilleure présentation
+    background: $form-background;
+    border-radius: 12px; // Coins arrondis plus prononcés
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); // Ombre douce
+    padding: 30px;
 
-.family-photo {
-    width: 100px; /* Largeur fixe de l'image */
-    height: 100px; /* Hauteur fixe pour garder la forme carrée */
-    object-fit: cover; /* Ajuste le contenu de l'image pour qu'elle s'adapte */
-    border-radius: 50%; /* Rend l'image ronde */
-    border: 2px solid #ccc; /* Optionnel : ajoute une bordure */
-    display: block; /* S'assure qu'elle suit les règles de box-sizing */
-    margin: 0 auto; /* Centre l'image horizontalement */
+    .infoTitle-fa {
+      text-align: center;
+      margin-bottom: 20px;
+
+      h3 {
+        color: $primary-color;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin: 0;
+      }
+    }
+
+    .infoBody-fa {
+      .forms-fa {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .fieldsWrap-fa {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+
+          .row-fa {
+            flex: 1;
+            min-width: calc(50% - 10px);
+          }
+
+          /* Champs sur la même ligne */
+          .inlineFields-fa {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%; // S'assurer que les éléments occupent toute la largeur
+          }
+
+          .inlineField-fa {
+            flex: 1;
+            min-width: calc(33% - 10px); // Trois éléments alignés
+          }
+        }
+
+        textarea#description-fa {
+          min-width: 100%;
+          height: 100px;
+          resize: vertical;
+          background: $input-background;
+          border: 1px solid $border-color;
+          padding: 12px;
+          border-radius: 8px;
+          font-size: 1rem;
+          color: $text-color;
+
+          &:focus {
+            border-color: $primary-color;
+            box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
+            outline: none;
+          }
+        }
+
+        .infoFieldContainer {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .infoLabel-fa {
+            font-size: 1rem;
+            font-weight: 500;
+            color: $primary-hover;
+          }
+
+          .infoInput-fa {
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid $border-color;
+            border-radius: 8px;
+            background: $input-background;
+            transition: all 0.3s ease;
+
+            &:focus {
+              border-color: $primary-color;
+              box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
+              outline: none;
+            }
+          }
+        }
+
+        .formBtns-fa {
+          display: flex;
+          justify-content: flex-end;
+          gap: 10px;
+
+          .submitBtn-fa,
+          .resetBtn-fa {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+
+            &:focus {
+              outline: none;
+              box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
+            }
+          }
+
+          .submitBtn-fa {
+            background-color: $primary-color;
+            color: #fff;
+
+            &:hover {
+              background-color: $primary-hover;
+              transform: translateY(-2px); // Effet de soulèvement
+            }
+          }
+
+          .resetBtn-fa {
+            background-color: $border-color;
+            color: $text-color;
+
+            &:hover {
+              background-color: lighten($border-color, 10%);
+              transform: translateY(-2px);
+            }
+          }
+        }
+      }
+    }
   }
-  
+}
+
+/* Conteneur principal pour la ligne Jardin : Oui Non */
+.infoFieldContainer-radio {
+  display: flex;
+  align-items: center; /* Pour aligner verticalement le texte et les radio */
+  gap: 10px; /* Espacement entre le label "Jardin" et les options */
+
+  .infoLabel-fa {
+    font-size: 1rem;
+    font-weight: 500;
+    color: $primary-hover;
+  }
+}
+
+/* Aligner les options radio en ligne */
+.radio-group {
+  display: flex;
+  gap: 10px; /* Espacement entre Oui et Non */
+  align-items: center; /* Aligner verticalement les boutons radio */
+}
+
+.radio-label {
+  display: flex;
+  align-items: center; /* Centrer le texte à côté du bouton radio */
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  color: $text-color;
+}
+
+.radio-label input[type="radio"] {
+  display: none; /* Cacher le radio native */
+}
+
+.radio-label .custom-radio {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid $primary-color;
+  background-color: transparent;
+  position: relative;
+  margin-right: 8px; /* Marge à droite du cercle */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.radio-label:hover .custom-radio {
+  border-color: $primary-hover;
+}
+
+.radio-label input[type="radio"]:checked + .custom-radio {
+  background-color: $primary-color;
+  border-color: $primary-color;
+}
+
+.radio-label .custom-radio::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.radio-label input[type="radio"]:checked + .custom-radio::after {
+  background-color: white;
+}
+
+
+
+/* Responsive Styles */
+
+/* Jusqu'à 1024px */
+@media screen and (max-width: 1024px) {
+  .infoSection-fa {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .fieldsWrap-fa {
+    .row-fa {
+      min-width: calc(50% - 10px);
+    }
+  }
+
+  .inlineFields-fa {
+    flex-direction: column;
+  }
+
+  .inlineField-fa {
+    min-width: 100%; // Passage en colonne sur les petits écrans
+  }
+}
+
+/* Jusqu'à 768px */
+@media screen and (max-width: 768px) {
+  .containerProfilFamily {
+    padding: 10px;
+  }
+
+  .infoSection-fa {
+    margin: 10px auto;
+    width: 100%;
+    padding: 15px;
+  }
+
+  .forms-fa {
+    gap: 15px;
+  }
+
+  .fieldsWrap-fa {
+    flex-direction: column;
+    gap: 15px;
+
+    .row-fa {
+      min-width: 100%;
+    }
+  }
+
+  .formBtns-fa {
+    flex-direction: column;
+    gap: 10px;
+
+    .submitBtn-fa,
+    .resetBtn-fa {
+      font-size: 0.9rem;
+      padding: 10px 15px;
+    }
+  }
+}

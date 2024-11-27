@@ -13,18 +13,19 @@ function FamilyProfile() {
   const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
   const familyId = user?.id_family; // Récupération de l'ID de la famille de l'utilisateur
 
-
   //! Utilisation d'un effet secondaire pour charger les données de la famille
   useEffect(() => {
-    if (!familyId || !token) { // Vérification si familyId ou token sont absents
+    if (!familyId || !token) {
+      // Vérification si familyId ou token sont absents
       console.log("Aucun familyId ou token trouvé !");
       return; // Sortie de l'effet si l'un des éléments est manquant
     }
 
-    const fetchFamilyData = async () => { // Fonction asynchrone pour récupérer les données de la famille
+    const fetchFamilyData = async () => {
+      // Fonction asynchrone pour récupérer les données de la famille
       try {
         //! Appel API pour récupérer les données de la famille
-        const response = await GetFamilyById(Number(familyId), token); 
+        const response = await GetFamilyById(Number(familyId), token);
         console.log("Données de la famille récupérées :", response);
 
         // Destructuration des données de la réponse de l'API
@@ -70,11 +71,14 @@ function FamilyProfile() {
 
   //! Fonction qui gère le changement d'image
   const handleImageChange = (image: string | File | null) => {
-    if (image instanceof File) { // Si l'image est un fichier
+    if (image instanceof File) {
+      // Si l'image est un fichier
       console.log("Nouveau fichier sélectionné :", image); // Log du nouveau fichier sélectionné
-    } else if (typeof image === "string") { // Si l'image est une URL
+    } else if (typeof image === "string") {
+      // Si l'image est une URL
       console.log("Nouvelle URL d'image :", image); // Log de la nouvelle URL d'image
-    } else { // Si l'image est null
+    } else {
+      // Si l'image est null
       console.log("Aucune image sélectionnée"); // Log quand aucune image n'est sélectionnée
     }
 
@@ -85,27 +89,32 @@ function FamilyProfile() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Empêche le comportement par défaut de soumission du formulaire
 
-    const updatedFamilyData: Partial<IFamily> = { // Création d'un objet mis à jour pour la famille
-      address: formData?.address || '', // Valeur de l'adresse, ou chaîne vide si non défini
-      city: formData?.city || '', // Valeur de la ville, ou chaîne vide si non défini
-      description: formData?.description || '', // Valeur de la description, ou chaîne vide si non défini
-      garden: formData?.garden || false, // Valeur de garden, ou false si non défini
+    const updatedFamilyData: Partial<IFamily> = {
+      // Création d'un objet mis à jour pour la famille
+      address: formData?.address || "", // Valeur de l'adresse, ou chaîne vide si non défini
+      city: formData?.city || "", // Valeur de la ville, ou chaîne vide si non défini
+      description: formData?.description || "", // Valeur de la description, ou chaîne vide si non défini
+      garden: formData?.garden || null, // Valeur de garden, ou false si non défini
       number_of_animals: formData?.number_of_animals || 0, // Valeur du nombre d'animaux, ou 0 si non défini
       number_of_children: formData?.number_of_children || 0, // Valeur du nombre d'enfants, ou 0 si non défini
-      phone: formData?.phone || '', // Valeur du téléphone, ou chaîne vide si non défini
-      postal_code: formData?.postal_code || '', // Valeur du code postal, ou chaîne vide si non défini
+      phone: formData?.phone || "", // Valeur du téléphone, ou chaîne vide si non défini
+      postal_code: formData?.postal_code || "", // Valeur du code postal, ou chaîne vide si non défini
       profile_photo: imageUrl, // Assure que l'URL de la photo est utilisée
       ...(imageUrl && { profile_photo: imageUrl }), // Mise à jour de la photo si imageUrl est défini
       user: {
-        email: formData?.user?.email || '', // Valeur de l'email utilisateur
-        firstname: formData?.user?.firstname || '', // Valeur du prénom utilisateur
-        lastname: formData?.user?.lastname || '' // Valeur du nom utilisateur
-      }
+        email: formData?.user?.email || "", // Valeur de l'email utilisateur
+        firstname: formData?.user?.firstname || "", // Valeur du prénom utilisateur
+        lastname: formData?.user?.lastname || "", // Valeur du nom utilisateur
+      },
     };
 
     try {
       //! Appel API pour mettre à jour les données de la famille
-      const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string); 
+      const updatedFamily = await PatchFamily(
+        familyId as number,
+        updatedFamilyData,
+        token as string
+      );
       console.log("Mise à jour réussie:", updatedFamily); // Log des données mises à jour
       setFamilyData(updatedFamily); // Mise à jour de l'état avec les nouvelles données
       setImageUrl(updatedFamily.profile_photo || null); // Mise à jour de l'URL de l'image de profil
@@ -115,148 +124,258 @@ function FamilyProfile() {
     }
   };
 
-  if (!user) return <div>Veuillez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté
+  if (!user)
+    return <div>Veuillez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté
   if (!familyData) return <div>Chargement des données...</div>; // Si les données de la famille ne sont pas encore chargées
 
   return (
-    <section className="infoSection">
-      <div className="infoTitle">
-        <h3>Informations Personnelles</h3>
-      </div>
-      <div className="infoBody">
-        <form className="forms" onSubmit={handleSubmit}>
-          
-          {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
-          <ImageUpload initialImageUrl={imageUrl} onImageChange={handleImageChange}
-          />
-          <div>
-          
-          </div>
+    <div className="containerProfilFamily">
+      <section className="infoSection-fa">
+        <div className="infoTitle-fa">
+          <h3>Informations Personnelles</h3>
+        </div>
+        <div className="infoBody-fa">
+          <form className="forms-fa" onSubmit={handleSubmit}>
+            {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
+            <ImageUpload
+              initialImageUrl={imageUrl}
+              onImageChange={handleImageChange}
+            />
+            <div></div>
 
-          {/* Champs du formulaire */}
-          <div className="fieldsWrap">
-            <div className="infoFieldContainer row">
-              {/* lastname */}
-              <label className="infoLabel" htmlFor="lastName">
-                Nom
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="lastName"
-                value={formData?.user?.lastname || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    user: { ...formData?.user, lastname: e.target.value },
-                  })
-                }
-              />
-            </div>
+            {/* Champs du formulaire */}
+            <div className="fieldsWrap-fa">
+              <div className="infoFieldContainer row-fa">
+                {/* lastname */}
+                <label className="infoLabel-fa" htmlFor="lastName">
+                  Nom
+                </label>
+                <input
+                  className="infoInput-fa"
+                  type="text"
+                  id="lastName-fa"
+                  value={formData?.user?.lastname || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      user: { ...formData?.user, lastname: e.target.value },
+                    })
+                  }
+                />
+              </div>
 
-            {/* firstname */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="firstname">
-                Prénom
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="firstname"
-                value={formData?.user?.firstname || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    user: { ...formData?.user, firstname: e.target.value },
-                  })
-                }
-              />
-            </div>
+              {/* firstname */}
+              <div className="infoFieldContainer row-fa">
+                <label className="infoLabel-fa" htmlFor="firstname">
+                  Prénom
+                </label>
+                <input
+                  className="infoInput-fa"
+                  type="text"
+                  id="firstname-fa"
+                  value={formData?.user?.firstname || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      user: { ...formData?.user, firstname: e.target.value },
+                    })
+                  }
+                />
+              </div>
 
-            {/* phone */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="phone">
-                Téléphone
-              </label>
-              <input
-                className="infoInput"
-                type="tel"
-                id="phone"
-                value={formData?.phone || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    phone: e.target.value,
-                  })
-                }
-              />
-            </div>
+              {/* phone */}
+              <div className="infoFieldContainer row-fa">
+                <label className="infoLabel-fa" htmlFor="phone">
+                  Téléphone
+                </label>
+                <input
+                  className="infoInput-fa"
+                  type="tel"
+                  id="phone-fa"
+                  value={formData?.phone || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      phone: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-            {/* address */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="address">
-                Adresse
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="address"
-                value={formData?.address || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    address: e.target.value,
-                  })
-                }
-              />
-            </div>
+              {/* address */}
+              <div className="infoFieldContainer row-fa">
+                <label className="infoLabel-fa" htmlFor="address">
+                  Adresse
+                </label>
+                <input
+                  className="infoInput-fa"
+                  type="text"
+                  id="address-fa"
+                  value={formData?.address || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      address: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-            {/* city */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="city">
-                Ville
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="city"
-                value={formData?.city || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    city: e.target.value,
-                  })
-                }
-              />
-            </div>
+              {/* city */}
+              <div className="infoFieldContainer row-fa">
+                <label className="infoLabel-fa" htmlFor="city">
+                  Ville
+                </label>
+                <input
+                  className="infoInput-fa"
+                  type="text"
+                  id="city-fa"
+                  value={formData?.city || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      city: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-            {/* postal_code */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="postal_code">
-                Code postal
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="postal_code"
-                value={formData?.postal_code || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    postal_code: e.target.value,
-                  })
-                }
-              />
+              {/* postal_code */}
+              <div className="infoFieldContainer row-fa">
+                <label className="infoLabel-fa" htmlFor="postal_code">
+                  Code postal
+                </label>
+                <input
+                  className="infoInput-fa"
+                  type="text"
+                  id="postal_code-fa"
+                  value={formData?.postal_code || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      postal_code: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              {/* number_of_children */}
+              <div className="infoFieldContainer row-fa">
+                <label className="infoLabel-fa" htmlFor="number_of_children">
+                  Nombre d'enfants
+                </label>
+                <select
+                  className="infoInput-fa"
+                  id="number_of_children-fa"
+                  value={formData?.number_of_children ?? ""} // utiliser "" si `undefined` ou `null`
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Si "4 ou plus" est sélectionné, on attribue 5 (vous pouvez ajuster cette valeur si nécessaire)
+                    setFormData({
+                      ...formData,
+                      number_of_children:
+                        value === "4"
+                          ? 5
+                          : value === ""
+                          ? undefined
+                          : Number(value),
+                    });
+                  }}
+                >
+                  <option value="">Sélectionner</option>{" "}
+                  {/* Option par défaut */}
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4 ou plus</option>
+                </select>
+              </div>
+
+              {/* number_of_animals */}
+              <div className="infoFieldContainer row-fa">
+                <label className="infoLabel-fa" htmlFor="number_of_animals">
+                  Nombre d'animaux
+                </label>
+                <select
+                  className="infoInput-fa"
+                  id="number_of_animals-fa"
+                  value={formData?.number_of_animals ?? ""} // Utilise "" si `undefined` ou `null`
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Si "4+" est sélectionné, on attribue 5 (vous pouvez ajuster cette valeur si nécessaire)
+                    setFormData({
+                      ...formData,
+                      number_of_animals:
+                        value === "4+"
+                          ? 5
+                          : value === ""
+                          ? undefined
+                          : Number(value), // Si "4+" sélectionné, 5, sinon conversion en nombre
+                    });
+                  }}
+                >
+                  <option value="">Sélectionner</option>{" "}
+                  {/* Option par défaut */}
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4+">4 ou plus </option>{" "}
+                  {/* Option "Plus de 3" */}
+                </select>
+              </div>
+              
+         {/* garden */}
+<div className="infoFieldContainer-radio row-fa">
+  <label className="infoLabel-fa" htmlFor="garden">
+    Jardin
+  </label>
+  <div className="radio-group"> {/* Ajout d'une classe radio-group ici */}
+    <label className="radio-label">
+      <input
+        type="radio"
+        name="garden"
+        value="oui"
+        checked={formData?.garden === true}
+        onChange={() =>
+          setFormData({
+            ...formData,
+            garden: true,
+          })
+        }
+      />
+      <span className="custom-radio"></span> {/* Spans pour styliser les radios */}
+      Oui
+    </label>
+    <label className="radio-label">
+      <input
+        type="radio"
+        name="garden"
+        value="non"
+        checked={formData?.garden === false}
+        onChange={() =>
+          setFormData({
+            ...formData,
+            garden: false,
+          })
+        }
+      />
+      <span className="custom-radio"></span> {/* Spans pour styliser les radios */}
+      Non
+    </label>
+  </div>
+</div>
+
             </div>
 
             {/* description */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="description">
+            <div className="infoFieldContainer row-fa">
+              <label className="infoLabel-fa" htmlFor="description">
                 Description
               </label>
               <textarea
-                className="infoInput"
-                id="description"
+                className="infoInput-fa"
+                id="description-fa"
                 value={formData?.description || ""}
                 onChange={(e) =>
                   setFormData({
@@ -267,74 +386,18 @@ function FamilyProfile() {
               />
             </div>
 
-            {/* garden */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="garden">
-                Jardin
-              </label>
-              <input
-                type="checkbox"
-                id="garden"
-                checked={formData?.garden || false}
-                onChange={() =>
-                  setFormData({
-                    ...formData,
-                    garden: !formData?.garden,
-                  })
-                }
-              />
+            <div className="formBtns-fa">
+              <button type="submit" className="submitBtn-fa">
+                Enregistrer
+              </button>
+              <button type="reset" className="resetBtn-fa">
+                Annuler
+              </button>
             </div>
-
-            {/* number_of_animals */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="number_of_animals">
-                Nombre d'animaux
-              </label>
-              <input
-                className="infoInput"
-                type="number"
-                id="number_of_animals"
-                value={formData?.number_of_animals || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    number_of_animals: Number(e.target.value),
-                  })
-                }
-              />
-            </div>
-
-            {/* number_of_children */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="number_of_children">
-                Nombre d'enfants
-              </label>
-              <input
-                className="infoInput"
-                type="number"
-                id="number_of_children"
-                value={formData?.number_of_children || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    number_of_children: Number(e.target.value),
-                  })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="formBtns">
-            <button type="submit" className="submitBtn">
-              Enregistrer
-            </button>
-            <button type="reset" className="resetBtn">
-              Annuler
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
+          </form>
+        </div>
+      </section>
+    </div>
   );
 }
 

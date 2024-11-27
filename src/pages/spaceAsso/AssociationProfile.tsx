@@ -11,7 +11,7 @@ import ImageUpload from "../../components/imageUpload/imageUpload"; // Importati
 function AssociationProfile() {
   // Récupération des informations de l'utilisateur et du token depuis le contexte d'authentification
   const { user, token } = useContext(AuthContext) || {};
-  
+
   // Déclare un état "AssociationData" initialisé à "null", destiné à stocker les données de l'association, de type "IAssociation" ou "null".
   const [AssociationData, setAssociationData] = useState<IAssociation | null>(
     null
@@ -142,30 +142,31 @@ function AssociationProfile() {
     return <div>Vous devez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté, afficher ce message
   if (!AssociationData) return <div>Chargement des données...</div>; // Si les données de l'association ne sont pas encore chargées, afficher ce message
 
-  return (
-    <section className="infoSection">
-      <div className="infoTitle">
-        <h3>Informations Personnelles</h3> {/* Titre de la section */}
+   return (
+    <div className="containerProfilAsso">
+    <section className="infoSection-asso">
+      <div className="infoTitle-asso">
+        <h3>Informations Personnelles</h3>
       </div>
-      <div className="infoBody">
-        <form className="forms" onSubmit={handleSubmit}>
-          {" "}
-          {/* Formulaire de mise à jour */}
+      <div className="infoBody-asso">
+        <form className="forms-asso" onSubmit={handleSubmit}>
           {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
           <ImageUpload
             initialImageUrl={imageUrl}
             onImageChange={handleImageChange}
           />
+          
           <div>
+
             {/* Nom de l'association */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="representative">
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="representative">
                 Nom de l'association
               </label>
               <input
-                className="infoInput"
+                className="infoInput-asso"
                 type="text"
-                id="representative"
+                id="representative-asso"
                 value={formData?.representative || ""}
                 onChange={(e) =>
                   setFormData({
@@ -175,16 +176,16 @@ function AssociationProfile() {
                 }
               />
             </div>
-
+            </div>
             {/* rna_number */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="rna_number">
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="rna_number">
                 Numéro RNA
               </label>
               <input
-                className="infoInput"
+                className="infoInput-asso"
                 type="text"
-                id="rna_number"
+                id="rna_number-asso"
                 value={formData?.rna_number || ""}
                 onChange={(e) =>
                   setFormData({
@@ -193,57 +194,157 @@ function AssociationProfile() {
                   })
                 }
               />
-            </div>
+           
           </div>
+
           {/* Champs du formulaire */}
-          <div className="fieldsWrap">
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="phone">
-                Téléphone
+          <div className="fieldsWrap-asso">
+            <div className="infoFieldContainer row-asso">
+              {/* lastname */}
+              <label className="infoLabel-asso" htmlFor="lastName">
+                Nom
               </label>
               <input
-                className="infoInput"
+                className="infoInput-asso"
                 type="text"
-                id="phone"
-                value={formData?.phone || ""}
+                id="lastName-asso"
+                value={formData?.user?.lastname || ""}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    phone: e.target.value, // Mise à jour du champ phone
+                    user: { ...formData?.user, lastname: e.target.value },
                   })
                 }
               />
             </div>
-            <div className="infoFieldContainer">
-              <label className="infoLabel" htmlFor="email">
-                E-mail
+
+            {/* firstname */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="firstname">
+                Prénom
               </label>
               <input
-                className="infoInput"
-                type="email"
-                id="email"
-                value={formData?.user?.email || ""}
+                className="infoInput-asso"
+                type="text"
+                id="firstname-asso"
+                value={formData?.user?.firstname || ""}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    user: {
-                      ...formData?.user,
-                      email: e.target.value, // Mise à jour du champ email
-                    },
+                    user: { ...formData?.user, firstname: e.target.value },
+                  })
+                }
+              />
+            </div>
+
+
+            {/* address */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="address">
+                Adresse
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="address-asso"
+                value={formData?.address || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    address: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            {/* city */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="city">
+                Ville
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="city-asso"
+                value={formData?.city || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    city: e.target.value,
+                })
+                }
+              />
+            </div>
+
+            {/* postal_code */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="postal_code">
+                Code postal
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="postal_code-asso"
+                value={formData?.postal_code || ""}
+                onChange={(e) =>
+                  setFormData({
+                      ...formData,
+                      postal_code: e.target.value,
+                    })
+                }
+              />
+            </div>
+                    {/* phone */}
+                    <div className="infoFieldContainer row-asso">
+                      <label className="infoLabel-asso" htmlFor="phone">
+                        Téléphone
+                      </label>
+                      <input
+                        className="infoInput-asso"
+                        type="tel"
+                        id="phone-asso"
+                        value={formData?.phone || ""}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            phone: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+
+            {/* description */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="description">
+                Description
+              </label>
+              <textarea
+                className="infoInput-asso"
+                id="description-asso"
+                value={formData?.description || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    description: e.target.value,
                   })
                 }
               />
             </div>
           </div>
-          <div className="row">
-            <button className="btnSubmit" type="submit">
-              Mettre à jour
+
+          <div className="formBtns-asso">
+            <button type="submit" className="submitBtn-asso">
+              Enregistrer
+            </button>
+            <button type="reset" className="resetBtn-asso">
+              Annuler
             </button>
           </div>
         </form>
       </div>
     </section>
+    </div>
   );
 }
 
-export default AssociationProfile; // Exportation du composant AssociationProfile
+export default AssociationProfile;
