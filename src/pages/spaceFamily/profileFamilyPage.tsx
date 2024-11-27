@@ -1,28 +1,32 @@
-import React, { useEffect, useState, useContext } from "react";
-import "./profilePageFamily.scss"; // Importation du SCSS spécifique à la page Profil
-import fileToDataUrl from "../../utils/fileToDataUrl"; // Fonction utilitaire pour convertir l'image en Data URL
-import type { IFamily, IFamilyForm } from "../../@types/family";
-import { GetFamilyById, PatchFamily } from "../../api/family.api";
-import AuthContext from "../../contexts/authContext";
+import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
+import "./profilePageFamily.scss"; // Importation du fichier SCSS pour les styles
+import { GetFamilyById, PatchFamily } from "../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
+import AuthContext from "../../contexts/authContext"; // Importation du contexte d'authentification
+import type { IFamily, IFamilyForm } from "../../@types/family"; // Importation des types pour les données de famille
+import ImageUpload from "../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
 
 function FamilyProfile() {
-  const { user, token } = useContext(AuthContext) || {};
-  const [familyData, setFamilyData] = useState<IFamily | null>(null);
-  const [formData, setFormData] = useState<IFamilyForm | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null); // Nouveau champ pour l'URL de l'image
-  const familyId = user?.id_family;
+  const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
+  const [familyData, setFamilyData] = useState<IFamily | null>(null); // Etat pour les données de la famille
+  const [formData, setFormData] = useState<IFamilyForm | null>(null); // Etat pour les données du formulaire
+  const [imageUrl, setImageUrl] = useState<string | null>(null); // Etat pour l'URL de l'image de profil
+  const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
+  const familyId = user?.id_family; // Récupération de l'ID de la famille de l'utilisateur
 
+
+  //! Utilisation d'un effet secondaire pour charger les données de la famille
   useEffect(() => {
-    if (!familyId || !token) {
+    if (!familyId || !token) { // Vérification si familyId ou token sont absents
       console.log("Aucun familyId ou token trouvé !");
-      return;
+      return; // Sortie de l'effet si l'un des éléments est manquant
     }
 
-    const fetchFamilyData = async () => {
+    const fetchFamilyData = async () => { // Fonction asynchrone pour récupérer les données de la famille
       try {
-        const response = await GetFamilyById(Number(familyId), token);
+        const response = await GetFamilyById(Number(familyId), token); // Appel API pour récupérer les données de la famille
         console.log("Données de la famille récupérées :", response);
 
+        // Destructuration des données de la réponse de l'API
         const {
           id_user,
           address,
@@ -33,117 +37,84 @@ function FamilyProfile() {
           number_of_children,
           phone,
           postal_code,
-          profile_photo, // URL de la photo de profil
+          profile_photo,
           user: { email, firstname, lastname },
         } = response;
 
+        // Création d'un objet familyData conforme au type IFamily
         const familyData: IFamily = {
           id_user,
           address,
           city,
-          description: description || "",
-          garden: garden || false,
-          number_of_animals: number_of_animals || 0,
-          number_of_children: number_of_children || 0,
+          description: description || "", // Valeur par défaut si description est null
+          garden: garden || false, // Valeur par défaut si garden est null
+          number_of_animals: number_of_animals || 0, // Valeur par défaut si number_of_animals est null
+          number_of_children: number_of_children || 0, // Valeur par défaut si number_of_children est null
           phone,
           postal_code,
-          profile_photo, // Sauvegarde de l'URL de la photo
-          user: { email, firstname, lastname },
+          profile_photo,
+          user: { email, firstname, lastname }, // Informations utilisateur
         };
 
-        setFamilyData(familyData); // Mise à jour de l'état de familyData
-        setFormData(familyData);
-        setImageUrl(profile_photo || null); // Met à jour l'URL de l'image de profil initiale
+        setFamilyData(familyData); // Mise à jour de l'état avec les données de la famille
+        setFormData(familyData); // Mise à jour de l'état avec les données du formulaire
+        setImageUrl(profile_photo || null); // Mise à jour de l'état avec l'URL de la photo de profil
       } catch (error) {
-        console.error("Erreur lors de la récupération des données :", error);
+        console.error("Erreur lors de la récupération des données :", error); // Gestion des erreurs de récupération des données
       }
     };
 
-    fetchFamilyData();
-  }, [familyId, token]);
+    fetchFamilyData(); // Appel de la fonction pour récupérer les données
+  }, [familyId, token]); // Déclenchement de l'effet quand familyId ou token changent
 
-  // Gestion de la prévisualisation de l'image
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setFormData({
-        ...formData,
-        profile_photo: file, // Sauvegarde le fichier sélectionné dans le state
-      });
+  //! Fonction qui gère le changement d'image
+  const handleImageChange = (image: string | File | null) => {
+    if (image instanceof File) { // Si l'image est un fichier
+      console.log("Nouveau fichier sélectionné :", image); // Log du nouveau fichier sélectionné
+    } else if (typeof image === "string") { // Si l'image est une URL
+      console.log("Nouvelle URL d'image :", image); // Log de la nouvelle URL d'image
+    } else { // Si l'image est null
+      console.log("Aucune image sélectionnée"); // Log quand aucune image n'est sélectionnée
     }
+
+    setImage(image); // Mise à jour de l'état avec l'image sélectionnée
   };
 
-  //! Fonction pour prévisualiser l'image et gérer le cas où il s'agit d'une URL
-  async function previewImage(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Si un fichier est sélectionné, convertissons-le en Data URL pour la prévisualisation
-    const dataUrl = await fileToDataUrl(file);
-
-    // Mettez à jour l'état du formulaire avec l'URL temporaire de l'image en prévisualisation
-    setFormData((prevData) => ({
-      ...prevData,
-      profile_photo: dataUrl, // Mettre à jour avec le Data URL pour la prévisualisation
-    }));
-  }
-
+  //! Fonction de gestion de la soumission du formulaire
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault(); // Empêche le comportement par défaut de soumission du formulaire
 
-    const updatedFamilyData: Partial<IFamily> = {
-      address: formData?.address || '',
-      city: formData?.city || '',
-      description: formData?.description || '',
-      garden: formData?.garden || false,
-      number_of_animals: formData?.number_of_animals || 0,
-      number_of_children: formData?.number_of_children || 0,
-      phone: formData?.phone || '',
-      postal_code: formData?.postal_code || '',
-      profile_photo: imageUrl, // Met à jour l'URL de la photo dans les données à envoyer
-      ...(imageUrl && { profile_photo: imageUrl }),  // Assure-toi que `imageUrl` est bien passé
+    const updatedFamilyData: Partial<IFamily> = { // Création d'un objet mis à jour pour la famille
+      address: formData?.address || '', // Valeur de l'adresse, ou chaîne vide si non défini
+      city: formData?.city || '', // Valeur de la ville, ou chaîne vide si non défini
+      description: formData?.description || '', // Valeur de la description, ou chaîne vide si non défini
+      garden: formData?.garden || false, // Valeur de garden, ou false si non défini
+      number_of_animals: formData?.number_of_animals || 0, // Valeur du nombre d'animaux, ou 0 si non défini
+      number_of_children: formData?.number_of_children || 0, // Valeur du nombre d'enfants, ou 0 si non défini
+      phone: formData?.phone || '', // Valeur du téléphone, ou chaîne vide si non défini
+      postal_code: formData?.postal_code || '', // Valeur du code postal, ou chaîne vide si non défini
+      profile_photo: imageUrl, // Assure que l'URL de la photo est utilisée
+      ...(imageUrl && { profile_photo: imageUrl }), // Mise à jour de la photo si imageUrl est défini
       user: {
-        email: formData?.user?.email || '',
-        firstname: formData?.user?.firstname || '',
-        lastname: formData?.user?.lastname || ''
+        email: formData?.user?.email || '', // Valeur de l'email utilisateur
+        firstname: formData?.user?.firstname || '', // Valeur du prénom utilisateur
+        lastname: formData?.user?.lastname || '' // Valeur du nom utilisateur
       }
     };
 
     try {
-      const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string);
-      console.log("Mise à jour réussie:", updatedFamily);
-
-      setFamilyData(updatedFamily);
-      setImageUrl(updatedFamily.profile_photo || null);
+      const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string); // Appel API pour mettre à jour les données de la famille
+      console.log("Mise à jour réussie:", updatedFamily); // Log des données mises à jour
+      setFamilyData(updatedFamily); // Mise à jour de l'état avec les nouvelles données
+      setImageUrl(updatedFamily.profile_photo || null); // Mise à jour de l'URL de l'image de profil
     } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error);
-      alert("Erreur lors de la mise à jour des données.");
+      console.error("Erreur lors de la mise à jour:", error); // Gestion des erreurs lors de la mise à jour
+      alert("Erreur lors de la mise à jour des données."); // Affichage d'une alerte en cas d'erreur
     }
   };
 
-  const handleReset = () => {
-    if (familyData) {
-      const formData: IFamilyForm = {
-        address: familyData.address,
-        city: familyData.city,
-        description: familyData.description,
-        garden: familyData.garden,
-        number_of_animals: familyData.number_of_animals,
-        number_of_children: familyData.number_of_children,
-        phone: familyData.phone,
-        postal_code: familyData.postal_code,
-        profile_photo: null , // ou une valeur de type File si nécessaire
-        user: familyData.user,
-      };
-
-      setFormData(formData);
-      setImageUrl(familyData.profile_photo || null); // Réinitialiser l'URL de l'image
-    }
-  };
-
-  if (!user)
-    return <div>Veuillez vous connecter pour accéder à cette page.</div>;
-  if (!familyData) return <div>Chargement des données...</div>;
+  if (!user) return <div>Veuillez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté
+  if (!familyData) return <div>Chargement des données...</div>; // Si les données de la famille ne sont pas encore chargées
 
   return (
     <section className="infoSection">
@@ -151,41 +122,17 @@ function FamilyProfile() {
         <h3>Informations Personnelles</h3>
       </div>
       <div className="infoBody">
-        <form className="forms" onSubmit={handleSubmit} onReset={handleReset}>
-          {/* Photo de profil */}
+        <form className="forms" onSubmit={handleSubmit}>
+          
+          {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
+          <ImageUpload initialImageUrl={imageUrl} onImageChange={handleImageChange}
+          />
           <div>
-          <div className="profileImgWrap">
-            {/* Affichage de l'image de profil avec la logique de prévisualisation */}
-            <img
-              src={
-                typeof formData?.profile_photo === "string" &&
-                formData.profile_photo.startsWith("http")
-                  ? formData.profile_photo // Si c'est une URL complète
-                  : formData?.profile_photo instanceof File // Si c'est un fichier
-                    ? URL.createObjectURL(formData.profile_photo) // Générer une URL temporaire pour la prévisualisation
-                    : `${import.meta.env.VITE_STATIC_URL}${
-                        formData?.profile_photo
-                      }` // Sinon, on concatène l'URL de base pour l'image locale
-              }
-              alt="Family Profile"
-              className="family-photo"
-            />
-          </div>
+          
+          
+ 
 
-            <div className="profileImgBtns">
-              <div className="profileImgUploadBtn">
-                <label className="profilImgBtn" htmlFor="profile_photo">
-                  Choisir une photo
-                </label>
-                <input
-                  type="file"
-                  id="profile_photo"
-                  name="profile_photo"
-                  accept="image/*"
-                  onChange={handleImageChange} // Gérer l'upload de l'image
-                />
-              </div>
-            </div>
+   
           </div>
 
           {/* Champs du formulaire */}
