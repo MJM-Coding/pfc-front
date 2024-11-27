@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
-import "./FamilyProfile.scss"; // Importation du fichier SCSS pour les styles
-import { GetFamilyById, PatchFamily } from "../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
-import AuthContext from "../../contexts/authContext"; // Importation du contexte d'authentification
-import type { IFamily, IFamilyForm } from "../../@types/family"; // Importation des types pour les données de famille
-import ImageUpload from "../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
-import Toast from "../../toast/toast"; // Importation du composant Toast pour les notifications
-import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de_succès
+import "./familyProfile.scss"; // Importation du fichier SCSS pour les styles
+import { GetFamilyById, PatchFamily } from "../../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
+import AuthContext from "../../../contexts/authContext"; // Importation du contexte d'authentification
+import type { IFamily, IFamilyForm } from "../../../@types/family"; // Importation des types pour les données de famille
+import ImageUpload from "../../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
+import Toast from "../../../toast/toast"; // Importation du composant Toast pour les notifications
+import Message from "../../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de_succès
 
 function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
@@ -14,6 +14,8 @@ function FamilyProfile() {
   const [imageUrl, setImageUrl] = useState<string | null>(null); // Etat pour l'URL de l'image de profil
   const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
   const familyId = user?.id_family; // Récupération de l'ID de la famille de l'utilisateur
+
+  const [isEditable, setIsEditable] = useState<boolean>(false); // Etat pour gérer l'édition
 
   // State pour les messages d'erreur et de succès
   const [phoneError, setPhoneError] = useState<string>("");
@@ -146,11 +148,12 @@ function FamilyProfile() {
       setFamilyData(updatedFamily);
       setImageUrl(updatedFamily.profile_photo || null);
 
+      // Désactivation de l'édition après la mise à jour réussie
+      setIsEditable(false);
+
       setToastMessage("Mise à jour réussie !");
       setToastType("success");
       setShowToast(true);
-
-
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error);
       alert("Erreur lors de la mise à jour des données.");
@@ -160,6 +163,11 @@ function FamilyProfile() {
       setShowToast(true);
     }
   };
+
+  const toggleEdit = () => {
+    setIsEditable(!isEditable); // Bascule entre édition et non-édition
+  };
+
 
   if (!user)
     return <div>Veuillez vous connecter pour accéder à cette page.</div>;
@@ -183,6 +191,7 @@ function FamilyProfile() {
             {/* Champs du formulaire */}
             <div className="fieldsWrap-fa">
               <div className="infoFieldContainer row-fa">
+
                 {/* Nom */}
                 <label className="infoLabel-fa" htmlFor="lastName">
                   Nom
@@ -199,6 +208,7 @@ function FamilyProfile() {
                       user: { ...formData?.user, lastname: e.target.value },
                     })
                   }
+                  disabled={!isEditable}
                 />
               </div>
 
@@ -219,6 +229,7 @@ function FamilyProfile() {
                       user: { ...formData?.user, firstname: e.target.value },
                     })
                   }
+                  disabled={!isEditable}
                 />
               </div>
 
@@ -239,6 +250,7 @@ function FamilyProfile() {
                       phone: e.target.value,
                     })
                   }
+                  disabled={!isEditable}
                 />
                 {phoneError && <Message message={phoneError} type="error" />}
               </div>
@@ -260,6 +272,7 @@ function FamilyProfile() {
                       address: e.target.value,
                     })
                   }
+                  disabled={!isEditable}
                 />
               </div>
 
@@ -280,6 +293,7 @@ function FamilyProfile() {
                       city: e.target.value,
                     })
                   }
+                  disabled={!isEditable}
                 />
               </div>
 
@@ -300,6 +314,7 @@ function FamilyProfile() {
                       postal_code: e.target.value,
                     })
                   }
+                  disabled={!isEditable}
                 />
                 {postalCodeError && (
                   <Message message={postalCodeError} type="error" />
@@ -329,6 +344,7 @@ function FamilyProfile() {
                           : Number(value),
                     });
                   }}
+                  disabled={!isEditable}
                 >
                   <option value="">Sélectionner</option>{" "}
                   {/* Option par défaut */}
@@ -363,6 +379,7 @@ function FamilyProfile() {
                           : Number(value), // Si "4+" sélectionné, 5, sinon conversion en nombre
                     });
                   }}
+                  disabled={!isEditable}
                 >
                   <option value="">Sélectionner</option>{" "}
                   {/* Option par défaut */}
@@ -395,6 +412,7 @@ function FamilyProfile() {
                           garden: true,
                         })
                       }
+                      disabled={!isEditable}
                     />
                     <span className="custom-radio"></span>{" "}
                     {/* Spans pour styliser les radios */}
@@ -436,22 +454,30 @@ function FamilyProfile() {
                     ...formData,
                     description: e.target.value,
                   })
+                  
                 }
+                disabled={!isEditable}
               />
             </div>
 
             <div className="formBtns-fa">
-              <button type="submit" className="submitBtn-fa">
+              <button
+                type="submit"
+                className="submitBtn-fa"
+                disabled={!isEditable}
+              >
                 Enregistrer
               </button>
-              <button type="reset" className="resetBtn-fa">
-                Annuler
+              <button
+                type="button"
+                className="editBtn-fa"
+                onClick={toggleEdit}
+              >
+                {isEditable ? "Annuler" : "Modifier"}
               </button>
             </div>
           </form>
         </div>
-
-        {/* Affichage du Toast avec le message */}
         {showToast && (
           <Toast
             setToast={setShowToast}
@@ -463,5 +489,4 @@ function FamilyProfile() {
     </div>
   );
 }
-
 export default FamilyProfile;
