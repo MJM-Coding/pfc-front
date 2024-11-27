@@ -48,18 +48,20 @@ export const GetFamilyById = async (id: number, token: string): Promise<IFamily>
 // Méthode asynchrone pour mettre à jour les informations d'une famille
 // Function to update family data, including the imageUrl
 // Dans le fichier family.api.ts
+
 export const PatchFamily = async (
-  id: number,
-  updatedFamilyData: { imageUrl: string }, token: string
+  id: number, 
+  familyData: Partial<IFamily>, 
+  token: string
 ): Promise<IFamily> => {
   try {
-    const response = await api.patch<IFamily>(`/family/${id}`, updatedFamilyData, {
-      headers: {
+    const response = await api.patch<IFamily>(`/family/${id}`, familyData, {
+      headers: { 
         Authorization: `Bearer ${token}`,
-        // Pas besoin de définir 'Content-Type' avec FormData, c'est géré automatiquement
+        'Content-Type': 'application/json', // Indique que nous envoyons des données JSON
       },
     });
-    return response.data;  // Renvoie les données mises à jour de la famille
+    return response.data;
   } catch (error) {
     handleApiError(error, `Impossible de mettre à jour la famille avec l'ID ${id}`);
     throw error;

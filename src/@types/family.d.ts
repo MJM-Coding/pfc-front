@@ -20,8 +20,7 @@ export interface IUser {
     number_of_children: number | null;
     phone: string;
     postal_code: string;
-    profile_photo?: string ;
-    
+    profile_photo?: string | null;
   };
 }
 
@@ -39,7 +38,7 @@ export interface IFamily {
   garden: boolean | undefined;
   description: string | undefined;
   profile_photo?:  string | null;
-  imageUrl?: string | File ;
+  imageUrl?: string | File | null;
   id_user: number;
   created_at?: string;
   updated_at?: string;
@@ -57,7 +56,7 @@ export interface IFamilyForm {
   number_of_animals?: number | null | undefined;
   garden?: boolean | null | undefined;
   description?: string | null | undefined;
-  profile_photo?:  File |string | null;
-  imageUrl?: string | File ;
+  profile_photo?:  File | string | undefined | null ;
+  imageUrl?: string | File | null;
   user?: Partial<IUser> | null; // Utilisé pour indiquer que l'utilisateur est optionnel
 }
