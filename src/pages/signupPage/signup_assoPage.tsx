@@ -3,8 +3,8 @@ import "./signup_asso.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationAssociation } from "../../@types/signupForm";
 import Toast from "../../toast/toast";
+import Message from "../../components/Message/message";
 import ModalLogin from "../../components/modalLogin/modalLogin";
-
 
 const signup_assoPage = () => {
   //! State pour gérer les données du formulaire
@@ -76,14 +76,14 @@ const signup_assoPage = () => {
           setPostalCodeError("");
         }
       }
-      // Validation du RNA number en temps réel
+      // Validation du RNA en temps réel
       if (name === "rna_number") {
         if (!/^W\d{9}$/.test(value)) {
           setRnaNumberError(
             "Le numéro RNA doit commencer par W suivi de 9 chiffres."
           );
         } else {
-          setRnaNumberError("");
+          setRnaNumberError(""); // Réinitialisation de l'erreur si le RNA est valide
         }
       }
     } else {
@@ -126,12 +126,12 @@ const signup_assoPage = () => {
       formIsValid = false; // Si la validation a échoué, on arrête le processus
     }
 
-    // Vérification du NRA number
+    // Vérification du RNA
     if (!/^W\d{9}$/.test(formData.association.rna_number)) {
       setRnaNumberError(
         "Le numéro RNA doit commencer par W suivi de 9 chiffres."
       );
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
+      formIsValid = false;
     }
 
     // Permet de ne pas envoyer les données si le formulaire n'est pas valide
@@ -190,250 +190,256 @@ const signup_assoPage = () => {
   //! Affichage du formulaire d'inscription
   return (
     <div className="assoPage-container">
-    <section className="signup-asso">
-      <div className="signup_Header-asso">
-        <h1>Inscription association</h1>
-      </div>
-      <div className="subscribeFormContainer-asso">
-        <form
-          onSubmit={handleSubmit}
-          className="formConnexionPage-asso"
-          id="subscribeForm"
-        >
-          <div className="formColumns">
-            {/* Colonne de gauche */}
-            <div className="formColumnLeft">
-              {/* Nom de l'association */}
-              <div className="fieldContainer-asso">
-                <label
-                  className="labelConnexionPage-asso"
-                  htmlFor="representative"
-                >
-                  Nom de l'association
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="representative"
-                  id="representative"
-                  value={formData.association.representative}
-                  onChange={handleChange}
-                  required
-                />
+      <section className="signup-asso">
+        <div className="signup_Header-asso">
+          <h1>Inscription association</h1>
+        </div>
+        <div className="subscribeFormContainer-asso">
+          <form
+            onSubmit={handleSubmit}
+            className="formConnexionPage-asso"
+            id="subscribeForm"
+          >
+            <div className="formColumns">
+              {/* Colonne de gauche */}
+              <div className="formColumnLeft">
+                {/* Nom de l'association */}
+                <div className="fieldContainer-asso">
+                  <label
+                    className="labelConnexionPage-asso"
+                    htmlFor="representative"
+                  >
+                    Nom de l'association
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="text"
+                    name="representative"
+                    id="representative"
+                    value={formData.association.representative}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Nom du représentant */}
+                <div className="fieldContainer-asso">
+                  <label className="labelConnexionPage-asso" htmlFor="lastname">
+                    Nom du représentant
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="text"
+                    name="lastname"
+                    id="lastname"
+                    value={formData.lastname}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Prénom du représentant */}
+                <div className="fieldContainer-asso">
+                  <label
+                    className="labelConnexionPage-asso"
+                    htmlFor="firstname"
+                  >
+                    Prénom du représentant
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="text"
+                    name="firstname"
+                    id="firstname"
+                    value={formData.firstname}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Adresse */}
+                <div className="fieldContainer-asso">
+                  <label className="labelConnexionPage-asso" htmlFor="address">
+                    Adresse
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="text"
+                    name="address"
+                    id="address"
+                    value={formData.association.address}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Code postal */}
+                <div className="fieldContainer-asso">
+                  <label
+                    className="labelConnexionPage-asso"
+                    htmlFor="postal_code"
+                  >
+                    Code postal
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="text"
+                    name="postal_code"
+                    id="postal_code"
+                    value={formData.association.postal_code}
+                    onChange={handleChange}
+                    required
+                  />
+                  {postalCodeError && (
+                    <p className="errorMessage-asso">{postalCodeError}</p>
+                  )}
+                </div>
+
+                {/* Ville */}
+                <div className="fieldContainer-asso">
+                  <label className="labelConnexionPage-asso" htmlFor="city">
+                    Ville
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="text"
+                    name="city"
+                    id="city"
+                    value={formData.association.city}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               </div>
 
-              {/* Nom du représentant */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="lastname">
-                  Nom du représentant
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="lastname"
-                  id="lastname"
-                  value={formData.lastname}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              {/* Colonne de droite */}
 
-              {/* Prénom du représentant */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="firstname">
-                  Prénom du représentant
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="firstname"
-                  id="firstname"
-                  value={formData.firstname}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="formColumnRight">
+                {/* RNA */}
+                <div className="fieldContainer-asso">
+                  <label
+                    className="labelConnexionPage-asso"
+                    htmlFor="rna_number"
+                  >
+                    RNA
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="text"
+                    name="rna_number"
+                    id="rna_number"
+                    value={formData.association.rna_number}
+                    onChange={handleChange}
+                    required
+                    style={{ textTransform: "uppercase" }}
+                  />
+                  {rnaNumberError && (
+                    <p className="errorMessage-asso">{rnaNumberError}</p>
+                  )}
+                </div>
 
-              {/* Adresse */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="address">
-                  Adresse
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="address"
-                  id="address"
-                  value={formData.association.address}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+                {/* Téléphone */}
+                <div className="fieldContainer-asso">
+                  <label className="labelConnexionPage-asso" htmlFor="phone">
+                    Téléphone
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    value={formData.association.phone}
+                    onChange={handleChange}
+                    required
+                  />
+                  {phoneError && (
+                    <p className="errorMessage-asso">{phoneError}</p>
+                  )}
+                </div>
 
-              {/* Code postal */}
-              <div className="fieldContainer-asso">
-                <label
-                  className="labelConnexionPage-asso"
-                  htmlFor="postal_code"
-                >
-                  Code postal
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="postal_code"
-                  id="postal_code"
-                  value={formData.association.postal_code}
-                  onChange={handleChange}
-                  required
-                />
-                {postalCodeError && (
-                  <p className="errorMessage-asso">{postalCodeError}</p>
-                )}
-              </div>
+                {/* Email */}
+                <div className="fieldContainer-asso">
+                  <label className="labelConnexionPage-asso" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    style={{ textTransform: "lowercase" }}
+                  />
+                </div>
 
-              {/* Ville */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="city">
-                  Ville
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="city"
-                  id="city"
-                  value={formData.association.city}
-                  onChange={handleChange}
-                  required
-                />
+                {/*  Mot de passe */}
+                <div className="fieldContainer-asso">
+                  <label className="labelConnexionPage-asso" htmlFor="password">
+                    Mot de passe
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="password"
+                    name="password"
+                    id="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Confirmation du mot de passe */}
+                <div className="fieldContainer-asso">
+                  <label
+                    className="labelConnexionPage-asso"
+                    htmlFor="passwordConfirmation"
+                  >
+                    Confirmer le mot de passe
+                  </label>
+                  <input
+                    className="inputConnexionPage-asso"
+                    type="password"
+                    name="passwordConfirmation"
+                    id="passwordConfirmation"
+                    value={formData.passwordConfirmation}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                {/* Bouton de validation */}
+                <button type="submit" className="buttonConnexionPage-asso">
+                  Créer un compte
+                </button>
               </div>
             </div>
 
-            {/* Colonne de droite */}
+            {/* Message d'erreur */}
+            {errorMessage && <Message type="error" message={errorMessage} />}
+          </form>
+        </div>
 
-            <div className="formColumnRight">
-              {/* RNA */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="rna_number">
-                  RNA
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="rna_number"
-                  id="rna_number"
-                  value={formData.association.rna_number}
-                  onChange={handleChange}
-                  required
-                  style={{ textTransform: "uppercase" }}
-                />
-                {rnaNumberError && (
-                  <p className="errorMessage-asso">{rnaNumberError}</p>
-                )}
-              </div>
+        {/* Affichage du Toast avec le message */}
+        {showToast && (
+          <Toast
+            setToast={setShowToast}
+            message={toastMessage}
+            type={toastType}
+          />
+        )}
 
-              {/* Téléphone */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="phone">
-                  Téléphone
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="tel"
-                  name="phone"
-                  id="phone"
-                  value={formData.association.phone}
-                  onChange={handleChange}
-                  required
-                />
-                {phoneError && (
-                  <p className="errorMessage-asso">{phoneError}</p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  style={{ textTransform: "lowercase" }}
-                />
-              </div>
-
-              {/*  Mot de passe */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="password">
-                  Mot de passe
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Confirmation du mot de passe */}
-              <div className="fieldContainer-asso">
-                <label
-                  className="labelConnexionPage-asso"
-                  htmlFor="passwordConfirmation"
-                >
-                  Confirmer le mot de passe
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="password"
-                  name="passwordConfirmation"
-                  id="passwordConfirmation"
-                  value={formData.passwordConfirmation}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              {/* Bouton de validation */}
-              <button type="submit" className="buttonConnexionPage-asso">
-                Créer un compte
-              </button>
-            </div>
-          </div>
-
-          {/* Affichage des erreurs */}
-          {errorMessage && <p className="errorMessage-asso">{errorMessage}</p>}
-        </form>
-      </div>
-
-      {/* Affichage du Toast avec le message */}
-      {showToast && (
-        <Toast
-          setToast={setShowToast}
-          message={toastMessage}
-          type={toastType}
-        />
-      )}
-
-      {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
-      {showLoginModal && (
-        <ModalLogin
-          show={showLoginModal}
-          onClose={() => setShowLoginModal(false)}
-          login={() => {
-            /* gestion du login */
-          }}
-        />
-      )}
-    </section>
+        {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
+        {showLoginModal && (
+          <ModalLogin
+            show={showLoginModal}
+            onClose={() => setShowLoginModal(false)}
+            login={() => {
+              /* gestion du login */
+            }}
+          />
+        )}
+      </section>
     </div>
   );
 };
