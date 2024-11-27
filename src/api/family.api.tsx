@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import { IFamily } from "../@types/vieuxtypes/family"; 
+import { IFamily } from "../@types/family"; 
 
 
 /**
@@ -39,12 +39,16 @@ export const GetFamilyById = async (id: number, token: string): Promise<IFamily>
 };
 
 /**
- * Met à jour les données d'une famille.
+ *! Met à jour les données d'une famille.
  * @param id L'identifiant de la famille à mettre à jour.
  * @param familyData Les nouvelles données de la famille.
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec l'objet IFamily mis à jour.
  */
+// Méthode asynchrone pour mettre à jour les informations d'une famille
+// Function to update family data, including the imageUrl
+// Dans le fichier family.api.ts
+
 export const PatchFamily = async (
   id: number, 
   familyData: Partial<IFamily>, 
@@ -52,7 +56,10 @@ export const PatchFamily = async (
 ): Promise<IFamily> => {
   try {
     const response = await api.patch<IFamily>(`/family/${id}`, familyData, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json', // Indique que nous envoyons des données JSON
+      },
     });
     return response.data;
   } catch (error) {
@@ -60,6 +67,12 @@ export const PatchFamily = async (
     throw error;
   }
 };
+
+
+
+
+
+
 
 
 /**

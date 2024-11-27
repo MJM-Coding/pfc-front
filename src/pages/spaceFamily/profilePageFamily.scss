@@ -17,3 +17,14 @@ h1 {
     font-size: 2rem;
     text-align: center;
 }
+
+.family-photo {
+    width: 100px; /* Largeur fixe de l'image */
+    height: 100px; /* Hauteur fixe pour garder la forme carrée */
+    object-fit: cover; /* Ajuste le contenu de l'image pour qu'elle s'adapte */
+    border-radius: 50%; /* Rend l'image ronde */
+    border: 2px solid #ccc; /* Optionnel : ajoute une bordure */
+    display: block; /* S'assure qu'elle suit les règles de box-sizing */
+    margin: 0 auto; /* Centre l'image horizontalement */
+  }
+  
