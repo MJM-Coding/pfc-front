@@ -23,7 +23,8 @@ function FamilyProfile() {
 
     const fetchFamilyData = async () => { // Fonction asynchrone pour récupérer les données de la famille
       try {
-        const response = await GetFamilyById(Number(familyId), token); // Appel API pour récupérer les données de la famille
+        //! Appel API pour récupérer les données de la famille
+        const response = await GetFamilyById(Number(familyId), token); 
         console.log("Données de la famille récupérées :", response);
 
         // Destructuration des données de la réponse de l'API
@@ -103,7 +104,8 @@ function FamilyProfile() {
     };
 
     try {
-      const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string); // Appel API pour mettre à jour les données de la famille
+      //! Appel API pour mettre à jour les données de la famille
+      const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string); 
       console.log("Mise à jour réussie:", updatedFamily); // Log des données mises à jour
       setFamilyData(updatedFamily); // Mise à jour de l'état avec les nouvelles données
       setImageUrl(updatedFamily.profile_photo || null); // Mise à jour de l'URL de l'image de profil
@@ -129,10 +131,6 @@ function FamilyProfile() {
           />
           <div>
           
-          
- 
-
-   
           </div>
 
           {/* Champs du formulaire */}

@@ -3,71 +3,78 @@ import "./AssociationProfile.scss"; // Importation du fichier SCSS pour les styl
 import {
   GetAssociationById,
   PatchAssociation,
-} from "../../api/association.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
+} from "../../api/association.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de l'association
 import AuthContext from "../../contexts/authContext"; // Importation du contexte d'authentification
-import type { IAssociation, IAssociationForm } from "../../@types/association"; // Importation des types pour les données de famille
+import type { IAssociation, IAssociationForm } from "../../@types/association"; // Importation des types pour les données de l'association
 import ImageUpload from "../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
 
 function AssociationProfile() {
-  const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
+  // Récupération des informations de l'utilisateur et du token depuis le contexte d'authentification
+  const { user, token } = useContext(AuthContext) || {};
+  
+  // Déclare un état "AssociationData" initialisé à "null", destiné à stocker les données de l'association, de type "IAssociation" ou "null".
   const [AssociationData, setAssociationData] = useState<IAssociation | null>(
     null
-  ); // Etat pour les données de la famille
-  const [formData, setFormData] = useState<IAssociationForm | null>(null); // Etat pour les données du formulaire
-  const [imageUrl, setImageUrl] = useState<string | null>(null); // Etat pour l'URL de l'image de profil
-  const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
-  const associationId = user?.id_association; // Récupération de l'ID de la famille de l'utilisateur
+  );
 
-  //! Utilisation d'un effet secondaire pour charger les données de la famille
+  //* Etat pour les données de l'association, initialisé à null
+  const [formData, setFormData] = useState<IAssociationForm | null>(null); // Etat pour les données du formulaire, initialisé à null
+  const [imageUrl, setImageUrl] = useState<string | null>(null); // Etat pour l'URL de l'image de profil, initialisé à null
+  const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL), initialisé à null
+  const associationId = user?.id_association; // Récupération de l'ID de l'association de l'utilisateur connecté
+
+  //! Utilisation d'un effet secondaire pour charger les données de l'association
   useEffect(() => {
     if (!associationId || !token) {
-      // Vérification si assoId ou token sont absents
+      // Vérification si associationId ou token sont absents
       console.log("Aucun associationId ou token trouvé !");
       return; // Sortie de l'effet si l'un des éléments est manquant
     }
 
     const fetchAssociationData = async () => {
-      // Fonction asynchrone pour récupérer les données de la famille
+      // Fonction asynchrone pour récupérer les données de l'association
       try {
         console.log("User object:", user);
         console.log(
           "Récupération des données pour l'association avec ID:",
           associationId
         );
-        const response = await GetAssociationById(associationId, token); // Appel API pour récupérer les données de la famille
-        console.log("Données de la famille récupérées :", response);
+
+        //! Appel API pour récupérer les données de l'association
+        const response = await GetAssociationById(associationId, token);
+        console.log("Données de l'association récupérées :", response);
 
         // Destructuration des données de la réponse de l'API
         const {
           id_user,
           address,
           city,
-          description = "", 
+          description = "",
           phone,
           postal_code,
           profile_photo,
           user: { email, firstname, lastname },
-        } = response || {}; 
+        } = response || {};
 
         // Création d'un objet associationData conforme au type IAssociation
         const associationData: IAssociation = {
           id_user,
-          representative: response.representative, // Add this line
-          rna_number: response.rna_number, // Add this line
+          representative: response.representative,
+          rna_number: response.rna_number,
           address,
           city,
           postal_code,
           phone,
-          description: description || "", // Valeur par défaut si description est null
-          status: response.status, // Add this line
-          animals: response.animals, // Add this line
+          description: description || "",
+          status: response.status,
+          animals: response.animals, // Liste des animaux
           profile_photo,
-          user: { email, firstname, lastname }, // Informations utilisateur
+          user: { email, firstname, lastname }, // Informations utilisateur liées à l'association
         };
 
-        setAssociationData(associationData); // Mise à jour de l'état avec les données de la famille
-        setFormData(associationData); // Mise à jour de l'état avec les données du formulaire
-        setImageUrl(profile_photo || null); // Mise à jour de l'état avec l'URL de la photo de profil
+        setAssociationData(associationData); // Mise à jour de l'état avec les données récupérées
+        setFormData(associationData); // Mise à jour de l'état du formulaire avec les données de l'association
+        setImageUrl(profile_photo || null); // Mise à jour de l'URL de l'image de profil
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error); // Gestion des erreurs de récupération des données
       }
@@ -96,13 +103,14 @@ function AssociationProfile() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Empêche le comportement par défaut de soumission du formulaire
 
+    //* Création d'un objet mis à jour pour l'association
+    // Les valeurs de l'image sont prises en compte seulement si elle est définie
     const updatedAssociationData: Partial<IAssociation> = {
-      // Création d'un objet mis à jour pour la famille
       address: formData?.address || "", // Valeur de l'adresse, ou chaîne vide si non défini
       city: formData?.city || "", // Valeur de la ville, ou chaîne vide si non défini
       description: formData?.description || "", // Valeur de la description, ou chaîne vide si non défini
-      representative: formData?.representative || ",", // Valeur du représentant, ou chaîne vide si non défini"" // Valeur de garden, ou false si non défini
-      rna_number: formData?.rna_number || "", // Valeur du nombre d'animaux, ou 0 si non défini
+      representative: formData?.representative || ",", // Valeur du représentant, ou chaîne vide si non défini
+      rna_number: formData?.rna_number || "", // Valeur du numéro RNA, ou chaîne vide si non défini
       phone: formData?.phone || "", // Valeur du téléphone, ou chaîne vide si non défini
       postal_code: formData?.postal_code || "", // Valeur du code postal, ou chaîne vide si non défini
       profile_photo: String(_image),
@@ -115,11 +123,12 @@ function AssociationProfile() {
     };
 
     try {
+      //! Appel API pour mettre à jour les données de l'association
       const updatedAssociation = await PatchAssociation(
         associationId as number,
         updatedAssociationData,
         token as string
-      ); // Appel API pour mettre à jour les données de la famille
+      );
       console.log("Mise à jour réussie:", updatedAssociation); // Log des données mises à jour
       setAssociationData(updatedAssociation); // Mise à jour de l'état avec les nouvelles données
       setImageUrl(updatedAssociation.profile_photo || null); // Mise à jour de l'URL de l'image de profil
@@ -130,23 +139,24 @@ function AssociationProfile() {
   };
 
   if (!user)
-    return <div>Veuillez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté
-  if (!AssociationData) return <div>Chargement des données...</div>; // Si les données de la famille ne sont pas encore chargées
+    return <div>Vous devez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté, afficher ce message
+  if (!AssociationData) return <div>Chargement des données...</div>; // Si les données de l'association ne sont pas encore chargées, afficher ce message
 
   return (
     <section className="infoSection">
       <div className="infoTitle">
-        <h3>Informations Personnelles</h3>
+        <h3>Informations Personnelles</h3> {/* Titre de la section */}
       </div>
       <div className="infoBody">
         <form className="forms" onSubmit={handleSubmit}>
+          {" "}
+          {/* Formulaire de mise à jour */}
           {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
           <ImageUpload
             initialImageUrl={imageUrl}
             onImageChange={handleImageChange}
           />
           <div>
-
             {/* Nom de l'association */}
             <div className="infoFieldContainer row">
               <label className="infoLabel" htmlFor="representative">
@@ -185,148 +195,49 @@ function AssociationProfile() {
               />
             </div>
           </div>
-
           {/* Champs du formulaire */}
           <div className="fieldsWrap">
-            <div className="infoFieldContainer row">
-              {/* lastname */}
-              <label className="infoLabel" htmlFor="lastName">
-                Nom
+            <div className="infoFieldContainer">
+              <label className="infoLabel" htmlFor="phone">
+                Téléphone
               </label>
               <input
                 className="infoInput"
                 type="text"
-                id="lastName"
-                value={formData?.user?.lastname || ""}
+                id="phone"
+                value={formData?.phone || ""}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    user: { ...formData?.user, lastname: e.target.value },
+                    phone: e.target.value, // Mise à jour du champ phone
                   })
                 }
               />
             </div>
-
-            {/* firstname */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="firstname">
-                Prénom
+            <div className="infoFieldContainer">
+              <label className="infoLabel" htmlFor="email">
+                E-mail
               </label>
               <input
                 className="infoInput"
-                type="text"
-                id="firstname"
-                value={formData?.user?.firstname || ""}
+                type="email"
+                id="email"
+                value={formData?.user?.email || ""}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    user: { ...formData?.user, firstname: e.target.value },
-                  })
-                }
-              />
-            </div>
-
-
-            {/* address */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="address">
-                Adresse
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="address"
-                value={formData?.address || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    address: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            {/* city */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="city">
-                Ville
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="city"
-                value={formData?.city || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    city: e.target.value,
-                })
-                }
-              />
-            </div>
-
-            {/* postal_code */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="postal_code">
-                Code postal
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="postal_code"
-                value={formData?.postal_code || ""}
-                onChange={(e) =>
-                  setFormData({
-                      ...formData,
-                      postal_code: e.target.value,
-                    })
-                }
-              />
-            </div>
-                    {/* phone */}
-                    <div className="infoFieldContainer row">
-                      <label className="infoLabel" htmlFor="phone">
-                        Téléphone
-                      </label>
-                      <input
-                        className="infoInput"
-                        type="tel"
-                        id="phone"
-                        value={formData?.phone || ""}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            phone: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-
-            {/* description */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="description">
-                Description
-              </label>
-              <textarea
-                className="infoInput"
-                id="description"
-                value={formData?.description || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    description: e.target.value,
+                    user: {
+                      ...formData?.user,
+                      email: e.target.value, // Mise à jour du champ email
+                    },
                   })
                 }
               />
             </div>
           </div>
-
-          <div className="formBtns">
-            <button type="submit" className="submitBtn">
-              Enregistrer
-            </button>
-            <button type="reset" className="resetBtn">
-              Annuler
+          <div className="row">
+            <button className="btnSubmit" type="submit">
+              Mettre à jour
             </button>
           </div>
         </form>
@@ -335,4 +246,4 @@ function AssociationProfile() {
   );
 }
 
-export default AssociationProfile;
+export default AssociationProfile; // Exportation du composant AssociationProfile
