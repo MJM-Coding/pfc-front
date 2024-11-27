@@ -1,8 +1,7 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
 import { IAssociation } from "../@types/association";
-import { IAnimal } from "../@types//animal"; // Assurez-vous d'avoir défini ce type
- import { IUser } from "../@types/user";  
+/* import { IAnimal } from "../@types//animal";  */// Assurez-vous d'avoir défini ce type
 
 /**
  *! Récupère la liste de toutes les associations.
@@ -23,32 +22,7 @@ export const GetAllAssociations = async (token: string): Promise<IAssociation[]>
   }
 };
 
-//! Récupérer à la fois l'utilisateur et l'association
-export const GetUserAndAssociationById = async (
-  userId: string,
-  token: string
-): Promise<{ user: IUser; association: IAssociation }> => {
-  try {
-    const userResponse: AxiosResponse<IUser> = await api.get(`/user/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
 
-    const associationResponse: AxiosResponse<IAssociation> = await api.get(
-      `/association/user/${userId}`, // Supposons qu'il existe un endpoint pour récupérer l'association d'un utilisateur.
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-
-    return {
-      user: userResponse.data,
-      association: associationResponse.data,
-    };
-  } catch (error) {
-    handleApiError(error, `la récupération du profil de l'utilisateur avec l'ID ${userId}`);
-    throw error;
-  }
-};
 /**
  *! Récupère une association spécifique par son ID.
  ** Cette fonction est accessible publiquement.
@@ -56,23 +30,19 @@ export const GetUserAndAssociationById = async (
  * @returns Une promesse qui résout avec un objet IAssociation.
  */
  export const GetAssociationById = async (
-  id: string,
-  token: string
-): Promise<IAssociation> => {
-
+  id: number, 
+  token: string): 
+  Promise<IAssociation> => {
   try {
-    const response: AxiosResponse<IAssociation> = await api.get(
-      `/association/${id}`,{headers: { Authorization: `Bearer ${token}` 
-      }}
-    );
-    
+    const response = await api.get<IAssociation>(`/association/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return response.data;
   } catch (error) {
-    handleApiError(error, `la récupération de l'association avec l'ID ${id}`);
+    handleApiError(error, `Impossible de récupérer l'association avec l'ID ${id}`);
     throw error;
   }
 };
-
 
 /**
  *! Modifie une association existante.
@@ -82,30 +52,27 @@ export const GetUserAndAssociationById = async (
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec l'objet IAssociation modifié.
  */
- export const UpdateAssociation = async (
-  id: string,
-  data: Partial<IAssociation>, // Permet des mises à jour partielles
+ export const PatchAssociation = async (
+  id: number,
+  associationData: Partial<IAssociation>, // Permet des mises à jour partielles
   token: string
+
 ): Promise<IAssociation> => {
   try {
-    // Envoi de la requête PATCH à l'API
-    const response: AxiosResponse<IAssociation> = await api.patch(
-      `/association/${id}`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Authentification avec le token
-        },
-      }
-    );
-
-    return response.data; // Retourne les données mises à jour
+    const response = await api.patch<IAssociation>(`/association/${id}`, associationData, {
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json', // Indique que nous envoyons des données JSON
+      },
+    });
+    return response.data;
   } catch (error) {
-    // Gestion des erreurs avec un message personnalisé
-    handleApiError(error, `la mise à jour de l'association avec l'ID ${id}`);
-    throw error; // Relance l'erreur pour traitement ultérieur
+    handleApiError(error, `Impossible de mettre à jour l'association avec l'ID ${id}`);
+    throw error;
   }
 };
+
+
 
 /**
  *! Supprime une association.
@@ -135,7 +102,7 @@ export const DeleteAssociation = async (
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec un tableau d'objets IAnimal.
  */
-export const GetAllAnimalsByAssociation = async (
+/* export const GetAllAnimalsByAssociation = async (
   associationId: string,
   token: string
 ): Promise<IAnimal[]> => {
@@ -154,7 +121,7 @@ export const GetAllAnimalsByAssociation = async (
     );
     throw error;
   }
-};
+}; */
 
 /**
  *! Récupère un animal spécifique lié à une association par son ID.
@@ -164,7 +131,7 @@ export const GetAllAnimalsByAssociation = async (
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec un objet IAnimal.
  */
-export const GetAnimalByIdForAssociation = async (
+/* export const GetAnimalByIdForAssociation = async (
   associationId: string,
   animalId: string,
   token: string
@@ -184,7 +151,7 @@ export const GetAnimalByIdForAssociation = async (
     );
     throw error;
   }
-};
+}; */
 
 /**
  *! Récupère toutes les demandes liées à une association spécifique.
@@ -277,4 +244,4 @@ export const GetAnimalByIdForAssociation = async (
   }
 };
  */
-export type { IAssociation, IAnimal/* , IAsk  */};
+export type { IAssociation/*, IAnimal/, IAsk  */};

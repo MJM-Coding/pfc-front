@@ -1,29 +1,40 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
-import "./profilePageFamily.scss"; // Importation du fichier SCSS pour les styles
-import { GetFamilyById, PatchFamily } from "../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
+import "./AssociationProfile.scss"; // Importation du fichier SCSS pour les styles
+import {
+  GetAssociationById,
+  PatchAssociation,
+} from "../../api/association.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
 import AuthContext from "../../contexts/authContext"; // Importation du contexte d'authentification
-import type { IFamily, IFamilyForm } from "../../@types/family"; // Importation des types pour les données de famille
+import type { IAssociation, IAssociationForm } from "../../@types/association"; // Importation des types pour les données de famille
 import ImageUpload from "../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
 
-function FamilyProfile() {
+function AssociationProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
-  const [familyData, setFamilyData] = useState<IFamily | null>(null); // Etat pour les données de la famille
-  const [formData, setFormData] = useState<IFamilyForm | null>(null); // Etat pour les données du formulaire
+  const [AssociationData, setAssociationData] = useState<IAssociation | null>(
+    null
+  ); // Etat pour les données de la famille
+  const [formData, setFormData] = useState<IAssociationForm | null>(null); // Etat pour les données du formulaire
   const [imageUrl, setImageUrl] = useState<string | null>(null); // Etat pour l'URL de l'image de profil
   const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
-  const familyId = user?.id_family; // Récupération de l'ID de la famille de l'utilisateur
-
+  const associationId = user?.id_association; // Récupération de l'ID de la famille de l'utilisateur
 
   //! Utilisation d'un effet secondaire pour charger les données de la famille
   useEffect(() => {
-    if (!familyId || !token) { // Vérification si familyId ou token sont absents
-      console.log("Aucun familyId ou token trouvé !");
+    if (!associationId || !token) {
+      // Vérification si assoId ou token sont absents
+      console.log("Aucun associationId ou token trouvé !");
       return; // Sortie de l'effet si l'un des éléments est manquant
     }
 
-    const fetchFamilyData = async () => { // Fonction asynchrone pour récupérer les données de la famille
+    const fetchAssociationData = async () => {
+      // Fonction asynchrone pour récupérer les données de la famille
       try {
-        const response = await GetFamilyById(Number(familyId), token); // Appel API pour récupérer les données de la famille
+        console.log("User object:", user);
+        console.log(
+          "Récupération des données pour l'association avec ID:",
+          associationId
+        );
+        const response = await GetAssociationById(associationId, token); // Appel API pour récupérer les données de la famille
         console.log("Données de la famille récupérées :", response);
 
         // Destructuration des données de la réponse de l'API
@@ -31,49 +42,50 @@ function FamilyProfile() {
           id_user,
           address,
           city,
-          description,
-          garden,
-          number_of_animals,
-          number_of_children,
+          description = "", 
           phone,
           postal_code,
           profile_photo,
           user: { email, firstname, lastname },
-        } = response;
+        } = response || {}; 
 
-        // Création d'un objet familyData conforme au type IFamily
-        const familyData: IFamily = {
+        // Création d'un objet associationData conforme au type IAssociation
+        const associationData: IAssociation = {
           id_user,
+          representative: response.representative, // Add this line
+          rna_number: response.rna_number, // Add this line
           address,
           city,
-          description: description || "", // Valeur par défaut si description est null
-          garden: garden || false, // Valeur par défaut si garden est null
-          number_of_animals: number_of_animals || 0, // Valeur par défaut si number_of_animals est null
-          number_of_children: number_of_children || 0, // Valeur par défaut si number_of_children est null
-          phone,
           postal_code,
+          phone,
+          description: description || "", // Valeur par défaut si description est null
+          status: response.status, // Add this line
+          animals: response.animals, // Add this line
           profile_photo,
           user: { email, firstname, lastname }, // Informations utilisateur
         };
 
-        setFamilyData(familyData); // Mise à jour de l'état avec les données de la famille
-        setFormData(familyData); // Mise à jour de l'état avec les données du formulaire
+        setAssociationData(associationData); // Mise à jour de l'état avec les données de la famille
+        setFormData(associationData); // Mise à jour de l'état avec les données du formulaire
         setImageUrl(profile_photo || null); // Mise à jour de l'état avec l'URL de la photo de profil
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error); // Gestion des erreurs de récupération des données
       }
     };
 
-    fetchFamilyData(); // Appel de la fonction pour récupérer les données
-  }, [familyId, token]); // Déclenchement de l'effet quand familyId ou token changent
+    fetchAssociationData(); // Appel de la fonction pour récupérer les données
+  }, [associationId, token]); // Déclenchement de l'effet quand AssociationId ou token changent
 
   //! Fonction qui gère le changement d'image
   const handleImageChange = (image: string | File | null) => {
-    if (image instanceof File) { // Si l'image est un fichier
+    if (image instanceof File) {
+      // Si l'image est un fichier
       console.log("Nouveau fichier sélectionné :", image); // Log du nouveau fichier sélectionné
-    } else if (typeof image === "string") { // Si l'image est une URL
+    } else if (typeof image === "string") {
+      // Si l'image est une URL
       console.log("Nouvelle URL d'image :", image); // Log de la nouvelle URL d'image
-    } else { // Si l'image est null
+    } else {
+      // Si l'image est null
       console.log("Aucune image sélectionnée"); // Log quand aucune image n'est sélectionnée
     }
 
@@ -84,37 +96,42 @@ function FamilyProfile() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Empêche le comportement par défaut de soumission du formulaire
 
-    const updatedFamilyData: Partial<IFamily> = { // Création d'un objet mis à jour pour la famille
-      address: formData?.address || '', // Valeur de l'adresse, ou chaîne vide si non défini
-      city: formData?.city || '', // Valeur de la ville, ou chaîne vide si non défini
-      description: formData?.description || '', // Valeur de la description, ou chaîne vide si non défini
-      garden: formData?.garden || false, // Valeur de garden, ou false si non défini
-      number_of_animals: formData?.number_of_animals || 0, // Valeur du nombre d'animaux, ou 0 si non défini
-      number_of_children: formData?.number_of_children || 0, // Valeur du nombre d'enfants, ou 0 si non défini
-      phone: formData?.phone || '', // Valeur du téléphone, ou chaîne vide si non défini
-      postal_code: formData?.postal_code || '', // Valeur du code postal, ou chaîne vide si non défini
-      profile_photo: imageUrl, // Assure que l'URL de la photo est utilisée
+    const updatedAssociationData: Partial<IAssociation> = {
+      // Création d'un objet mis à jour pour la famille
+      address: formData?.address || "", // Valeur de l'adresse, ou chaîne vide si non défini
+      city: formData?.city || "", // Valeur de la ville, ou chaîne vide si non défini
+      description: formData?.description || "", // Valeur de la description, ou chaîne vide si non défini
+      representative: formData?.representative || ",", // Valeur du représentant, ou chaîne vide si non défini"" // Valeur de garden, ou false si non défini
+      rna_number: formData?.rna_number || "", // Valeur du nombre d'animaux, ou 0 si non défini
+      phone: formData?.phone || "", // Valeur du téléphone, ou chaîne vide si non défini
+      postal_code: formData?.postal_code || "", // Valeur du code postal, ou chaîne vide si non défini
+      profile_photo: String(_image),
       ...(imageUrl && { profile_photo: imageUrl }), // Mise à jour de la photo si imageUrl est défini
       user: {
-        email: formData?.user?.email || '', // Valeur de l'email utilisateur
-        firstname: formData?.user?.firstname || '', // Valeur du prénom utilisateur
-        lastname: formData?.user?.lastname || '' // Valeur du nom utilisateur
-      }
+        email: formData?.user?.email || "", // Valeur de l'email utilisateur
+        firstname: formData?.user?.firstname || "", // Valeur du prénom utilisateur
+        lastname: formData?.user?.lastname || "", // Valeur du nom utilisateur
+      },
     };
 
     try {
-      const updatedFamily = await PatchFamily(familyId as number, updatedFamilyData, token as string); // Appel API pour mettre à jour les données de la famille
-      console.log("Mise à jour réussie:", updatedFamily); // Log des données mises à jour
-      setFamilyData(updatedFamily); // Mise à jour de l'état avec les nouvelles données
-      setImageUrl(updatedFamily.profile_photo || null); // Mise à jour de l'URL de l'image de profil
+      const updatedAssociation = await PatchAssociation(
+        associationId as number,
+        updatedAssociationData,
+        token as string
+      ); // Appel API pour mettre à jour les données de la famille
+      console.log("Mise à jour réussie:", updatedAssociation); // Log des données mises à jour
+      setAssociationData(updatedAssociation); // Mise à jour de l'état avec les nouvelles données
+      setImageUrl(updatedAssociation.profile_photo || null); // Mise à jour de l'URL de l'image de profil
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error); // Gestion des erreurs lors de la mise à jour
       alert("Erreur lors de la mise à jour des données."); // Affichage d'une alerte en cas d'erreur
     }
   };
 
-  if (!user) return <div>Veuillez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté
-  if (!familyData) return <div>Chargement des données...</div>; // Si les données de la famille ne sont pas encore chargées
+  if (!user)
+    return <div>Veuillez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté
+  if (!AssociationData) return <div>Chargement des données...</div>; // Si les données de la famille ne sont pas encore chargées
 
   return (
     <section className="infoSection">
@@ -123,16 +140,50 @@ function FamilyProfile() {
       </div>
       <div className="infoBody">
         <form className="forms" onSubmit={handleSubmit}>
-          
           {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
-          <ImageUpload initialImageUrl={imageUrl} onImageChange={handleImageChange}
+          <ImageUpload
+            initialImageUrl={imageUrl}
+            onImageChange={handleImageChange}
           />
           <div>
-          
-          
- 
 
-   
+            {/* Nom de l'association */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="representative">
+                Nom de l'association
+              </label>
+              <input
+                className="infoInput"
+                type="text"
+                id="representative"
+                value={formData?.representative || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    representative: e.target.value, // Mise à jour du champ representative
+                  })
+                }
+              />
+            </div>
+
+            {/* rna_number */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="rna_number">
+                Numéro RNA
+              </label>
+              <input
+                className="infoInput"
+                type="text"
+                id="rna_number"
+                value={formData?.rna_number || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    rna_number: e.target.value, // Mise à jour du champ rna_number
+                  })
+                }
+              />
+            </div>
           </div>
 
           {/* Champs du formulaire */}
@@ -175,24 +226,6 @@ function FamilyProfile() {
               />
             </div>
 
-            {/* phone */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="phone">
-                Téléphone
-              </label>
-              <input
-                className="infoInput"
-                type="tel"
-                id="phone"
-                value={formData?.phone || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    phone: e.target.value,
-                  })
-                }
-              />
-            </div>
 
             {/* address */}
             <div className="infoFieldContainer row">
@@ -227,7 +260,7 @@ function FamilyProfile() {
                   setFormData({
                     ...formData,
                     city: e.target.value,
-                  })
+                })
                 }
               />
             </div>
@@ -244,12 +277,30 @@ function FamilyProfile() {
                 value={formData?.postal_code || ""}
                 onChange={(e) =>
                   setFormData({
-                    ...formData,
-                    postal_code: e.target.value,
-                  })
+                      ...formData,
+                      postal_code: e.target.value,
+                    })
                 }
               />
             </div>
+                    {/* phone */}
+                    <div className="infoFieldContainer row">
+                      <label className="infoLabel" htmlFor="phone">
+                        Téléphone
+                      </label>
+                      <input
+                        className="infoInput"
+                        type="tel"
+                        id="phone"
+                        value={formData?.phone || ""}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            phone: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
 
             {/* description */}
             <div className="infoFieldContainer row">
@@ -264,62 +315,6 @@ function FamilyProfile() {
                   setFormData({
                     ...formData,
                     description: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            {/* garden */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="garden">
-                Jardin
-              </label>
-              <input
-                type="checkbox"
-                id="garden"
-                checked={formData?.garden || false}
-                onChange={() =>
-                  setFormData({
-                    ...formData,
-                    garden: !formData?.garden,
-                  })
-                }
-              />
-            </div>
-
-            {/* number_of_animals */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="number_of_animals">
-                Nombre d'animaux
-              </label>
-              <input
-                className="infoInput"
-                type="number"
-                id="number_of_animals"
-                value={formData?.number_of_animals || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    number_of_animals: Number(e.target.value),
-                  })
-                }
-              />
-            </div>
-
-            {/* number_of_children */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="number_of_children">
-                Nombre d'enfants
-              </label>
-              <input
-                className="infoInput"
-                type="number"
-                id="number_of_children"
-                value={formData?.number_of_children || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    number_of_children: Number(e.target.value),
                   })
                 }
               />
@@ -340,4 +335,4 @@ function FamilyProfile() {
   );
 }
 
-export default FamilyProfile;
+export default AssociationProfile;
