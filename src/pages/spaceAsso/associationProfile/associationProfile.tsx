@@ -5,13 +5,12 @@ import {
   PatchAssociation,
 } from "../../../api/association.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de l'association
 import AuthContext from "../../../contexts/authContext"; // Importation du contexte d'authentification
-import type {
-  IAssociation,
-  IAssociationForm,
-} from "../../../@types/association"; // Importation des types pour les données de l'association
+import type { IAssociation, IAssociationForm } from "../../../@types/association"; // Importation des types pour les données de l'association
 import ImageUpload from "../../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
 import Message from "../../../components/errorSuccessMessage/errorSuccessMessage";
-import Toast from "../../../toast/toast";
+import Toast from "../../../components/toast/toast";
+import { validateForm } from "../../../components/validateForm/validateForm";
+import "../../../components/validateForm/validateForm.scss";
 
 function AssociationProfile() {
   // Récupération des informations de l'utilisateur et du token depuis le contexte d'authentification
@@ -30,15 +29,16 @@ function AssociationProfile() {
   const associationId = user?.id_association; // Récupération de l'ID de l'association de l'utilisateur connecté
   const [isEditable, setIsEditable] = useState<boolean>(false); // Etat pour gérer l'édition
 
-  // State pour les messages d'erreur et de succès
-  const [phoneError, setPhoneError] = useState<string>("");
-  const [postalCodeError, setPostalCodeError] = useState<string>("");
-  const [RNANumberError, setRNANumberError] = useState<string>("");
+ // State pour les messages d'erreur et de succès
+ const [phoneError, setPhoneError] = useState<string>("");
+ const [postalCodeError, setPostalCodeError] = useState<string>("");
+ const [RNANumberError, setRNANumberError] = useState<string>("");
 
-  // State pour gérer l'affichage de Toast
-  const [showToast, setShowToast] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>("");
-  const [toastType, setToastType] = useState<"success" | "error">("success");
+// State pour gérer l'affichage de Toast
+const [showToast, setShowToast] = useState<boolean>(false);
+const [toastMessage, setToastMessage] = useState<string>("");
+const [toastType, setToastType] = useState<"success" | "error">("success");
+
 
   //! Utilisation d'un effet secondaire pour charger les données de l'association
   useEffect(() => {
@@ -117,39 +117,39 @@ function AssociationProfile() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Empêche le comportement par défaut de soumission du formulaire
 
-    // Réinitialiser les messages d'erreur avant la soumission
-    setPhoneError("");
-    setPostalCodeError("");
-    setRNANumberError("");
+ // Réinitialiser les messages d'erreur avant la soumission
+ setPhoneError("");
+ setPostalCodeError("");
+ setRNANumberError("");
 
-    let formIsValid = true;
-    const newErrors: Record<string, string> = {};
+ //* Utilisation de validateForm pour valider tous les champs nécessaires
+ const errors = validateForm(
+  {
+    ...formData,
+    postal_code: formData?.postal_code || "",
+    phone: formData?.phone || "",
+    rna_number: formData?.rna_number || "", // Assurez-vous que l'email est correctement référencé
+  },
+  ["postal_code", "phone", "rna_number"]
+);
 
-    // Validation du code postal
-    if (!/^\d{5}$/.test(formData?.postal_code || "")) {
-      newErrors.postal_code = "Le code postal doit être composé de 5 chiffres.";
-      formIsValid = false;
-    }
+// Vérifier s'il y a des erreurs
+if (Object.keys(errors).length > 0) {
+  // Gérer les erreurs
+  if (errors.postal_code) {
+    setPostalCodeError(errors.postal_code);
+  }
+  if (errors.phone) {
+    setPhoneError(errors.phone);
+  }
+  if (errors.rna_number) {
+    setRNANumberError(errors.rna_number);
+  }
 
-    // Validation du numéro de téléphone
-    if (!/^\d{10}$/.test(formData?.phone || "")) {
-      newErrors.phone = "Le numéro de téléphone doit comporter 10 chiffres.";
-      formIsValid = false;
-    }
+  return; // Sortir si des erreurs existent
+}
 
-    // Vérification du RNA
-    if (!/^W\d{9}$/.test(formData?.rna_number || "")) {
-      newErrors.rna_number =
-        "Le numéro RNA doit commencer par W suivi de 9 chiffres.";
-      formIsValid = false;
-    }
 
-    if (!formIsValid) {
-      setPhoneError(newErrors.phone || "");
-      setPostalCodeError(newErrors.postal_code || "");
-      setRNANumberError(newErrors.rna_number || "");
-      return;
-    }
 
     //* Création d'un objet mis à jour pour l'association
     // Les valeurs de l'image sont prises en compte seulement si elle est définie
@@ -180,18 +180,24 @@ function AssociationProfile() {
       console.log("Mise à jour réussie:", updatedAssociation); // Log des données mises à jour
       setAssociationData(updatedAssociation); // Mise à jour de l'état avec les nouvelles données
       setImageUrl(updatedAssociation.profile_photo || null); // Mise à jour de l'URL de l'image de profil
-
-      // Désactivation de l'édition après la mise à jour réussie
-      setIsEditable(false);
+    
+ // Désactivation de l'édition après la mise à jour réussie
+    setIsEditable(false); 
 
       setToastMessage("Mise à jour réussie !");
       setToastType("success");
       setShowToast(true);
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error); // Gestion des erreurs lors de la mise à jour
-      alert("Erreur lors de la mise à jour des données."); // Affichage d'une alerte en cas d'erreur
-
-      setToastMessage("Erreur lors de la mise à jour des données.");
+    
+    
+    } catch (error:any) {
+      
+      // Vérifie si l'erreur est une réponse de l'API (par exemple une erreur 4xx ou 5xx)
+      const errorMessage = error?.response?.data?.message || error.message || "Erreur inconnue lors de la mise à jour des données.";
+      
+      console.error("Erreur lors de la mise à jour:", errorMessage); // Affiche l'erreur détaillée dans la console
+      alert(`Erreur lors de la mise à jour des données : ${errorMessage}`); // Affichage d'une alerte détaillée en cas d'erreur
+      
+      setToastMessage(`Erreur lors de la mise à jour des données : ${errorMessage}`);
       setToastType("error");
       setShowToast(true);
     }
@@ -201,44 +207,46 @@ function AssociationProfile() {
     setIsEditable(!isEditable); // Bascule entre édition et non-édition
   };
 
+
   if (!user)
     return <div>Vous devez vous connecter pour accéder à cette page.</div>; // Si l'utilisateur n'est pas connecté, afficher ce message
   if (!AssociationData) return <div>Chargement des données...</div>; // Si les données de l'association ne sont pas encore chargées, afficher ce message
 
-  return (
+   return (
     <div className="containerProfilAsso">
-      <section className="infoSection-asso">
-        <div className="infoTitle-asso">
-          <h3>Informations Personnelles</h3>
-        </div>
-        <div className="infoBody-asso">
-          <form className="forms-asso" onSubmit={handleSubmit}>
-            {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
-            <ImageUpload
-              initialImageUrl={imageUrl}
-              onImageChange={handleImageChange}
-            />
+    <section className="infoSection-asso">
+      <div className="infoTitle-asso">
+        <h3>Informations Personnelles</h3>
+      </div>
+      <div className="infoBody-asso">
+        <form className="forms-asso" onSubmit={handleSubmit}>
+          {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
+          <ImageUpload
+            initialImageUrl={imageUrl}
+            onImageChange={handleImageChange}
+          />
+          
+          <div>
 
-            <div>
-              {/* Nom de l'association */}
-              <div className="infoFieldContainer row-asso">
-                <label className="infoLabel-asso" htmlFor="representative">
-                  Nom de l'association
-                </label>
-                <input
-                  className="infoInput-asso"
-                  type="text"
-                  id="representative-asso"
-                  value={formData?.representative || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      representative: e.target.value, // Mise à jour du champ representative
-                    })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
+            {/* Nom de l'association */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="representative">
+                Nom de l'association
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="representative-asso"
+                value={formData?.representative || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    representative: e.target.value, // Mise à jour du champ representative
+                  })
+                }
+                disabled={!isEditable} 
+              />
+            </div>
             </div>
             {/* rna_number */}
             <div className="infoFieldContainer row-asso">
@@ -256,164 +264,158 @@ function AssociationProfile() {
                     rna_number: e.target.value, // Mise à jour du champ rna_number
                   })
                 }
+              disabled={!isEditable}
+              />
+            {RNANumberError && <Message message={RNANumberError} type="error" />}
+          </div>
+
+          {/* Champs du formulaire */}
+          <div className="fieldsWrap-asso">
+            <div className="infoFieldContainer row-asso">
+              {/* lastname */}
+              <label className="infoLabel-asso" htmlFor="lastName">
+                Nom
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="lastName-asso"
+                value={formData?.user?.lastname || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    user: { ...formData?.user, lastname: e.target.value },
+                  })
+                }
                 disabled={!isEditable}
               />
-              {RNANumberError && (
-                <Message message={RNANumberError} type="error" />
-              )}
             </div>
 
-            {/* Champs du formulaire */}
-            <div className="fieldsWrap-asso">
-              <div className="infoFieldContainer row-asso">
-                {/* lastname */}
-                <label className="infoLabel-asso" htmlFor="lastName">
-                  Nom
-                </label>
-                <input
-                  className="infoInput-asso"
-                  type="text"
-                  id="lastName-asso"
-                  value={formData?.user?.lastname || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      user: { ...formData?.user, lastname: e.target.value },
-                    })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
+            {/* firstname */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="firstname">
+                Prénom
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="firstname-asso"
+                value={formData?.user?.firstname || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    user: { ...formData?.user, firstname: e.target.value },
+                  })
+                }
+                disabled={!isEditable}
+              />
+            </div>
 
-              {/* firstname */}
-              <div className="infoFieldContainer row-asso">
-                <label className="infoLabel-asso" htmlFor="firstname">
-                  Prénom
-                </label>
-                <input
-                  className="infoInput-asso"
-                  type="text"
-                  id="firstname-asso"
-                  value={formData?.user?.firstname || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      user: { ...formData?.user, firstname: e.target.value },
-                    })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
 
-              {/* address */}
-              <div className="infoFieldContainer row-asso">
-                <label className="infoLabel-asso" htmlFor="address">
-                  Adresse
-                </label>
-                <input
-                  className="infoInput-asso"
-                  type="text"
-                  id="address-asso"
-                  value={formData?.address || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      address: e.target.value,
-                    })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
+            {/* address */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="address">
+                Adresse
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="address-asso"
+                value={formData?.address || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    address: e.target.value,
+                  })
+                }
+                disabled={!isEditable}
+              />
+            </div>
 
-              {/* city */}
-              <div className="infoFieldContainer row-asso">
-                <label className="infoLabel-asso" htmlFor="city">
-                  Ville
-                </label>
-                <input
-                  className="infoInput-asso"
-                  type="text"
-                  id="city-asso"
-                  value={formData?.city || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      city: e.target.value,
-                    })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
+            {/* city */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="city">
+                Ville
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="city-asso"
+                value={formData?.city || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    city: e.target.value,
+                })
+                }
+                disabled={!isEditable}
+              />
+            </div>
 
-              {/* postal_code */}
-              <div className="infoFieldContainer row-asso">
-                <label className="infoLabel-asso" htmlFor="postal_code">
-                  Code postal
-                </label>
-                <input
-                  className="infoInput-asso"
-                  type="text"
-                  id="postal_code-asso"
-                  value={formData?.postal_code || ""}
-                  onChange={(e) =>
-                    setFormData({
+            {/* postal_code */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="postal_code">
+                Code postal
+              </label>
+              <input
+                className="infoInput-asso"
+                type="text"
+                id="postal_code-asso"
+                value={formData?.postal_code || ""}
+                onChange={(e) =>
+                  setFormData({
                       ...formData,
                       postal_code: e.target.value,
                     })
-                  }
-                  disabled={!isEditable}
-                />
-                {postalCodeError && (
-                  <Message message={postalCodeError} type="error" />
-                )}
-              </div>
-              {/* phone */}
-              <div className="infoFieldContainer row-asso">
-                <label className="infoLabel-asso" htmlFor="phone">
-                  Téléphone
-                </label>
-                <input
-                  className="infoInput-asso"
-                  type="tel"
-                  id="phone-asso"
-                  value={formData?.phone || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      phone: e.target.value,
-                    })
-                  }
-                  disabled={!isEditable}
-                />
-                {phoneError && <Message message={phoneError} type="error" />}
-              </div>
-
-              {/* description */}
-              <div className="infoFieldContainer row-asso">
-                <label className="infoLabel-asso" htmlFor="description">
-                  Description
-                </label>
-                <textarea
-                  className="infoInput-asso"
-                  id="description-asso"
-                  value={formData?.description || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      description: e.target.value,
-                    })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
-            </div>
-
-            <div className="formBtns-asso">
-              <button
-                type="submit"
-                className="submitBtn-asso"
+                }
                 disabled={!isEditable}
-              >
+              />
+              {postalCodeError && <Message message={postalCodeError} type="error" />}
+            </div>
+                    {/* phone */}
+                    <div className="infoFieldContainer row-asso">
+                      <label className="infoLabel-asso" htmlFor="phone">
+                        Téléphone
+                      </label>
+                      <input
+                        className="infoInput-asso"
+                        type="tel"
+                        id="phone-asso"
+                        value={formData?.phone || ""}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            phone: e.target.value,
+                          })
+                        }
+                        disabled={!isEditable}
+                      />
+    {phoneError && <Message message={phoneError} type="error" />}
+
+                    </div>
+
+            {/* description */}
+            <div className="infoFieldContainer row-asso">
+              <label className="infoLabel-asso" htmlFor="description">
+                Description
+              </label>
+              <textarea
+                className="infoInput-asso"
+                id="description-asso"
+                value={formData?.description || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    description: e.target.value,
+                  })
+                }
+                disabled={!isEditable}
+              />
+            </div>
+          </div>
+
+          <div className="formBtns-asso">
+              <button type="submit" className="submitBtn-asso" disabled={!isEditable}>
                 Enregistrer
               </button>
               <button

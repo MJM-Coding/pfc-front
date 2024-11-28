@@ -4,7 +4,15 @@ import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationFamily } from "../../@types/signupForm";
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Import du composant Message
 import ModalLogin from "../../components/modalLogin/modalLogin";
-import Toast from "../../toast/toast"; // Import du composant Toast
+import Toast from "../../components/toast/toast"; // Import du composant Toast
+import { validateForm } from "../../components/validateForm/validateForm"; // Import de la fonction de validation des champs après l'envoi
+import {
+  validatePhone,
+  validatePostalCode,
+  validateEmail,
+  validatePassword,
+} from "../../components/validateForm/validateForm"; // Import des fonctions de validation des champs
+import "../../components/validateForm/validateForm.scss";
 
 const Signup_faPage = () => {
   const [formData, setFormData] = useState<IUserRegistrationFamily>({
@@ -24,13 +32,19 @@ const Signup_faPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordConfirmationError, setPasswordConfirmationError] = useState("");
 
-  // Gestion du toast pour informer l'utilisateur du succès ou de l'échec
-  const [toastMessage, setToastMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+    // State pour gérer l'affichage de Toast
+    const [showToast, setShowToast] = useState<boolean>(false);
+    const [toastMessage, setToastMessage] = useState<string>("");
+    const [toastType, setToastType] = useState<"success" | "error">("success");
+  
 
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
-  // Gère les changements dans les champs du formulaire
+  //! Gère les changements dans les champs du formulaire
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -43,28 +57,39 @@ const Signup_faPage = () => {
         },
       }));
 
-      // Validation du numéro de téléphone en temps réel
       if (name === "phone") {
-        if (!/^\d{10}$/.test(value)) {
-          setPhoneError("Le numéro de téléphone doit comporter 10 chiffres.");
-        } else {
-          setPhoneError("");
-        }
+        const phoneError = validatePhone(value);
+        setPhoneError(phoneError || "");
       }
 
-      // Validation du code postal en temps réel
       if (name === "postal_code") {
-        if (!/^\d{5}$/.test(value)) {
-          setPostalCodeError("Le code postal doit être composé de 5 chiffres.");
-        } else {
-          setPostalCodeError("");
-        }
+        const postalCodeError = validatePostalCode(value);
+        setPostalCodeError(postalCodeError || "");
       }
+
+      
     } else {
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
+
+      if (name === "email") {
+        const emailError = validateEmail(value);
+        setEmailError(emailError || "");
+      }
+
+      if (name === "password" || name === "passwordConfirmation") {
+        const passwordError = validatePassword(
+          name === "password" ? value : formData.password,
+          name === "passwordConfirmation" ? value : formData.passwordConfirmation
+        );
+        if (name === "password") {
+          setPasswordError(passwordError || "");
+        } else {
+          setPasswordConfirmationError(passwordError || "");
+        }
+      }
     }
   };
 
@@ -72,44 +97,43 @@ const Signup_faPage = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    let formIsValid = true;
+    //! Utilisation de validateForm pour valider tous les champs nécessaires
+    const errors = validateForm(
+      {
+        ...formData,
+        postal_code: formData.family.postal_code,
+        phone: formData.family.phone,
+      },
+      ["postal_code", "phone", "email", "password"]
+    );
 
-    // Validation du code postal
-    if (!/^\d{5}$/.test(formData.family.postal_code)) {
-      setErrorMessage("Le code postal doit être composé de 5 chiffres.");
-      formIsValid = false;
+    // Vérifier s'il y a des erreurs
+    if (Object.keys(errors).length > 0) {
+      // Gérer les erreurs
+      if (errors.postal_code) {
+        setPostalCodeError(errors.postal_code);
+      }
+      if (errors.phone) {
+        setPhoneError(errors.phone);
+      }
+      if (errors.email || errors.password) {
+        setErrorMessage(errors.email || errors.password);
+      }
+      if (errors.password) {
+        setPasswordError(errors.password);
+        setPasswordConfirmationError(errors.password);
+      }
+      return;
     }
-
-    // Validation du numéro de téléphone
-    if (!/^\d{10}$/.test(formData.family.phone)) {
-      setPhoneError("Le numéro de téléphone doit comporter 10 chiffres.");
-      formIsValid = false;
-    }
-
-    // Vérification des mots de passe
-    if (formData.password !== formData.passwordConfirmation) {
-      setErrorMessage("Les mots de passe ne correspondent pas.");
-      formIsValid = false;
-    }
-
-    // Validation de l'email
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailPattern.test(formData.email)) {
-      setErrorMessage("L'email est invalide.");
-      formIsValid = false;
-    }
-
-    if (!formIsValid) return;
 
     // Envoi du formulaire
     try {
       const { passwordConfirmation, ...dataToSend } = formData;
       await CreateUser(dataToSend);
 
-      setToastMessage({
-        text: "Inscription réussie ! Vous pouvez maintenant vous connecter.",
-        type: "success",
-      });
+      setToastMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+      setToastType("success");
+      
 
       setShowLoginModal(true);
 
@@ -132,16 +156,18 @@ const Signup_faPage = () => {
       setErrorMessage("");
       setPhoneError("");
       setPostalCodeError("");
+
     } catch (error: any) {
       const errorMessage =
-        error?.response?.data?.message || "Une erreur s'est produite lors de l'inscription.";
+        error?.response?.data?.message ||
+       `Une erreur s'est produite lors de l'inscription: ${error.message}`;
 
-      setToastMessage({
-        text: errorMessage,
-        type: "error",
-      });
-    }
-  };
+
+       setToastMessage(`errorMessage : ${errorMessage}`);
+       setToastType("error");
+       setShowToast(true);
+     }
+   };
 
   //! Affichage du formulaire d'inscription
   return (
@@ -151,10 +177,15 @@ const Signup_faPage = () => {
           <h1>Inscription famille d'accueil</h1>
         </div>
         <div className="subscribeFormContainer-fa">
-          <form onSubmit={handleSubmit} className="formConnexionPage-fa" id="subscribeForm">
+          <form
+            onSubmit={handleSubmit}
+            className="formConnexionPage-fa"
+            id="subscribeForm"
+          >
             <div className="formColumns">
               {/* Colonne de gauche */}
               <div className="formColumnLeft">
+                
                 {/* Nom */}
                 <div className="fieldContainer-fa">
                   <label className="labelConnexionPage-fa" htmlFor="lastname">
@@ -205,7 +236,10 @@ const Signup_faPage = () => {
 
                 {/* Code postal */}
                 <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="postal_code">
+                  <label
+                    className="labelConnexionPage-fa"
+                    htmlFor="postal_code"
+                  >
                     Code postal
                   </label>
                   <input
@@ -217,7 +251,9 @@ const Signup_faPage = () => {
                     onChange={handleChange}
                     required
                   />
-                  {postalCodeError && <p className="errorMessage-fa">{postalCodeError}</p>}
+                  {postalCodeError && (
+                    <p className="errorMessage">{postalCodeError}</p>
+                  )}
                 </div>
 
                 {/* Ville */}
@@ -253,7 +289,9 @@ const Signup_faPage = () => {
                     onChange={handleChange}
                     required
                   />
-                  {phoneError && <p className="errorMessage-fa">{phoneError}</p>}
+                  {phoneError && (
+                    <p className="errorMessage">{phoneError}</p>
+                  )}
                 </div>
 
                 {/* Email */}
@@ -271,6 +309,9 @@ const Signup_faPage = () => {
                     required
                     style={{ textTransform: "lowercase" }}
                   />
+                  {emailError && (
+                    <p className="errorMessage">{emailError}</p>
+                  )}
                 </div>
 
                 {/* Mot de passe */}
@@ -287,11 +328,17 @@ const Signup_faPage = () => {
                     onChange={handleChange}
                     required
                   />
+                  {passwordError && (
+                    <p className="errorMessage">{passwordError}</p>
+                  )}
                 </div>
 
                 {/* Confirmation du mot de passe */}
                 <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="passwordConfirmation">
+                  <label
+                    className="labelConnexionPage-fa"
+                    htmlFor="passwordConfirmation"
+                  >
                     Confirmer le mot de passe
                   </label>
                   <input
@@ -303,6 +350,7 @@ const Signup_faPage = () => {
                     onChange={handleChange}
                     required
                   />
+                    {passwordConfirmationError && <p className="errorMessage">{passwordConfirmationError}</p>}
                 </div>
               </div>
             </div>
@@ -315,28 +363,28 @@ const Signup_faPage = () => {
           </form>
         </div>
 
-            {/* Message d'erreur */}
-            {errorMessage && <Message type="error" message={errorMessage} />}
+        {/* Message d'erreur */}
+        {errorMessage && <Message type="error" message={errorMessage} />}
 
-      {/* Affichage du Toast */}
-   {toastMessage && (
-     <Toast 
-       message={toastMessage.text} 
-       type={toastMessage.type} 
-       setToast={() => setToastMessage(null)} 
-     />
-   )}
-      {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
-      {showLoginModal && (
-        <ModalLogin
-          show={showLoginModal}
-          onClose={() => setShowLoginModal(false)}
-          login={() => {
-            /* gestion du login */
-          }}
+      {/* Affichage du Toast avec le message */}
+      {showToast && (
+        <Toast
+          setToast={setShowToast}
+          message={toastMessage}
+          type={toastType}
         />
       )}
-    </section>
+        {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
+        {showLoginModal && (
+          <ModalLogin
+            show={showLoginModal}
+            onClose={() => setShowLoginModal(false)}
+            login={() => {
+              /* gestion du login */
+            }}
+          />
+        )}
+      </section>
     </div>
   );
 };

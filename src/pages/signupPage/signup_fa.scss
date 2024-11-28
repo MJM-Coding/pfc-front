@@ -7,24 +7,18 @@ $input-border-color: #ced4da;
 $button-bg-color: $primary-color;
 $button-hover-bg-color: #375d68;
 $label-color: #495057;
-$error-color: $danger-color;
 
 .faPage-container {
   width: 100vw;
-  height: 83vh; /* Prend toute la hauteur de la fenêtre */
+  height: 83vh;
   background: $background-color;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  
-
 }
 
-// Style global du formulaire
 .signup-fa {
   padding: 10px 20px;
-
-
 
   .signup_Header-fa {
     text-align: center;
@@ -54,8 +48,7 @@ $error-color: $danger-color;
         width: 100%;
         gap: 30px;
         
-        // Colonne gauche
-        .formColumnLeft {
+        .formColumnLeft, .formColumnRight {
           flex: 1;
           min-width: 300px;
           
@@ -84,58 +77,11 @@ $error-color: $danger-color;
               &.error {
                 border-color: $danger-color;
               }
-            }
-
-            .errorMessage-fa {
-              font-size: 0.875rem;
-              color: $error-color;
-              margin-top: 5px;
-            }
-          }
-        }
-
-        // Colonne droite
-        .formColumnRight {
-          flex: 1;
-          min-width: 300px;
-          
-          .fieldContainer-fa {
-            margin-bottom: 20px;
-
-            label {
-              font-size: 1rem;
-              color: $label-color;
-              margin-bottom: 8px;
-              display: block;
-            }
-
-            input {
-              width: 100%;
-              padding: 12px;
-              font-size: 1rem;
-              border: 1px solid $input-border-color;
-              border-radius: 5px;
-              outline: none;
-
-              &:focus {
-                border-color: $primary-color;
-              }
-
-              &.error {
-                border-color: $danger-color;
-              }
-            }
-
-            .errorMessage-fa {
-              font-size: 0.875rem;
-              color: $error-color;
-              margin-top: 5px;
             }
           }
         }
       }
 
-      // Bouton de soumission
       button[type="submit"] {
         width: 100%;
         padding: 15px;
@@ -151,15 +97,6 @@ $error-color: $danger-color;
           background-color: $button-hover-bg-color;
         }
       }
-
-      // Message d'erreur général
-      .errorMessage-fa {
-        color: $danger-color;
-        font-size: 1rem;
-        margin-top: 15px;
-      }
     }
   }
-
-
 }

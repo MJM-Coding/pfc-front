@@ -4,8 +4,10 @@ import { GetFamilyById, PatchFamily } from "../../../api/family.api"; // Importa
 import AuthContext from "../../../contexts/authContext"; // Importation du contexte d'authentification
 import type { IFamily, IFamilyForm } from "../../../@types/family"; // Importation des types pour les données de famille
 import ImageUpload from "../../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
-import Toast from "../../../toast/toast"; // Importation du composant Toast pour les notifications
+import Toast from "../../../components/toast/toast"; // Importation du composant Toast pour les notifications
 import Message from "../../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de_succès
+import { validateForm } from "../../../components/validateForm/validateForm";
+import "../../../components/validateForm/validateForm.scss";
 
 function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
@@ -98,25 +100,28 @@ function FamilyProfile() {
     setPhoneError("");
     setPostalCodeError("");
 
-    let formIsValid = true;
-    const newErrors: Record<string, string> = {};
+    //* Utilisation de validateForm pour valider tous les champs nécessaires
+    const errors = validateForm(
+      {
+        ...formData,
+        postal_code: formData?.postal_code || "",
+        phone: formData?.phone || "",
+    
+      },
+      ["postal_code", "phone"]
+    );
 
-    // Validation du code postal
-    if (!/^\d{5}$/.test(formData?.postal_code || "")) {
-      newErrors.postal_code = "Le code postal doit être composé de 5 chiffres.";
-      formIsValid = false;
-    }
+    // Vérifier s'il y a des erreurs
+    if (Object.keys(errors).length > 0) {
+      // Gérer les erreurs
+      if (errors.postal_code) {
+        setPostalCodeError(errors.postal_code);
+      }
+      if (errors.phone) {
+        setPhoneError(errors.phone);
+      }
 
-    // Validation du numéro de téléphone
-    if (!/^\d{10}$/.test(formData?.phone || "")) {
-      newErrors.phone = "Le numéro de téléphone doit comporter 10 chiffres.";
-      formIsValid = false;
-    }
-
-    if (!formIsValid) {
-      setPhoneError(newErrors.phone || "");
-      setPostalCodeError(newErrors.postal_code || "");
-      return;
+      return; // Sortir si des erreurs existent
     }
 
     const updatedFamilyData: Partial<IFamily> = {
@@ -154,20 +159,24 @@ function FamilyProfile() {
       setToastMessage("Mise à jour réussie !");
       setToastType("success");
       setShowToast(true);
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error);
-      alert("Erreur lors de la mise à jour des données.");
 
-      setToastMessage("Erreur lors de la mise à jour des données.");
+    } catch (error:any) {
+      
+      // Vérifie si l'erreur est une réponse de l'API (par exemple une erreur 4xx ou 5xx)
+      const errorMessage = error?.response?.data?.message || error.message || "Erreur inconnue lors de la mise à jour des données.";
+      
+      console.error("Erreur lors de la mise à jour:", errorMessage); // Affiche l'erreur détaillée dans la console
+      alert(`Erreur lors de la mise à jour des données : ${errorMessage}`); // Affichage d'une alerte détaillée en cas d'erreur
+      
+      setToastMessage(`Erreur lors de la mise à jour des données : ${errorMessage}`);
       setToastType("error");
       setShowToast(true);
     }
   };
-
+  
   const toggleEdit = () => {
     setIsEditable(!isEditable); // Bascule entre édition et non-édition
   };
-
 
   if (!user)
     return <div>Veuillez vous connecter pour accéder à cette page.</div>;
@@ -191,7 +200,6 @@ function FamilyProfile() {
             {/* Champs du formulaire */}
             <div className="fieldsWrap-fa">
               <div className="infoFieldContainer row-fa">
-
                 {/* Nom */}
                 <label className="infoLabel-fa" htmlFor="lastName">
                   Nom
@@ -454,7 +462,6 @@ function FamilyProfile() {
                     ...formData,
                     description: e.target.value,
                   })
-                  
                 }
                 disabled={!isEditable}
               />
@@ -468,11 +475,7 @@ function FamilyProfile() {
               >
                 Enregistrer
               </button>
-              <button
-                type="button"
-                className="editBtn-fa"
-                onClick={toggleEdit}
-              >
+              <button type="button" className="editBtn-fa" onClick={toggleEdit}>
                 {isEditable ? "Annuler" : "Modifier"}
               </button>
             </div>
