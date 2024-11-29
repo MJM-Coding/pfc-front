@@ -18,8 +18,8 @@ const EditAccountPreferences = () => {
 
   const [passwordFormData, setPasswordFormData] = useState<IPasswordEditForm>({
     currentPassword: '',
-    newPassword1: '',
-    newPassword2: '',
+    newPassword: '',
+    confirmPassword: '',
   });
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -77,12 +77,19 @@ const EditAccountPreferences = () => {
     //! Mise à jour du mot de passe
   const handleSubmitPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordFormData.newPassword1 !== passwordFormData.newPassword2) {
+    if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
       alert('Les nouveaux mots de passe ne correspondent pas');
       return;
     }
 
-    const associationData = { user: { password: passwordFormData.newPassword1 } };
+    const associationData = { 
+      user: { 
+        currentPassword: passwordFormData.currentPassword,
+        newPassword: passwordFormData.newPassword,
+        confirmPassword: passwordFormData.confirmPassword 
+      } 
+    };
+    
 
     try {
       if (typeof associationId === 'number') {
@@ -90,7 +97,7 @@ const EditAccountPreferences = () => {
         if (token) {
         await PatchAssociation(associationId, associationData, token);
       } else {
-        // Gérer le cas où associationId n'est pas un nombre
+        
         setError('Erreur : Aucun ID d\'association disponible.');
         setError('Erreur : Token manquant');
 }
@@ -163,8 +170,8 @@ const EditAccountPreferences = () => {
           <input
             type="password"
             id="new-password"
-            value={passwordFormData.newPassword1}
-            onChange={(e) => setPasswordFormData({ ...passwordFormData, newPassword1: e.target.value })}
+            value={passwordFormData.newPassword}
+            onChange={(e) => setPasswordFormData({ ...passwordFormData, newPassword: e.target.value })}
           />
         </div>
 
@@ -173,8 +180,8 @@ const EditAccountPreferences = () => {
           <input
             type="password"
             id="confirm-password"
-            value={passwordFormData.newPassword2}
-            onChange={(e) => setPasswordFormData({ ...passwordFormData, newPassword2: e.target.value })}
+            value={passwordFormData.confirmPassword}
+            onChange={(e) => setPasswordFormData({ ...passwordFormData, confirmPassword: e.target.value })}
           />
         </div>
 

@@ -1,8 +1,8 @@
 //! Interface pour le formulaire de mise à jour du mot de passe
 export interface IPasswordEditForm {
     currentPassword: string;
-    newPassword1: string;
-    newPassword2: string;
+    newPassword: string;
+    confirmPassword: string;
   }
 
 

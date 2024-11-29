@@ -5,6 +5,9 @@ export interface IUser {
   lastname: string;
   email: string;
   password: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
   role: 'association';
   id_association: number;
   created_at: string;

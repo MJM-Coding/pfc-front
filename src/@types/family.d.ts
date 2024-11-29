@@ -5,6 +5,9 @@ export interface IUser {
   lastname: string;
   email: string;
   password: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
   role: 'family';
   id_family: number;
   created_at: string;

@@ -3,7 +3,7 @@ import "./signup_fa.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationFamily } from "../../@types/signupForm";
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Import du composant Message
-import ModalLogin from "../../components/modalLogin/modalLogin";
+import ModalLogin from "../../components/longinSigninModale/loginSigninModale";
 import Toast from "../../components/toast/toast"; // Import du composant Toast
 import { validateForm } from "../../components/validateForm/validateForm"; // Import de la fonction de validation des champs après l'envoi
 import {
@@ -34,13 +34,13 @@ const Signup_faPage = () => {
   const [postalCodeError, setPostalCodeError] = useState<string>("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [passwordConfirmationError, setPasswordConfirmationError] = useState("");
+  const [passwordConfirmationError, setPasswordConfirmationError] =
+    useState("");
 
-    // State pour gérer l'affichage de Toast
-    const [showToast, setShowToast] = useState<boolean>(false);
-    const [toastMessage, setToastMessage] = useState<string>("");
-    const [toastType, setToastType] = useState<"success" | "error">("success");
-  
+  // State pour gérer l'affichage de Toast
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<"success" | "error">("success");
 
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
@@ -66,8 +66,6 @@ const Signup_faPage = () => {
         const postalCodeError = validatePostalCode(value);
         setPostalCodeError(postalCodeError || "");
       }
-
-      
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -82,7 +80,9 @@ const Signup_faPage = () => {
       if (name === "password" || name === "passwordConfirmation") {
         const passwordError = validatePassword(
           name === "password" ? value : formData.password,
-          name === "passwordConfirmation" ? value : formData.passwordConfirmation
+          name === "passwordConfirmation"
+            ? value
+            : formData.passwordConfirmation
         );
         if (name === "password") {
           setPasswordError(passwordError || "");
@@ -131,11 +131,17 @@ const Signup_faPage = () => {
       const { passwordConfirmation, ...dataToSend } = formData;
       await CreateUser(dataToSend);
 
-      setToastMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+      setToastMessage(
+        "Inscription réussie ! Vous pouvez maintenant vous connecter."
+      );
       setToastType("success");
-      
+      setShowToast(true); // Ajout de cette ligne pour afficher le toast
 
-      setShowLoginModal(true);
+       // Retarder la redirection de 5 secondes (5000ms)
+setTimeout(() => {
+  window.location.href = "/";
+}, 5000); // 5000ms = 5 secondes
+
 
       // Réinitialisation du formulaire après soumission réussie
       setFormData({
@@ -156,18 +162,16 @@ const Signup_faPage = () => {
       setErrorMessage("");
       setPhoneError("");
       setPostalCodeError("");
-
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message ||
-       `Une erreur s'est produite lors de l'inscription: ${error.message}`;
+        `Une erreur s'est produite lors de l'inscription: ${error.message}`;
 
-
-       setToastMessage(`errorMessage : ${errorMessage}`);
-       setToastType("error");
-       setShowToast(true);
-     }
-   };
+      setToastMessage(`errorMessage : ${errorMessage}`);
+      setToastType("error");
+      setShowToast(true);
+    }
+  };
 
   //! Affichage du formulaire d'inscription
   return (
@@ -185,7 +189,6 @@ const Signup_faPage = () => {
             <div className="formColumns">
               {/* Colonne de gauche */}
               <div className="formColumnLeft">
-                
                 {/* Nom */}
                 <div className="fieldContainer-fa">
                   <label className="labelConnexionPage-fa" htmlFor="lastname">
@@ -289,9 +292,7 @@ const Signup_faPage = () => {
                     onChange={handleChange}
                     required
                   />
-                  {phoneError && (
-                    <p className="errorMessage">{phoneError}</p>
-                  )}
+                  {phoneError && <p className="errorMessage">{phoneError}</p>}
                 </div>
 
                 {/* Email */}
@@ -309,9 +310,7 @@ const Signup_faPage = () => {
                     required
                     style={{ textTransform: "lowercase" }}
                   />
-                  {emailError && (
-                    <p className="errorMessage">{emailError}</p>
-                  )}
+                  {emailError && <p className="errorMessage">{emailError}</p>}
                 </div>
 
                 {/* Mot de passe */}
@@ -332,7 +331,6 @@ const Signup_faPage = () => {
                     <p className="errorMessage">{passwordError}</p>
                   )}
                 </div>
-
                 {/* Confirmation du mot de passe */}
                 <div className="fieldContainer-fa">
                   <label
@@ -350,7 +348,9 @@ const Signup_faPage = () => {
                     onChange={handleChange}
                     required
                   />
-                    {passwordConfirmationError && <p className="errorMessage">{passwordConfirmationError}</p>}
+                  {passwordConfirmationError && (
+                    <p className="errorMessage">{passwordConfirmationError}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -366,14 +366,14 @@ const Signup_faPage = () => {
         {/* Message d'erreur */}
         {errorMessage && <Message type="error" message={errorMessage} />}
 
-      {/* Affichage du Toast avec le message */}
-      {showToast && (
-        <Toast
-          setToast={setShowToast}
-          message={toastMessage}
-          type={toastType}
-        />
-      )}
+        {/* Affichage du Toast avec le message */}
+        {showToast && (
+          <Toast
+            setToast={setShowToast}
+            message={toastMessage}
+            type={toastType}
+          />
+        )}
         {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
         {showLoginModal && (
           <ModalLogin
