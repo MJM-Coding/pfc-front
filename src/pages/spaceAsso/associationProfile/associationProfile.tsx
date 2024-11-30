@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
-import "./associationProfile.scss"; // Importation du fichier SCSS pour les styles
+import "../../../styles/profilePage.scss"; // Importation du fichier SCSS pour les styles
 import {
   GetAssociationById,
   PatchAssociation,
@@ -213,13 +213,13 @@ if (Object.keys(errors).length > 0) {
   if (!AssociationData) return <div>Chargement des données...</div>; // Si les données de l'association ne sont pas encore chargées, afficher ce message
 
    return (
-    <div className="containerProfilAsso">
-    <section className="infoSection-asso">
-      <div className="infoTitle-asso">
+    <div className="containerProfile">
+    <section className="infoSection">
+      <div className="infoTitle">
         <h3>Informations Personnelles</h3>
       </div>
-      <div className="infoBody-asso">
-        <form className="forms-asso" onSubmit={handleSubmit}>
+      <div className="infoBody">
+        <form className="forms" onSubmit={handleSubmit}>
           {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
           <ImageUpload
             initialImageUrl={imageUrl}
@@ -229,14 +229,14 @@ if (Object.keys(errors).length > 0) {
           <div>
 
             {/* Nom de l'association */}
-            <div className="infoFieldContainer row-asso">
-              <label className="infoLabel-asso" htmlFor="representative">
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="representative">
                 Nom de l'association
               </label>
               <input
-                className="infoInput-asso"
+                className="infoInput"
                 type="text"
-                id="representative-asso"
+                id="representative"
                 value={formData?.representative || ""}
                 onChange={(e) =>
                   setFormData({
@@ -249,14 +249,14 @@ if (Object.keys(errors).length > 0) {
             </div>
             </div>
             {/* rna_number */}
-            <div className="infoFieldContainer row-asso">
-              <label className="infoLabel-asso" htmlFor="rna_number">
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="rna_number">
                 Numéro RNA
               </label>
               <input
-                className="infoInput-asso"
+                className="infoInput"
                 type="text"
-                id="rna_number-asso"
+                id="rna_number"
                 value={formData?.rna_number || ""}
                 onChange={(e) =>
                   setFormData({
@@ -270,16 +270,16 @@ if (Object.keys(errors).length > 0) {
           </div>
 
           {/* Champs du formulaire */}
-          <div className="fieldsWrap-asso">
-            <div className="infoFieldContainer row-asso">
+          <div className="fieldsWrap">
+            <div className="infoFieldContainer row">
               {/* lastname */}
-              <label className="infoLabel-asso" htmlFor="lastName">
+              <label className="infoLabel" htmlFor="lastName">
                 Nom
               </label>
               <input
-                className="infoInput-asso"
+                className="infoInput"
                 type="text"
-                id="lastName-asso"
+                id="lastName"
                 value={formData?.user?.lastname || ""}
                 onChange={(e) =>
                   setFormData({
@@ -292,14 +292,14 @@ if (Object.keys(errors).length > 0) {
             </div>
 
             {/* firstname */}
-            <div className="infoFieldContainer row-asso">
-              <label className="infoLabel-asso" htmlFor="firstname">
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="firstname">
                 Prénom
               </label>
               <input
-                className="infoInput-asso"
+                className="infoInput"
                 type="text"
-                id="firstname-asso"
+                id="firstname"
                 value={formData?.user?.firstname || ""}
                 onChange={(e) =>
                   setFormData({
@@ -313,14 +313,14 @@ if (Object.keys(errors).length > 0) {
 
 
             {/* address */}
-            <div className="infoFieldContainer row-asso">
-              <label className="infoLabel-asso" htmlFor="address">
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="address">
                 Adresse
               </label>
               <input
-                className="infoInput-asso"
+                className="infoInput"
                 type="text"
-                id="address-asso"
+                id="address"
                 value={formData?.address || ""}
                 onChange={(e) =>
                   setFormData({
@@ -333,14 +333,14 @@ if (Object.keys(errors).length > 0) {
             </div>
 
             {/* city */}
-            <div className="infoFieldContainer row-asso">
-              <label className="infoLabel-asso" htmlFor="city">
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="city">
                 Ville
               </label>
               <input
-                className="infoInput-asso"
+                className="infoInput"
                 type="text"
-                id="city-asso"
+                id="city"
                 value={formData?.city || ""}
                 onChange={(e) =>
                   setFormData({
@@ -353,14 +353,14 @@ if (Object.keys(errors).length > 0) {
             </div>
 
             {/* postal_code */}
-            <div className="infoFieldContainer row-asso">
-              <label className="infoLabel-asso" htmlFor="postal_code">
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="postal_code">
                 Code postal
               </label>
               <input
-                className="infoInput-asso"
+                className="infoInput"
                 type="text"
-                id="postal_code-asso"
+                id="postal_code"
                 value={formData?.postal_code || ""}
                 onChange={(e) =>
                   setFormData({
@@ -373,14 +373,14 @@ if (Object.keys(errors).length > 0) {
               {postalCodeError && <Message message={postalCodeError} type="error" />}
             </div>
                     {/* phone */}
-                    <div className="infoFieldContainer row-asso">
-                      <label className="infoLabel-asso" htmlFor="phone">
+                    <div className="infoFieldContainer row">
+                      <label className="infoLabel" htmlFor="phone">
                         Téléphone
                       </label>
                       <input
-                        className="infoInput-asso"
+                        className="infoInput"
                         type="tel"
-                        id="phone-asso"
+                        id="phone"
                         value={formData?.phone || ""}
                         onChange={(e) =>
                           setFormData({
@@ -395,13 +395,13 @@ if (Object.keys(errors).length > 0) {
                     </div>
 
             {/* description */}
-            <div className="infoFieldContainer row-asso">
-              <label className="infoLabel-asso" htmlFor="description">
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="description">
                 Description
               </label>
               <textarea
-                className="infoInput-asso"
-                id="description-asso"
+                className="infoInput"
+                id="description"
                 value={formData?.description || ""}
                 onChange={(e) =>
                   setFormData({
@@ -414,13 +414,13 @@ if (Object.keys(errors).length > 0) {
             </div>
           </div>
 
-          <div className="formBtns-asso">
-              <button type="submit" className="submitBtn-asso" disabled={!isEditable}>
+          <div className="formBtns">
+              <button type="submit" className="submitBtn" disabled={!isEditable}>
                 Enregistrer
               </button>
               <button
                 type="button"
-                className="editBtn-asso"
+                className="editBtn"
                 onClick={toggleEdit}
               >
                 {isEditable ? "Annuler" : "Modifier"}

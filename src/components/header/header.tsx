@@ -3,7 +3,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./header.scss";
 import logo from "../../assets/images/logosimple.png";
 import ModalLogin from "../longinSigninModale/loginSigninModale";
-import "../../styles/commun.scss";
 import AuthContext from "../../contexts/authContext";
 import type { IAssociation } from "../../@types/association";
 import DropdownMenu from "../dropdownMenu/dropdownMenu";

@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import "./signup_fa.scss";
+import "../../styles/signupPage.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationFamily } from "../../@types/signupForm";
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Import du composant Message
@@ -175,27 +175,27 @@ setTimeout(() => {
 
   //! Affichage du formulaire d'inscription
   return (
-    <div className="faPage-container">
-      <section className="signup-fa">
-        <div className="signup_Header-fa">
+    <div className="containerSignup">
+      <section className="signup">
+        <div className="signup_Header">
           <h1>Inscription famille d'accueil</h1>
         </div>
-        <div className="subscribeFormContainer-fa">
+        <div className="subscribeFormContainer">
           <form
             onSubmit={handleSubmit}
-            className="formConnexionPage-fa"
+            className="formConnexionPage"
             id="subscribeForm"
           >
             <div className="formColumns">
               {/* Colonne de gauche */}
               <div className="formColumnLeft">
                 {/* Nom */}
-                <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="lastname">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="lastname">
                     Nom
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="text"
                     name="lastname"
                     id="lastname"
@@ -206,12 +206,12 @@ setTimeout(() => {
                 </div>
 
                 {/* Prénom */}
-                <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="firstname">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="firstname">
                     Prénom
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="text"
                     name="firstname"
                     id="firstname"
@@ -222,12 +222,12 @@ setTimeout(() => {
                 </div>
 
                 {/* Adresse */}
-                <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="address">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="address">
                     Adresse
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="text"
                     name="address"
                     id="address"
@@ -238,15 +238,15 @@ setTimeout(() => {
                 </div>
 
                 {/* Code postal */}
-                <div className="fieldContainer-fa">
+                <div className="fieldContainer">
                   <label
-                    className="labelConnexionPage-fa"
+                    className="labelConnexionPage"
                     htmlFor="postal_code"
                   >
                     Code postal
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="text"
                     name="postal_code"
                     id="postal_code"
@@ -260,12 +260,12 @@ setTimeout(() => {
                 </div>
 
                 {/* Ville */}
-                <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="city">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="city">
                     Ville
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="text"
                     name="city"
                     id="city"
@@ -279,12 +279,12 @@ setTimeout(() => {
               {/* Colonne de droite */}
               <div className="formColumnRight">
                 {/* Téléphone */}
-                <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="phone">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="phone">
                     Téléphone
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="tel"
                     name="phone"
                     id="phone"
@@ -296,12 +296,12 @@ setTimeout(() => {
                 </div>
 
                 {/* Email */}
-                <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="email">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="email">
                     Email
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="email"
                     name="email"
                     id="email"
@@ -314,12 +314,12 @@ setTimeout(() => {
                 </div>
 
                 {/* Mot de passe */}
-                <div className="fieldContainer-fa">
-                  <label className="labelConnexionPage-fa" htmlFor="password">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="password">
                     Mot de passe
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="password"
                     name="password"
                     id="password"
@@ -332,15 +332,15 @@ setTimeout(() => {
                   )}
                 </div>
                 {/* Confirmation du mot de passe */}
-                <div className="fieldContainer-fa">
+                <div className="fieldContainer">
                   <label
-                    className="labelConnexionPage-fa"
+                    className="labelConnexionPage"
                     htmlFor="passwordConfirmation"
                   >
                     Confirmer le mot de passe
                   </label>
                   <input
-                    className="inputConnexionPage-fa"
+                    className="inputConnexionPage"
                     type="password"
                     name="passwordConfirmation"
                     id="passwordConfirmation"
@@ -352,13 +352,13 @@ setTimeout(() => {
                     <p className="errorMessage">{passwordConfirmationError}</p>
                   )}
                 </div>
-              </div>
-            </div>
-            {/* Bouton de soumission */}
-            <div className="submitContainer-fa">
-              <button className="btnConnexionPage-fa" type="submit">
-                S'inscrire
+            {/* Bouton de validation */}
+            <div className="submitContainer">
+              <button className="buttonConnexionPage" type="submit">
+                Créer un compte
               </button>
+            </div>
+              </div>
             </div>
           </form>
         </div>

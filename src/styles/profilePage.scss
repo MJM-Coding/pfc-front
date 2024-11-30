@@ -2,14 +2,14 @@
 $primary-color: #4a90e2;
 $primary-hover: #357ab8;
 $background-color: #cdd0d6;
-$form-background: linear-gradient(135deg, #ffffff, #dbd8d8);
+$form-background: #f9fbfe;
 $border-color: #d1d9e6;
 $text-color: #555;
 $input-background: #f9fbfe;
 
 
 // Styles généraux
-.containerProfilFamily {
+.containerProfile {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -17,7 +17,7 @@ $input-background: #f9fbfe;
   color: $text-color;
   padding: 20px;
 
-  .infoSection-fa {
+  .infoSection {
     flex: 1;
     margin: 20px auto;
     width: 90%;
@@ -27,7 +27,7 @@ $input-background: #f9fbfe;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); // Ombre douce
     padding: 30px;
 
-    .infoTitle-fa {
+    .infoTitle {
       text-align: center;
       margin-bottom: 20px;
 
@@ -39,37 +39,37 @@ $input-background: #f9fbfe;
       }
     }
 
-    .infoBody-fa {
-      .forms-fa {
+    .infoBody {
+      .forms {
         display: flex;
         flex-direction: column;
         gap: 20px;
 
-        .fieldsWrap-fa {
+        .fieldsWrap {
           display: flex;
           flex-wrap: wrap;
           gap: 20px;
 
-          .row-fa {
+          .row {
             flex: 1;
             min-width: calc(50% - 10px);
           }
 
           /* Champs sur la même ligne */
-          .inlineFields-fa {
+          .inlineFields {
             display: flex;
             justify-content: space-between;
             gap: 20px;
             width: 100%; // S'assurer que les éléments occupent toute la largeur
           }
 
-          .inlineField-fa {
+          .inlineField {
             flex: 1;
             min-width: calc(33% - 10px); // Trois éléments alignés
           }
         }
 
-        textarea#description-fa {
+        textarea#description {
           min-width: 100%;
           height: 100px;
           resize: vertical;
@@ -92,13 +92,13 @@ $input-background: #f9fbfe;
           flex-direction: column;
           gap: 8px;
 
-          .infoLabel-fa {
+          .infoLabel {
             font-size: 1rem;
             font-weight: 500;
             color: $primary-hover;
           }
 
-          .infoInput-fa {
+          .infoInput {
             padding: 12px;
             font-size: 1rem;
             border: 1px solid $border-color;
@@ -114,13 +114,13 @@ $input-background: #f9fbfe;
           }
         }
 
-        .formBtns-fa {
+        .formBtns {
           display: flex;
           justify-content: flex-end;
           gap: 10px;
 
-          .submitBtn-fa,
-          .resetBtn-fa {
+          .submitBtn,
+          .resetBtn {
             padding: 12px 25px;
             font-size: 1rem;
             font-weight: 600;
@@ -135,7 +135,7 @@ $input-background: #f9fbfe;
             }
           }
 
-          .submitBtn-fa {
+          .submitBtn {
             background-color: $primary-color;
             color: #fff;
 
@@ -145,7 +145,7 @@ $input-background: #f9fbfe;
             }
           }
 
-          .resetBtn-fa {
+          .resetBtn {
             background-color: $border-color;
             color: $text-color;
 
@@ -166,7 +166,7 @@ $input-background: #f9fbfe;
   align-items: center; /* Pour aligner verticalement le texte et les radio */
   gap: 10px; /* Espacement entre le label "Jardin" et les options */
 
-  .infoLabel-fa {
+  .infoLabel {
     font-size: 1rem;
     font-weight: 500;
     color: $primary-hover;
@@ -236,22 +236,22 @@ $input-background: #f9fbfe;
 
 /* Jusqu'à 1024px */
 @media screen and (max-width: 1024px) {
-  .infoSection-fa {
+  .infoSection {
     width: 95%;
     padding: 20px;
   }
 
-  .fieldsWrap-fa {
-    .row-fa {
+  .fieldsWrap {
+    .row {
       min-width: calc(50% - 10px);
     }
   }
 
-  .inlineFields-fa {
+  .inlineFields {
     flex-direction: column;
   }
 
-  .inlineField-fa {
+  .inlineField {
     min-width: 100%; // Passage en colonne sur les petits écrans
   }
 }
@@ -262,31 +262,31 @@ $input-background: #f9fbfe;
     padding: 10px;
   }
 
-  .infoSection-fa {
+  .infoSection {
     margin: 10px auto;
     width: 100%;
     padding: 15px;
   }
 
-  .forms-fa {
+  .forms {
     gap: 15px;
   }
 
-  .fieldsWrap-fa {
+  .fieldsWrap {
     flex-direction: column;
     gap: 15px;
 
-    .row-fa {
+    .row {
       min-width: 100%;
     }
   }
 
-  .formBtns-fa {
+  .formBtns {
     flex-direction: column;
     gap: 10px;
 
-    .submitBtn-fa,
-    .resetBtn-fa {
+    .submitBtn,
+    .resetBtn {
       font-size: 0.9rem;
       padding: 10px 15px;
     }

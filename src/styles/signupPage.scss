@@ -7,35 +7,43 @@ $input-border-color: #ced4da;
 $button-bg-color: $primary-color;
 $button-hover-bg-color: #375d68;
 $label-color: #495057;
+$error-color: $danger-color;
 
-.faPage-container {
+
+body {
+  background: $background-color;
+}
+.containerSignup {
   width: 100vw;
-  height: 83vh;
+  height: 83vh; /* Prend toute la hauteur de la fenêtre */
   background: $background-color;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  
+
 }
 
-.signup-fa {
+// Style global du formulaire
+.signup {
   padding: 10px 20px;
 
-  .signup_Header-fa {
+  .signup_Header {
     text-align: center;
     margin-bottom: 10px;
 
     h1 {
       color: $primary-color;
       font-size: 2.5rem;
-      margin-bottom: 90px;
+      margin-bottom: 70px;
     }
   }
 
-  .subscribeFormContainer-fa {
+  .subscribeFormContainer {
     display: flex;
     justify-content: center;
     
-    .formConnexionPage-fa {
+    .formConnexionPage {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -48,11 +56,12 @@ $label-color: #495057;
         width: 100%;
         gap: 30px;
         
-        .formColumnLeft, .formColumnRight {
+        // Colonne gauche
+        .formColumnLeft {
           flex: 1;
           min-width: 300px;
           
-          .fieldContainer-fa {
+          .fieldContainer {
             margin-bottom: 20px;
 
             label {
@@ -78,10 +87,57 @@ $label-color: #495057;
                 border-color: $danger-color;
               }
             }
+
+            .errorMessage {
+              font-size: 0.875rem;
+              color: $error-color;
+              margin-top: 5px;
+            }
+          }
+        }
+
+        // Colonne droite
+        .formColumnRight {
+          flex: 1;
+          min-width: 300px;
+          
+          .fieldContainer {
+            margin-bottom: 20px;
+
+            label {
+              font-size: 1rem;
+              color: $label-color;
+              margin-bottom: 8px;
+              display: block;
+            }
+
+            input {
+              width: 100%;
+              padding: 12px;
+              font-size: 1rem;
+              border: 1px solid $input-border-color;
+              border-radius: 5px;
+              outline: none;
+
+              &:focus {
+                border-color: $primary-color;
+              }
+
+              &.error {
+                border-color: $danger-color;
+              }
+            }
+
+            .errorMessage {
+              font-size: 0.875rem;
+              color: $error-color;
+              margin-top: 5px;
+            }
           }
         }
       }
 
+      // Bouton de soumission
       button[type="submit"] {
         width: 100%;
         padding: 15px;
@@ -97,6 +153,15 @@ $label-color: #495057;
           background-color: $button-hover-bg-color;
         }
       }
+
+      // Message d'erreur général
+      .errorMessage {
+        color: $danger-color;
+        font-size: 1rem;
+        margin-top: 15px;
+      }
     }
   }
+
+ 
 }

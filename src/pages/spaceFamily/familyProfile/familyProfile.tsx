@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
-import "./familyProfile.scss"; // Importation du fichier SCSS pour les styles
+import "../../../styles/profilePage.scss"; // Importation du fichier SCSS pour les styles
 import { GetFamilyById, PatchFamily } from "../../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
 import AuthContext from "../../../contexts/authContext"; // Importation du contexte d'authentification
 import type { IFamily, IFamilyForm } from "../../../@types/family"; // Importation des types pour les données de famille
@@ -183,13 +183,13 @@ function FamilyProfile() {
   if (!familyData) return <div>Chargement des données...</div>;
 
   return (
-    <div className="containerProfilFamily">
-      <section className="infoSection-fa">
-        <div className="infoTitle-fa">
+    <div className="containerProfile">
+      <section className="infoSection">
+        <div className="infoTitle">
           <h3>Informations Personnelles</h3>
         </div>
-        <div className="infoBody-fa">
-          <form className="forms-fa" onSubmit={handleSubmit}>
+        <div className="infoBody">
+          <form className="forms" onSubmit={handleSubmit}>
             {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
             <ImageUpload
               initialImageUrl={imageUrl}
@@ -198,16 +198,16 @@ function FamilyProfile() {
             <div></div>
 
             {/* Champs du formulaire */}
-            <div className="fieldsWrap-fa">
-              <div className="infoFieldContainer row-fa">
+            <div className="fieldsWrap">
+              <div className="infoFieldContainer row">
                 {/* Nom */}
-                <label className="infoLabel-fa" htmlFor="lastName">
+                <label className="infoLabel" htmlFor="lastName">
                   Nom
                 </label>
                 <input
-                  className="infoInput-fa"
+                  className="infoInput"
                   type="text"
-                  id="lastName-fa"
+                  id="lastName"
                   value={formData?.user?.lastname || ""}
                   required
                   onChange={(e) =>
@@ -221,14 +221,14 @@ function FamilyProfile() {
               </div>
 
               {/* Prénom */}
-              <div className="infoFieldContainer row-fa">
-                <label className="infoLabel-fa" htmlFor="firstname">
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="firstname">
                   Prénom
                 </label>
                 <input
-                  className="infoInput-fa"
+                  className="infoInput"
                   type="text"
-                  id="firstname-fa"
+                  id="firstname"
                   value={formData?.user?.firstname || ""}
                   required
                   onChange={(e) =>
@@ -242,14 +242,14 @@ function FamilyProfile() {
               </div>
 
               {/* Téléphone */}
-              <div className="infoFieldContainer row-fa">
-                <label className="infoLabel-fa" htmlFor="phone">
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="phone">
                   Téléphone
                 </label>
                 <input
-                  className="infoInput-fa"
+                  className="infoInput"
                   type="tel"
-                  id="phone-fa"
+                  id="phone"
                   value={formData?.phone || ""}
                   required
                   onChange={(e) =>
@@ -264,14 +264,14 @@ function FamilyProfile() {
               </div>
 
               {/* address */}
-              <div className="infoFieldContainer row-fa">
-                <label className="infoLabel-fa" htmlFor="address">
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="address">
                   Adresse
                 </label>
                 <input
-                  className="infoInput-fa"
+                  className="infoInput"
                   type="text"
-                  id="address-fa"
+                  id="address"
                   value={formData?.address || ""}
                   required
                   onChange={(e) =>
@@ -285,14 +285,14 @@ function FamilyProfile() {
               </div>
 
               {/* city */}
-              <div className="infoFieldContainer row-fa">
-                <label className="infoLabel-fa" htmlFor="city">
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="city">
                   Ville
                 </label>
                 <input
-                  className="infoInput-fa"
+                  className="infoInput"
                   type="text"
-                  id="city-fa"
+                  id="city"
                   value={formData?.city || ""}
                   required
                   onChange={(e) =>
@@ -306,14 +306,14 @@ function FamilyProfile() {
               </div>
 
               {/* postal_code */}
-              <div className="infoFieldContainer row-fa">
-                <label className="infoLabel-fa" htmlFor="postal_code">
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="postal_code">
                   Code postal
                 </label>
                 <input
-                  className="infoInput-fa"
+                  className="infoInput"
                   type="text"
-                  id="postal_code-fa"
+                  id="postal_code"
                   value={formData?.postal_code || ""}
                   required
                   onChange={(e) =>
@@ -330,13 +330,13 @@ function FamilyProfile() {
               </div>
 
               {/* number_of_children */}
-              <div className="infoFieldContainer row-fa">
-                <label className="infoLabel-fa" htmlFor="number_of_children">
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="number_of_children">
                   Nombre d'enfants
                 </label>
                 <select
-                  className="infoInput-fa"
-                  id="number_of_children-fa"
+                  className="infoInput"
+                  id="number_of_children"
                   value={formData?.number_of_children ?? ""}
                   required // utiliser "" si `undefined` ou `null`
                   onChange={(e) => {
@@ -365,13 +365,13 @@ function FamilyProfile() {
               </div>
 
               {/* number_of_animals */}
-              <div className="infoFieldContainer row-fa">
-                <label className="infoLabel-fa" htmlFor="number_of_animals">
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="number_of_animals">
                   Nombre d'animaux
                 </label>
                 <select
-                  className="infoInput-fa"
-                  id="number_of_animals-fa"
+                  className="infoInput"
+                  id="number_of_animals"
                   value={formData?.number_of_animals ?? ""}
                   required // Utilise "" si `undefined` ou `null`
                   onChange={(e) => {
@@ -401,8 +401,8 @@ function FamilyProfile() {
               </div>
 
               {/* garden */}
-              <div className="infoFieldContainer-radio row-fa">
-                <label className="infoLabel-fa" htmlFor="garden">
+              <div className="infoFieldContainer-radio row">
+                <label className="infoLabel" htmlFor="garden">
                   Jardin
                 </label>
                 <div className="radio-group">
@@ -448,13 +448,13 @@ function FamilyProfile() {
             </div>
 
             {/* description */}
-            <div className="infoFieldContainer row-fa">
-              <label className="infoLabel-fa" htmlFor="description">
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="description">
                 Description
               </label>
               <textarea
-                className="infoInput-fa"
-                id="description-fa"
+                className="infoInput"
+                id="description"
                 value={formData?.description || ""}
                 required
                 onChange={(e) =>
@@ -467,15 +467,15 @@ function FamilyProfile() {
               />
             </div>
 
-            <div className="formBtns-fa">
+            <div className="formBtns">
               <button
                 type="submit"
-                className="submitBtn-fa"
+                className="submitBtn"
                 disabled={!isEditable}
               >
                 Enregistrer
               </button>
-              <button type="button" className="editBtn-fa" onClick={toggleEdit}>
+              <button type="button" className="editBtn" onClick={toggleEdit}>
                 {isEditable ? "Annuler" : "Modifier"}
               </button>
             </div>

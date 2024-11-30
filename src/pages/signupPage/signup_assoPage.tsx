@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import "./signup_asso.scss";
+import "../../styles/signupPage.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationAssociation } from "../../@types/signupForm";
 import Toast from "../../components/toast/toast";
@@ -224,30 +224,30 @@ const signup_assoPage = () => {
 
   //! Affichage du formulaire d'inscription
   return (
-    <div className="assoPage-container">
-      <section className="signup-asso">
-        <div className="signup_Header-asso">
+    <div className="containerSignup">
+      <section className="signup">
+        <div className="signup_Header">
           <h1>Inscription association</h1>
         </div>
-        <div className="subscribeFormContainer-asso">
+        <div className="subscribeFormContainer">
           <form
             onSubmit={handleSubmit}
-            className="formConnexionPage-asso"
+            className="formConnexionPage"
             id="subscribeForm"
           >
             <div className="formColumns">
               {/* Colonne de gauche */}
               <div className="formColumnLeft">
                 {/* Nom de l'association */}
-                <div className="fieldContainer-asso">
+                <div className="fieldContainer">
                   <label
-                    className="labelConnexionPage-asso"
+                    className="labelConnexionPage"
                     htmlFor="representative"
                   >
                     Nom de l'association
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="text"
                     name="representative"
                     id="representative"
@@ -258,12 +258,12 @@ const signup_assoPage = () => {
                 </div>
 
                 {/* Nom du representant */}
-                <div className="fieldContainer-asso">
-                  <label className="labelConnexionPage-asso" htmlFor="lastname">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="lastname">
                     Nom
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="text"
                     name="lastname"
                     id="lastname"
@@ -274,15 +274,15 @@ const signup_assoPage = () => {
                 </div>
 
                 {/* Prénom du représentant */}
-                <div className="fieldContainer-asso">
+                <div className="fieldContainer">
                   <label
-                    className="labelConnexionPage-asso"
+                    className="labelConnexionPage"
                     htmlFor="firstname"
                   >
                     Prénom du représentant
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="text"
                     name="firstname"
                     id="firstname"
@@ -293,12 +293,12 @@ const signup_assoPage = () => {
                 </div>
 
                 {/* Adresse */}
-                <div className="fieldContainer-asso">
-                  <label className="labelConnexionPage-asso" htmlFor="address">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="address">
                     Adresse
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="text"
                     name="address"
                     id="address"
@@ -309,15 +309,15 @@ const signup_assoPage = () => {
                 </div>
 
                 {/* Code postal */}
-                <div className="fieldContainer-asso">
+                <div className="fieldContainer">
                   <label
-                    className="labelConnexionPage-asso"
+                    className="labelConnexionPage"
                     htmlFor="postal_code"
                   >
                     Code postal
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="text"
                     name="postal_code"
                     id="postal_code"
@@ -332,12 +332,12 @@ const signup_assoPage = () => {
                 </div>
 
                 {/* Ville */}
-                <div className="fieldContainer-asso">
-                  <label className="labelConnexionPage-asso" htmlFor="city">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="city">
                     Ville
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="text"
                     name="city"
                     id="city"
@@ -352,15 +352,15 @@ const signup_assoPage = () => {
 
               <div className="formColumnRight">
                 {/* RNA */}
-                <div className="fieldContainer-asso">
+                <div className="fieldContainer">
                   <label
-                    className="labelConnexionPage-asso"
+                    className="labelConnexionPage"
                     htmlFor="rna_number"
                   >
                     RNA
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="text"
                     name="rna_number"
                     id="rna_number"
@@ -374,12 +374,12 @@ const signup_assoPage = () => {
                 </div>
 
                 {/* Téléphone */}
-                <div className="fieldContainer-asso">
+                <div className="fieldContainer">
                   <label className="labelConnexionPage" htmlFor="phone">
                     Téléphone
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="tel"
                     name="phone"
                     id="phone"
@@ -388,17 +388,17 @@ const signup_assoPage = () => {
                     required
                   />
                   {phoneError && (
-                    <p className="errorMessage-asso">{phoneError}</p>
+                    <p className="errorMessage">{phoneError}</p>
                   )}
                 </div>
 
                 {/* Email */}
-                <div className="fieldContainer-asso">
-                  <label className="labelConnexionPage-asso" htmlFor="email">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="email">
                     Email
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="email"
                     name="email"
                     id="email"
@@ -410,12 +410,12 @@ const signup_assoPage = () => {
                 </div>
 
                 {/*  Mot de passe */}
-                <div className="fieldContainer-asso">
-                  <label className="labelConnexionPage-asso" htmlFor="password">
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="password">
                     Mot de passe
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="password"
                     name="password"
                     id="password"
@@ -429,15 +429,15 @@ const signup_assoPage = () => {
                 </div>
 
                 {/* Confirmation du mot de passe */}
-                <div className="fieldContainer-asso">
+                <div className="fieldContainer">
                   <label
-                    className="labelConnexionPage-asso"
+                    className="labelConnexionPage"
                     htmlFor="passwordConfirmation"
                   >
                     Confirmer le mot de passe
                   </label>
                   <input
-                    className="inputConnexionPage-asso"
+                    className="inputConnexionPage"
                     type="password"
                     name="passwordConfirmation"
                     id="passwordConfirmation"
@@ -450,7 +450,7 @@ const signup_assoPage = () => {
                   )}
                 </div>
                 {/* Bouton de validation */}
-                <button type="submit" className="buttonConnexionPage-asso">
+                <button type="submit" className="buttonConnexionPage">
                   Créer un compte
                 </button>
               </div>

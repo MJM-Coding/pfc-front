@@ -82,7 +82,7 @@ export const GetAllAssociations = async (token: string): Promise<IAssociation[]>
  * @returns Une promesse qui résout sans valeur après la suppression.
  */
 export const DeleteAssociation = async (
-  id: string,
+  id: number,
   token: string
 ): Promise<void> => {
   try {

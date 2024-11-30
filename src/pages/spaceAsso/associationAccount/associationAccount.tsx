@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { IPasswordEditForm, IEmailEditForm } from "../../../@types/emailPassword";
-import { GetAssociationById, PatchAssociation } from "../../../api/association.api";
+import { GetAssociationById, PatchAssociation, DeleteAssociation } from "../../../api/association.api";
 import AuthContext from "../../../contexts/authContext";
 import { validateEmail } from "../../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
-import "./associationAccount.scss";
+import "../../../styles/accountPage.scss";
 
 //! Composant de gestion du compte de l'association
 const associationAccount = () => {
@@ -25,8 +25,6 @@ const associationAccount = () => {
     confirmPassword: '',
   });
 
-  //! États pour afficher ou masquer les champs supplémentaires dans le formulaire d'email
-  const [showEmailForm, setShowEmailForm] = useState<boolean>(false); // Pour afficher/masquer les champs supplémentaires du formulaire d'email
 
   //! États pour gérer l'état de chargement et les erreurs
   const [loading, setLoading] = useState<boolean>(true);
@@ -126,14 +124,37 @@ const associationAccount = () => {
     return <p>Erreur : Aucun ID d'association disponible.</p>;
   }
 
+  //! Suppression du compte 
+const handleDeleteAccount = async (e:React.FormEvent) => {
+  e.preventDefault();
+  try {
+    if (typeof associationId === 'number') {
+      if (token) {
+        await DeleteAssociation(associationId, token);
+      } else {
+        setError('Erreur : Aucun ID d\'association disponible.');
+        setError('Erreur : Token manquant');
+      }
+    }
+    alert('Compte supprimé avec succès');
+  } catch (err) {
+    setError('Erreur lors de la suppression du compte');
+  }
+  
+}
+
+
+
+
+
   return (
 <div className="containerAccount">
   <div className="account-preferences">
-  <h1>Mon compte</h1>
+    <h1>Mon compte</h1>
     {loading && <p>Chargement des données...</p>}
     {error && <p>{error}</p>}
 
-    {/* Conteneur pour les deux formulaires */}
+    {/* Conteneur pour les formulaires */}
     <div className="forms-container">
       {/* Encadré email */}
       <div className="form-container">
@@ -148,35 +169,25 @@ const associationAccount = () => {
           />
         </div>
 
-        {/* Bouton pour afficher/cacher les champs email */}
-        <button className="email-button" onClick={() => setShowEmailForm(prev => !prev)}>
-          {showEmailForm ? "Annuler la modification de l'email" : "Modifier l'email"}
-        </button>
+        <div className="infoFieldContainer">
+          <label htmlFor="new-email">Nouveau Email</label>
+          <input
+            type="email"
+            id="new-email"
+            value={emailFormData.newEmail}
+            onChange={(e) => setEmailFormData({ ...emailFormData, newEmail: e.target.value })}
+          />
+        </div>
 
-        {/* Champs cachés, visibles si on clique sur "Modifier l'email" */}
-        {showEmailForm && (
-          <>
-            <div className="infoFieldContainer">
-              <label htmlFor="new-email">Nouveau Email</label>
-              <input
-                type="email"
-                id="new-email"
-                value={emailFormData.newEmail}
-                onChange={(e) => setEmailFormData({ ...emailFormData, newEmail: e.target.value })}
-              />
-            </div>
-
-            <div className="infoFieldContainer">
-              <label htmlFor="confirm-email">Confirmer le Nouveau Email</label>
-              <input
-                type="email"
-                id="confirm-email"
-                value={emailFormData.confirmNewEmail}
-                onChange={(e) => setEmailFormData({ ...emailFormData, confirmNewEmail: e.target.value })}
-              />
-            </div>
-          </>
-        )}
+        <div className="infoFieldContainer">
+          <label htmlFor="confirm-email">Confirmer le Nouveau Email</label>
+          <input
+            type="email"
+            id="confirm-email"
+            value={emailFormData.confirmNewEmail}
+            onChange={(e) => setEmailFormData({ ...emailFormData, confirmNewEmail: e.target.value })}
+          />
+        </div>
 
         <button onClick={handleSubmitEmail} className="submit-btn">Sauvegarder l'email</button>
       </div>
@@ -215,6 +226,15 @@ const associationAccount = () => {
         </div>
 
         <button onClick={handleSubmitPassword} className="submit-btn">Sauvegarder le mot de passe</button>
+      </div>
+
+      {/* Encadré suppression de compte */}
+      <div className="delete-container">
+        <h3>Supprimer le compte</h3>
+        <p>Attention : Cette action est irréversible.</p>
+        <button onClick={handleDeleteAccount} className="delete-btn">
+          Supprimer mon compte
+        </button>
       </div>
     </div>
   </div>
