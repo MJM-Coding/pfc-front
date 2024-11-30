@@ -3,12 +3,12 @@ import { IPasswordEditForm, IEmailEditForm } from "../../../@types/emailPassword
 import { GetAssociationById, PatchAssociation } from "../../../api/association.api";
 import AuthContext from "../../../contexts/authContext";
 import { validateEmail } from "../../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
+import "./associationAccount.scss";
 
 //! Composant de gestion du compte de l'association
 const associationAccount = () => {
   const { user, token } = useContext(AuthContext) || {}; // On récupère l'utilisateur et le token du contexte d'authentification
   
-  // Utiliser l'ID de l'association depuis l'utilisateur authentifié
   const associationId = user?.id_association; // L'ID de l'association est pris depuis l'utilisateur authentifié
   console.log("ID de l'association : ", associationId); // Log de l'ID de l'association
 
@@ -25,6 +25,9 @@ const associationAccount = () => {
     confirmPassword: '',
   });
 
+  //! États pour afficher ou masquer les champs supplémentaires dans le formulaire d'email
+  const [showEmailForm, setShowEmailForm] = useState<boolean>(false); // Pour afficher/masquer les champs supplémentaires du formulaire d'email
+
   //! États pour gérer l'état de chargement et les erreurs
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,10 +37,9 @@ const associationAccount = () => {
     if (!associationId || !token) {
       setError('Identifiant de l\'association ou token manquant');
       setLoading(false);
-      return; // Si l'ID de l'association ou le token sont manquants, on arrête le processus
+      return;
     }
 
-    //! Fonction pour récupérer les données de l'association depuis l'API
     const fetchAssociationData = async () => {
       try {
         const association = await GetAssociationById(associationId, token); // Appel à l'API pour récupérer l'association par son ID
@@ -58,9 +60,7 @@ const associationAccount = () => {
 
   //! Mise à jour de l'email
   const handleSubmitEmail = async (e: React.FormEvent) => {
-    e.preventDefault(); // On empêche le rechargement de la page à la soumission du formulaire
-
-    // Validation de l'email
+    e.preventDefault();
     const emailValidationError = validateEmail(emailFormData.newEmail); // On valide le nouvel email
     if (emailValidationError) {
       alert(emailValidationError); // Affichage d'une alerte en cas d'erreur
@@ -72,7 +72,7 @@ const associationAccount = () => {
       return;
     }
 
-    const associationData = { user: { email: emailFormData.newEmail } }; // On prépare les données à envoyer à l'API
+    const associationData = { user: { email: emailFormData.newEmail } };
 
     try {
       if (associationId === null || associationId === undefined) {
@@ -83,11 +83,8 @@ const associationAccount = () => {
         throw new Error('Token manquant');
       }
 
-      console.log("Données envoyées à l'API pour la mise à jour de l'email : ", associationData); // Log des données envoyées
-
-      //! Envoi de la requête à l'API pour la mise à jour de l'email
-      await PatchAssociation(associationId, associationData, token); 
-
+      console.log("Données envoyées à l'API pour la mise à jour de l'email : ", associationData);
+      await PatchAssociation(associationId, associationData, token);
       alert('Email mis à jour avec succès');
     } catch (err) {
       setError('Erreur lors de la mise à jour de l\'email');
@@ -96,7 +93,7 @@ const associationAccount = () => {
 
   //! Mise à jour du mot de passe
   const handleSubmitPassword = async (e: React.FormEvent) => {
-    e.preventDefault(); // On empêche le rechargement de la page à la soumission du formulaire
+    e.preventDefault();
     if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
       alert('Les nouveaux mots de passe ne correspondent pas');
       return;
@@ -112,34 +109,36 @@ const associationAccount = () => {
 
     try {
       if (typeof associationId === 'number') {
-
         if (token) {
-          console.log("Données envoyées à l'API pour la mise à jour du mot de passe : ", associationData); // Log des données envoyées pour le mot de passe
-          await PatchAssociation(associationId, associationData, token); // Envoi de la requête pour mettre à jour le mot de passe
+          console.log("Données envoyées à l'API pour la mise à jour du mot de passe : ", associationData);
+          await PatchAssociation(associationId, associationData, token);
         } else {
           setError('Erreur : Token manquant');
         }
       }
-      alert('Mot de passe mis à jour avec succès'); // Alerte de succès
+      alert('Mot de passe mis à jour avec succès');
     } catch (err) {
       setError('Erreur lors de la mise à jour du mot de passe');
     }
   };
 
-  //! Vérification si l'ID de l'association est présent
   if (!associationId) {
-    return <p>Erreur : Aucun ID d'association disponible.</p>; // Message d'erreur
+    return <p>Erreur : Aucun ID d'association disponible.</p>;
   }
 
-  //! Affichage du formulaire de modification de l'email et du mot de passe
   return (
-    <div className="account-preferences">
-      {loading && <p>Chargement des données...</p>} {/* Affichage d'un message de chargement */}
-      {error && <p>{error}</p>} {/* Affichage des erreurs s'il y en a */}
+<div className="containerAccount">
+  <div className="account-preferences">
+  <h1>Mon compte</h1>
+    {loading && <p>Chargement des données...</p>}
+    {error && <p>{error}</p>}
 
-      <form onSubmit={handleSubmitEmail} className="form-container">
+    {/* Conteneur pour les deux formulaires */}
+    <div className="forms-container">
+      {/* Encadré email */}
+      <div className="form-container">
         <h3>Modification de l'email</h3>
-        <div className="infoFieldContainer row-preferenceasso">
+        <div className="infoFieldContainer">
           <label htmlFor="current-email">Email actuel</label>
           <input
             type="email"
@@ -149,33 +148,43 @@ const associationAccount = () => {
           />
         </div>
 
-        <div className="infoFieldContainer row-preferenceasso">
-          <label htmlFor="new-email">Nouveau Email</label>
-          <input
-            type="email"
-            id="new-email"
-            value={emailFormData.newEmail}
-            onChange={(e) => setEmailFormData({ ...emailFormData, newEmail: e.target.value })}
-          />
-        </div>
+        {/* Bouton pour afficher/cacher les champs email */}
+        <button className="email-button" onClick={() => setShowEmailForm(prev => !prev)}>
+          {showEmailForm ? "Annuler la modification de l'email" : "Modifier l'email"}
+        </button>
 
-        <div className="infoFieldContainer row-preferenceasso">
-          <label htmlFor="confirm-email">Confirmer le Nouveau Email</label>
-          <input
-            type="email"
-            id="confirm-email"
-            value={emailFormData.confirmNewEmail}
-            onChange={(e) => setEmailFormData({ ...emailFormData, confirmNewEmail: e.target.value })}
-          />
-        </div>
+        {/* Champs cachés, visibles si on clique sur "Modifier l'email" */}
+        {showEmailForm && (
+          <>
+            <div className="infoFieldContainer">
+              <label htmlFor="new-email">Nouveau Email</label>
+              <input
+                type="email"
+                id="new-email"
+                value={emailFormData.newEmail}
+                onChange={(e) => setEmailFormData({ ...emailFormData, newEmail: e.target.value })}
+              />
+            </div>
 
-        <button type="submit" className="submit-btn">Sauvegarder l'email</button>
-      </form>
+            <div className="infoFieldContainer">
+              <label htmlFor="confirm-email">Confirmer le Nouveau Email</label>
+              <input
+                type="email"
+                id="confirm-email"
+                value={emailFormData.confirmNewEmail}
+                onChange={(e) => setEmailFormData({ ...emailFormData, confirmNewEmail: e.target.value })}
+              />
+            </div>
+          </>
+        )}
 
-      <form onSubmit={handleSubmitPassword} className="form-container">
+        <button onClick={handleSubmitEmail} className="submit-btn">Sauvegarder l'email</button>
+      </div>
+
+      {/* Encadré mot de passe */}
+      <div className="form-container">
         <h3>Modification du mot de passe</h3>
-
-        <div className="infoFieldContainer row-preferenceasso">
+        <div className="infoFieldContainer">
           <label htmlFor="current-password">Mot de passe actuel</label>
           <input
             type="password"
@@ -185,7 +194,7 @@ const associationAccount = () => {
           />
         </div>
 
-        <div className="infoFieldContainer row-preferenceasso">
+        <div className="infoFieldContainer">
           <label htmlFor="new-password">Nouveau mot de passe</label>
           <input
             type="password"
@@ -195,7 +204,7 @@ const associationAccount = () => {
           />
         </div>
 
-        <div className="infoFieldContainer row-preferenceasso">
+        <div className="infoFieldContainer">
           <label htmlFor="confirm-password">Confirmer le nouveau mot de passe</label>
           <input
             type="password"
@@ -205,9 +214,12 @@ const associationAccount = () => {
           />
         </div>
 
-        <button type="submit" className="submit-btn">Sauvegarder le mot de passe</button>
-      </form>
+        <button onClick={handleSubmitPassword} className="submit-btn">Sauvegarder le mot de passe</button>
+      </div>
     </div>
+  </div>
+</div>
+
   );
 };
 
