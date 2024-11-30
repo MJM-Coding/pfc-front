@@ -10,11 +10,11 @@ import AnimalsListPage from "./pages/animalsListPage/animalsListPage"; // page d
 
 import Signup_assoPage from "./pages/signupPage/signup_assoPage"; // page de l'inscription d'une association
 import ProfilePageAsso from "./pages/spaceAsso/associationProfile/associationProfile";
-import PreferenceAsso from "./pages/spaceAsso/preferenceAsso/preferenceAsso";
+import AssociationAccount from "./pages/spaceAsso/associationAccount/associationAccount";
 
 import Signup_faPage from "./pages/signupPage/signup_faPage"; // page de l'inscription d'une famille
 import ProfilePageFamily from "./pages/spaceFamily/familyProfile/familyProfile";
-import PreferenceFamily from "./pages/spaceFamily/preferenceFamily/preferenceFamily";
+import FamilyAccount from "./pages/spaceFamily/familyAccount/familyAccount";
 
 import Footer from "./components/footer/footer";
 
@@ -28,11 +28,11 @@ const App: React.FC = () => {
 
         <Route path="/inscription-association" element={<Signup_assoPage />} />
         <Route path="/espace-association/profil-association/:id" element={<ProfilePageAsso />} />
-        <Route path="/espace-association/Configuration-du-compte/:id" element={<PreferenceAsso />} />
+        <Route path="/espace-association/Mon-compte/:id" element={<AssociationAccount />} />
 
         <Route path="/inscription-famille" element={<Signup_faPage />} />
         <Route path="/espace-famille/profil-famille/:id" element={<ProfilePageFamily />} />
-        <Route path="/espace-famille/Configuration-du-compte/:id" element={<PreferenceFamily />} />
+        <Route path="/espace-famille/Mon-compte/:id" element={<FamilyAccount />} />
 
         {/* Vous pouvez ajouter d'autres routes ici */}
       </Routes>

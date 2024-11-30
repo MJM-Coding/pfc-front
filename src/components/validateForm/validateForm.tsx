@@ -14,6 +14,8 @@ export const validatePhone = (phone: string): string | null => {
 
 //* Validation de l'email
 export const validateEmail = (email: string): string | null => {
+  email = email.trim();
+  console.log("Email à valider:", email); // Vérifie ce que tu reçois
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailPattern.test(email) ? null : "L'email est invalide.";
 };
@@ -39,7 +41,7 @@ export const validateRNA = (rna: string): string | null => {
 type ValidationField = 'postal_code' | 'phone' | 'email' | 'password' | 'rna_number';
 
 
-//! Validation des champs du formulaire
+//! Validation des champs du formulaire en temps réel
 export const validateForm = (formData: any, fieldsToValidate: ValidationField[]): Record<string, string> => {
   const errors: Record<string, string> = {};
 

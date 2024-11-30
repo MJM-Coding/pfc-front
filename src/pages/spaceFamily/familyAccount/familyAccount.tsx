@@ -1,7 +1,7 @@
 import React from "react";
-import "./preferenceFamily.scss";
+import "./familyAccount.scss";
 
-const ConnexionFamily: React.FC = () => {
+const familyAccount: React.FC = () => {
   return (
     <>
       <h1>Modifier mes info de connexion Famille</h1>
@@ -9,4 +9,4 @@ const ConnexionFamily: React.FC = () => {
   );
 };
 
-export default ConnexionFamily;
+export default familyAccount;

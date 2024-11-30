@@ -136,13 +136,12 @@ $input-background: #f9fbfe;
             color: $text-color;
 
             &:hover {
-              background-color: lighten($border-color, 10%);
+              background-color: $border-color;
               transform: translateY(-2px);
             }
           }
         }
-      }
-    }
+      }    }
   }
 }
 
