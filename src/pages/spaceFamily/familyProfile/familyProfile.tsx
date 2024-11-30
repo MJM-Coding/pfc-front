@@ -184,9 +184,9 @@ function FamilyProfile() {
 
   return (
     <div className="containerProfile">
+          <h1 data-title="Mon profil">Mon profil</h1>
       <section className="infoSection">
         <div className="infoTitle">
-          <h3>Informations Personnelles</h3>
         </div>
         <div className="infoBody">
           <form className="forms" onSubmit={handleSubmit}>
@@ -470,7 +470,7 @@ function FamilyProfile() {
             <div className="formBtns">
               <button
                 type="submit"
-                className="submitBtn"
+                className="submitBtnProfile"
                 disabled={!isEditable}
               >
                 Enregistrer

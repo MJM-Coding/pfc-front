@@ -213,10 +213,10 @@ if (Object.keys(errors).length > 0) {
   if (!AssociationData) return <div>Chargement des données...</div>; // Si les données de l'association ne sont pas encore chargées, afficher ce message
 
    return (
-    <div className="containerProfile">
+     <div className="containerProfile">
+      <h1 data-title="Mon profil">Mon profil</h1>
     <section className="infoSection">
       <div className="infoTitle">
-        <h3>Informations Personnelles</h3>
       </div>
       <div className="infoBody">
         <form className="forms" onSubmit={handleSubmit}>
@@ -415,7 +415,7 @@ if (Object.keys(errors).length > 0) {
           </div>
 
           <div className="formBtns">
-              <button type="submit" className="submitBtn" disabled={!isEditable}>
+              <button type="submit" className="submitBtnProfile" disabled={!isEditable}>
                 Enregistrer
               </button>
               <button
