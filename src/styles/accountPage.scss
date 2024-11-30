@@ -118,6 +118,7 @@ $color-text-light: #555; // Texte clair
         color: white;
         border: none;
         padding: 12px;
+        margin-bottom: 10px;
         font-size: 1rem;
         border-radius: 4px;
         cursor: pointer;
@@ -133,6 +134,20 @@ $color-text-light: #555; // Texte clair
     }
   }
 
+  .cancel-btn {
+    background: $color-success;
+    color: white;
+    border: none;
+    
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+    margin-top: auto; /* Place le bouton en bas */
+    align-self: flex-end; /* Assure un alignement en bas */
+  }
   // Responsiveness
   @media (max-width: 1024px) { // Tablettes
     .forms-container {

@@ -86,7 +86,7 @@ export const PatchFamily = async (
  * @returns Une promesse qui résout sans valeur après la suppression.
  */
 export const DeleteFamily = async (
-  id: string,
+  id: number,
   token: string
 ): Promise<void> => {
   try {

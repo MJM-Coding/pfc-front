@@ -49,6 +49,7 @@ export interface IAssociation {
   created_at?: Date; // Date de création
   updated_at?: Date; // Date de mise à jour
   animals: IAnimal[] | undefined;
+  success?: boolean;
   user: Partial<IUser>;
 }
 

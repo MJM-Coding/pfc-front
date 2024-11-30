@@ -1,7 +1,6 @@
 import "./toast.scss";
 import { useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+
 
 //! Props
 interface IToastProps {
@@ -17,7 +16,7 @@ function Toast({ setToast, message, type }: IToastProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setToast(false);
-    }, 6000); //
+    }, 5000); //
 
     return () => {
       clearTimeout(timer);
@@ -30,7 +29,7 @@ return (
     <div className={`toast ${type}`}>
       <p>{message}</p>
       <button onClick={() => setToast(false)}>
-        <FontAwesomeIcon icon={faXmark} />
+    
       </button>
     </div>
   </div>
