@@ -1,0 +1,97 @@
+// Variables de couleurs
+$primary-color: #4CAF50;  // Vert principal
+$secondary-color: #FF5722; // Orange
+$background-color: #f4f4f4; // Fond léger
+$text-color: #333; // Couleur de texte principal
+$border-color: #ddd; // Bordure grise
+$highlight-color: #ff9800; // Couleur de survol des éléments
+$photo-border-radius: 10px; // Bordure arrondie pour les images
+$carousel-arrow-color: #fff; // Couleur des flèches du carrousel
+
+// Container principal
+.animalDetail-container {
+  background-color: $background-color;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Détails de l'animal
+.animal-details {
+  text-align: center;
+
+  .animal-name {
+    font-size: 2rem;
+    color: $primary-color;
+    margin-bottom: 10px;
+  }
+
+  .animal-species,
+  .animal-breed,
+  .animal-gender,
+  .animal-age,
+  .animal-size {
+    font-size: 1rem;
+    color: $text-color;
+    margin: 5px 0;
+  }
+
+  .animal-description {
+    font-size: 1rem;
+    color: $text-color;
+    margin-top: 20px;
+  }
+
+  .animal-association {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: $text-color;
+  }
+}
+
+// Style du carrousel
+.slick-carousel {
+  .slick-slide {
+    display: flex;
+    justify-content: center;
+  }
+
+  .slick-track {
+    display: flex;
+    align-items: center;
+  }
+
+  .slick-prev,
+  .slick-next {
+    color: $carousel-arrow-color;
+    font-size: 24px;
+    z-index: 1;
+  }
+
+  .slick-prev {
+    left: -40px;  // Position des flèches
+  }
+
+  .slick-next {
+    right: -40px;
+  }
+
+  .slick-arrow {
+    transition: all 0.3s ease;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.animal-photo {
+    width: 50%;  // S'adapte à la largeur du parent
+    height: 50%; // La hauteur sera ajustée automatiquement pour préserver les proportions
+    object-fit: contain; // Garde l'intégralité de l'image
+    border-radius: 10px;
+    margin: 0 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  

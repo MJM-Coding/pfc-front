@@ -3,6 +3,7 @@ import { GetAllAnimals } from "../../api/animal.api"; // appel la fonction getal
 import type { IAnimal } from "../../@types/animal";
 import "./animalsListPage.scss";
 import "../../styles/commun/commun.scss";
+import { Link } from "react-router-dom";
 
 const AnimalsPage: React.FC = () => {
   // Déclare les états pour gérer les animaux, les filtres et les erreurs
@@ -29,38 +30,39 @@ const AnimalsPage: React.FC = () => {
 
   //! Effet pour charger les données des animaux au montage du composant
   useEffect(() => {
-    document.body.classList.add("animals-page"); // Ajoute une classe pour la page actuelle
-
+   
     const loadAnimals = async () => {
       try {
         setIsLoading(true); // Indique que les données sont en cours de chargement
-        const data = await GetAllAnimals();
-        setAnimals(data); // Stocke tous les animaux récupérés
+        const data = await GetAllAnimals(); // Appelle la fonction pour récupérer la liste de tous les animaux depuis l'API
+        setAnimals(data); // Stocke tous les animaux récupérés dans l'état 'animals'
         setFilteredAnimals(data); // Initialise les animaux filtrés avec toutes les données
-
-        // Récupère des valeurs uniques pour les filtres (espèce, taille)
+  
+        // Récupère des valeurs uniques pour les filtres
         const uniqueSpecies = Array.from(
           new Set(data.map((animal) => animal.species))
-        ).filter(Boolean);
+        ).filter(Boolean); // Filtre les espèces uniques
         const uniqueSizes = Array.from(
           new Set(data.map((animal) => animal.size))
-        ).filter(Boolean);
-
+        ).filter(Boolean); // Filtre les tailles uniques
+  
         setSpecies(uniqueSpecies); // Met à jour les espèces uniques
         setSizes(uniqueSizes); // Met à jour les tailles uniques
       } catch (err) {
-        setError("Erreur lors du chargement des animaux"); // Gère une éventuelle erreur
-        console.error(err);
+        setError("Erreur lors du chargement des animaux"); // Gère les erreurs
+        console.error(err); // Affiche l'erreur dans la console
       } finally {
-        setIsLoading(false); // Indique que le chargement est terminé
+        setIsLoading(false); // Terminer l'état de chargement
       }
     };
-    loadAnimals();
-
+  
+    loadAnimals(); // Appelle la fonction pour charger les animaux au montage du composant
+  
     return () => {
-      document.body.classList.remove("animals-page"); // Nettoie la classe au démontage
+      // Code de nettoyage ici si nécessaire (annuler des appels API en cours par exemple)
     };
-  }, []);
+  }, []); // Tableau vide signifie que l'effet s'exécutera uniquement lors du montage du composant
+  
 
   //! Fonction pour appliquer les filtres sur la liste des animaux
   const applyFilters = () => {
@@ -119,8 +121,10 @@ const AnimalsPage: React.FC = () => {
   };
 
   //! Fonction pour rendre l'affichage d'un animal
-  const renderAnimal = (animal: IAnimal) => (
-    <li key={animal.id} className="animal-item">
+const renderAnimal = (animal: IAnimal) => (
+  <li key={animal.id} className="animal-item">
+    {/* Le lien enveloppe toute la carte */}
+    <Link to={`/animal-info/${animal.id}`} className="animal-link">
       {/* Affichage du nom de l'animal */}
       <h2 className="animal-name">{animal.name}</h2>
 
@@ -140,11 +144,11 @@ const AnimalsPage: React.FC = () => {
       {/* Détails supplémentaires sur l'animal */}
       <div className="animal-details">
         {animal.species && <p>Espèce: {animal.species}</p>}
-
         {animal.age && <p>Âge: {animal.age} ans</p>}
       </div>
-    </li>
-  );
+    </Link>
+  </li>
+);
 
   return (
     <div className="animals-container">

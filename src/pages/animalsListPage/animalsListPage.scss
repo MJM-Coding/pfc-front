@@ -25,6 +25,26 @@ main.Animals {
   box-sizing: border-box;
 }
 
+/* Style pour le lien */
+.animal-link {
+  text-decoration: none; /* Supprime le soulignement du lien */
+  color: inherit; /* Hérite de la couleur du parent */
+
+  /* Pour éviter tout décalage ou effet inattendu */
+  display: block; /* Fait en sorte que tout le contenu interne prenne l'espace du parent */
+  width: 100%; /* Assure que le lien occupe tout l'espace */
+  height: 100%;
+}
+
+/* Image de l'animal */
+.animal-photo {
+  width: 100%; /* Image occupe toute la largeur du conteneur */
+  height: auto; /* Garde le ratio d'aspect */
+  border-radius: 8px; /* Ajoute des coins arrondis si nécessaire */
+  object-fit: cover; /* Assure que l'image remplit bien le conteneur */
+}
+
+
 .filters {
   background-color: var(--white);
   padding: 20px;
