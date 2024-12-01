@@ -184,7 +184,7 @@ function FamilyProfile() {
 
   return (
     <div className="containerProfile">
-          <h1 data-title="Mon profil">Mon profil</h1>
+           <h1 data-title="Mon profil">Mon profil</h1>
       <section className="infoSection">
         <div className="infoTitle">
         </div>
@@ -195,12 +195,13 @@ function FamilyProfile() {
               initialImageUrl={imageUrl}
               onImageChange={handleImageChange}
             />
-            <div></div>
+           
 
             {/* Champs du formulaire */}
             <div className="fieldsWrap">
-              <div className="infoFieldContainer row">
+
                 {/* Nom */}
+              <div className="infoFieldContainer row">
                 <label className="infoLabel" htmlFor="lastName">
                   Nom
                 </label>
@@ -399,8 +400,7 @@ function FamilyProfile() {
                   {/* Option "Plus de 3" */}
                 </select>
               </div>
-
-              {/* garden */}
+    {/* garden */}
               <div className="infoFieldContainer-radio row">
                 <label className="infoLabel" htmlFor="garden">
                   Jardin
@@ -438,6 +438,7 @@ function FamilyProfile() {
                           garden: false,
                         })
                       }
+                      disabled={!isEditable}
                     />
                     <span className="custom-radio"></span>{" "}
                     {/* Spans pour styliser les radios */}

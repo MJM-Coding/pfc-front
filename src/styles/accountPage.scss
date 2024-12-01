@@ -1,49 +1,52 @@
-// Variables
-$color-primary: #007bff; // Couleur principale (bleu)
-$color-primary-hover: #0056b3; // Couleur principale au survol
-$color-success: #28a745; // Couleur succès (vert)
-$color-success-hover: #218838; // Couleur succès au survol
-$color-danger: #dc3545; // Couleur danger (rouge)
+// Variables de couleur
+$color-primary: #0044cc;            // Couleur principale (bleu)
+$color-primary-hover: #0056b3;      // Couleur principale au survol
+$color-accent: #ff6b6b;             // Couleur accent (rouge)
+$color-success: #28a745;            // Couleur succès (vert)
+$color-success-hover: #218838;      // Couleur succès au survol
+$color-danger: #dc3545;             // Couleur danger (rouge)
 $color-danger-hover: #c82333; // Couleur danger au survol
-$color-background: #f9f9f9; // Couleur de fond
-$color-border: #ddd; // Couleur des bordures
-$color-text-dark: #333; // Texte sombre
-$color-text-light: #555; // Texte clair
+$color-danger-lightness: #f8dcde;   // Couleur danger claire
+$color-danger-darkness: #c82333;    // Couleur danger foncée
+$color-background: #f4f4f4;         // Couleur de fond
+$color-border: #ddd;                // Couleur des bordures
+$color-text-dark: #333;             // Couleur texte sombre
+$color-text-light: #555;            // Couleur texte clair
+
+// Espacement
+$spacing: 16px;
 
 // Styles principaux
 .containerAccount {
-  background: #B9C9D3;
+  background: $color-background;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: calc($spacing * 2);
   min-height: 83.2vh;
 
-h1 {
-  font-size: 2rem;
-  margin: 50px 0;
-  text-align: center;
-  color: #262E33;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  position: relative;
-
-  &::before {
-    content: attr(data-title); // Reprend le texte du h1
-    position: absolute;
-    top: 5px; // Décalage vertical pour simuler la profondeur
-    left: 5px; // Décalage horizontal
-    color: #6b8ecc; // Couleur de l'ombre 3D
-    z-index: -1; // Place derrière le h1
+  h1 {
+    font-size: 24px;
+    color: $color-primary;            // Couleur principale
+    position: relative;
+    text-transform: uppercase;
+    margin-bottom: $spacing;          // Utilise la même variable pour l'espacement
+  
+    &::after {
+      content: attr(data-title);
+      position: absolute;
+      font-size: 14px;
+      color: $color-accent;           // Couleur accent
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
-}
 
-
-  // Partie des styles des conteneurs
   .forms-container {
     display: flex;
     gap: 20px;
-    margin-top: 20px;
+    margin-top: 70px;
 
     .form-container {
       background: $color-background;
@@ -52,8 +55,8 @@ h1 {
       padding: 20px;
       width: 350px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      display: flex; /* Flexbox pour aligner les éléments */
-      flex-direction: column; /* Alignement vertical des éléments */
+      display: flex;
+      flex-direction: column;
 
       h3 {
         font-size: 1.2rem;
@@ -94,8 +97,8 @@ h1 {
         cursor: pointer;
         transition: background 0.3s;
         width: 100%;
-        margin-top: auto; /* Place le bouton en bas */
-        align-self: flex-end; /* Assure un alignement en bas */
+        margin-top: auto;
+        align-self: flex-end;
       }
 
       .submit-btn:hover {
@@ -104,15 +107,15 @@ h1 {
     }
 
     .delete-container {
-      background: lighten($color-danger, 45%);
+      background: $color-danger-lightness;
       border: 1px solid $color-danger;
       border-radius: 8px;
       padding: 20px;
       width: 300px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      display: flex; /* Flexbox pour aligner les éléments */
-      flex-direction: column; /* Alignement vertical des éléments */
-      justify-content: space-between; /* Espacement entre le texte et le bouton */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
 
       h3 {
         font-size: 1.2rem;
@@ -122,7 +125,7 @@ h1 {
 
       p {
         font-size: 0.9rem;
-        color: darken($color-danger, 10%);
+        color: $color-danger-darkness;
         margin-bottom: 20px;
       }
 
@@ -137,8 +140,8 @@ h1 {
         cursor: pointer;
         width: 100%;
         transition: background 0.3s;
-        margin-top: auto; /* Place le bouton en bas */
-        align-self: flex-end; /* Assure un alignement en bas */
+        margin-top: auto;
+        align-self: flex-end;
       }
 
       .delete-btn:hover {
@@ -151,25 +154,25 @@ h1 {
     background: $color-success;
     color: white;
     border: none;
-    
     padding: 10px;
     font-size: 1rem;
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
     transition: background 0.3s;
-    margin-top: auto; /* Place le bouton en bas */
-    align-self: flex-end; /* Assure un alignement en bas */
+    margin-top: auto;
+    align-self: flex-end;
   }
+
   // Responsiveness
-  @media (max-width: 1024px) { // Tablettes
+  @media (max-width: 1024px) {
     .forms-container {
       flex-direction: column;
       align-items: center;
     }
   }
 
-  @media (max-width: 768px) { // Mobiles
+  @media (max-width: 768px) {
     h1 {
       font-size: 1.8rem;
     }
@@ -181,6 +184,29 @@ h1 {
     .form-container,
     .delete-container {
       width: 100%;
+    }
+  }
+
+  // Mobile responsiveness
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.6rem;
+    }
+
+    .forms-container {
+      gap: 10px;
+    }
+
+    .form-container,
+    .delete-container {
+      width: 100%;
+    }
+
+    .submit-btn,
+    .delete-btn,
+    .cancel-btn {
+      padding: 12px;
+      font-size: 1rem;
     }
   }
 }

@@ -220,8 +220,8 @@ const familyAccount = () => {
 
   return (
     <div className="containerAccount">
+      <h1 data-title="Mon compte">Mon compte</h1>
       <div className="account-preferences">
-        <h1>Mon compte</h1>
         {loading && <p>Chargement des données...</p>}
         {error && <p>{error}</p>}
 
