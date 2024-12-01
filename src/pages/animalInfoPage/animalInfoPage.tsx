@@ -10,6 +10,8 @@ const AnimalInfoPage: React.FC = () => {
   const { animalId } = useParams<{ animalId: string }>(); // Récupération de l'ID depuis l'URL
   const [animal, setAnimal] = useState<IAnimal | null>(null); // État pour l'animal
   const [association, setAssociation] = useState<IAssociation | null>(null); // État pour l'association
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null); // Photo sélectionnée pour la modale
+  const [isModalOpen, setIsModalOpen] = useState(false); // Ouverture de la modale
 
   //! Chargement des données de l'animal et de son association
   useEffect(() => {
@@ -40,6 +42,18 @@ const AnimalInfoPage: React.FC = () => {
     loadAnimal(); // Appel de la fonction de chargement au montage du composant
   }, [animalId]); // L'effet se déclenche seulement lorsque animalId change
 
+  //! Fonction pour ouvrir la modale avec la photo sélectionnée
+  const openModal = (photo: string) => {
+    setSelectedPhoto(photo);
+    setIsModalOpen(true);
+  };
+
+  //! Fonction pour fermer la modale
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPhoto(null);
+  };
+
   //! Affichage des détails de l'animal
   const renderAnimalDetails = (animal: IAnimal) => (
     <div className="animal_info-details">
@@ -55,6 +69,7 @@ const AnimalInfoPage: React.FC = () => {
           }
           alt={animal.name}
           className="animal_info-photo"
+          onClick={() => openModal(animal.profile_photo)} // Ouvrir la modale au clic
         />
       )}
 
@@ -67,6 +82,7 @@ const AnimalInfoPage: React.FC = () => {
         }
         alt={animal.name}
         className="animal_info-photo"
+        onClick={() => openModal(animal.photo1)} // Ouvrir la modale au clic
       />
 
       {/* Photo 2 */}
@@ -78,18 +94,22 @@ const AnimalInfoPage: React.FC = () => {
         }
         alt={animal.name}
         className="animal_info-photo"
+        onClick={() => openModal(animal.photo2)} // Ouvrir la modale au clic
       />
 
-      {/* Photo 3 */}
-      <img
-        src={
-          animal.photo3?.startsWith("http")
-            ? animal.photo3
-            : `${import.meta.env.VITE_STATIC_URL}${animal.photo3}`
-        }
-        alt={animal.name}
-        className="animal_info-photo"
-      />
+            {/* Photo 3 */}
+           {animal.photo3 && (
+             <img
+               src={
+                 animal.photo3?.startsWith("http")
+                   ? animal.photo3
+                   : `${import.meta.env.VITE_STATIC_URL}${animal.photo3}`
+               }
+               alt={animal.name}
+               className="animal_info-photo"
+               onClick={() => openModal(animal.photo3)} // Ouvrir la modale au clic
+             />
+           )}
 
       <p className="animal_info-species">Espèce: {animal.species}</p>
       <p className="animal_info-breed">Race: {animal.breed}</p>
@@ -107,12 +127,34 @@ const AnimalInfoPage: React.FC = () => {
         </p>
       )}
     </div>
+
+    
   );
+
+  
 
   return (
     <div className="animalDetail-container">
       {animal ? renderAnimalDetails(animal) : <p>Chargement de l'animal...</p>}
+
+      {/* Modale d'agrandissement de l'image */}
+      {isModalOpen && selectedPhoto && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content">
+            <img
+              src={
+                selectedPhoto.startsWith("http")
+                  ? selectedPhoto
+                  : `${import.meta.env.VITE_STATIC_URL}${selectedPhoto}`
+              }
+              alt="Photo agrandie"
+              className="modal-photo"
+            />
+          </div>
+        </div>
+      )}
     </div>
+    
   );
 };
 

@@ -1,5 +1,5 @@
 // Variables de couleurs
-$primary-color: #4CAF50;  // Vert principal
+$primary-color: #262E33;  // Vert principal
 $secondary-color: #FF5722; // Orange
 $background-color: #f4f4f4; // Fond léger
 $text-color: #333; // Couleur de texte principal
@@ -13,8 +13,9 @@ $carousel-arrow-color: #fff; // Couleur des flèches du carrousel
   background-color: $background-color;
   padding: 20px;
   border-radius: 8px;
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
+  min-height: 83.2vh;
 }
 
 // Détails de l'animal
@@ -50,14 +51,57 @@ $carousel-arrow-color: #fff; // Couleur des flèches du carrousel
   }
 }
 
-
+/* Pour les images affichées dans la page de détails de l'animal */
 .animal_info-photo {
-    width: 30%;  // S'adapte à la largeur du parent
-    height: auto; // La hauteur sera ajustée automatiquement pour préserver les proportions
+    width: 23%;  // Ajuste la largeur par rapport au parent
+    height: auto; // La hauteur est calculée automatiquement pour maintenir les proportions
     object-fit: contain; // Garde l'intégralité de l'image
     border-radius: 10px;
     margin: 0 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .animal_info-photo:hover {
+    transform: scale(1.05); // Légère augmentation au survol
+  }
+
+
+/* Style de la modale */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Fond sombre */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Modale au-dessus de tous les autres éléments */
+  }
+  
+  .modal-content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centrer le contenu */
+    width: auto; /* Permet à la modale de s'ajuster à la taille de l'image */
+    height: auto; /* La hauteur s'ajuste en fonction de l'image */
+    max-width: 100%; /* Pas de limite de largeur de la modale */
+    max-height: 100%; /* Pas de limite de hauteur de la modale */
+    overflow: auto; /* Permet le défilement si l'image est trop grande */
+    padding: 20px;
+  }
+  
+  /* Image de la modale */
+  .modal-photo {
+    width: auto;  /* L'image prend sa taille réelle sans restriction */
+    height: auto; /* Maintient les proportions naturelles de l'image */
+    object-fit: contain; /* Conserve les proportions de l'image sans déformation */
+    max-width: none; /* Supprime toute limitation sur la largeur */
+    max-height: none; /* Supprime toute limitation sur la hauteur */
     cursor: pointer;
   }
   
