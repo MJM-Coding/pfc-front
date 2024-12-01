@@ -1,4 +1,6 @@
-/* Variables */
+/* ============================= */
+/* Variables                     */
+/* ============================= */
 :root {
   --bg-modal: rgba(0, 0, 0, 0.7);
   --bg-modal-content: #262E33;
@@ -11,7 +13,9 @@
   --color-error: #e74c3c;
 }
 
-// Titre de la modale
+/* ============================= */
+/* Titre de la modale            */
+/* ============================= */
 h2 {
   font-size: 24px;
   font-weight: 600;
@@ -19,7 +23,10 @@ h2 {
   margin-bottom: 20px;
   text-align: center;
 }
-/* Styles de la modal */
+
+/* ============================= */
+/* Styles de la modale           */
+/* ============================= */
 .modal {
   position: fixed;
   top: 0;
@@ -31,7 +38,6 @@ h2 {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  
 }
 
 .modal-content {
@@ -43,7 +49,9 @@ h2 {
   position: relative;
 }
 
-/* Bouton de fermeture */
+/* ============================= */
+/* Bouton de fermeture           */
+/* ============================= */
 .close {
   position: absolute;
   top: 0px;
@@ -55,28 +63,27 @@ h2 {
   z-index: 3000;
 }
 
-
 .close:hover {
   color: var(--color-error);
 }
 
-/* Switch entre le formulaire de connexion et d'inscription */
+/* ============================= */
+/* Switch entre formulaires      */
+/* ============================= */
 .switch-form {
   text-align: center;
- 
   margin-bottom: 1rem;
+}
 
- p {
+.switch-form p {
   margin-bottom: 10px;
   margin-top: 10px;
- }
 }
 
 .switch-form button {
   background-color: var(--bg-button);
   color: white;
   padding: 10px 15px;
- 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -87,7 +94,9 @@ h2 {
   background-color: var(--bg-hover-button);
 }
 
-/* Styles pour le formulaire d'inscription */
+/* ============================= */
+/* Formulaire d'inscription      */
+/* ============================= */
 .register-options {
   margin-top: 20px;
 }
@@ -107,7 +116,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Styles pour le bouton "S'inscrire" */
+/* ============================= */
+/* Bouton "S'inscrire"           */
+/* ============================= */
 .register-button {
   background-color: var(--bg-register-button); /* Utilisation de la nouvelle variable */
   color: rgb(255, 255, 255);
@@ -123,9 +134,4 @@ button:disabled {
 
 .register-button:hover {
   background-color: var(--bg-hover-register-button); /* Utilisation de la nouvelle variable pour le survol */
-}
-
-button:disabled {
-  background-color: #0f0e0e;
-  cursor: not-allowed;
 }

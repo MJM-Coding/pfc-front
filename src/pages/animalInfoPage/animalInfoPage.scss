@@ -1,107 +1,210 @@
+// =============================
 // Variables de couleurs
-$primary-color: #262E33;  // Vert principal
+// =============================
+$primary-color: #262E33; // Vert principal
 $secondary-color: #FF5722; // Orange
 $background-color: #f4f4f4; // Fond léger
 $text-color: #333; // Couleur de texte principal
 $border-color: #ddd; // Bordure grise
-$highlight-color: #ff9800; // Couleur de survol des éléments
 $photo-border-radius: 10px; // Bordure arrondie pour les images
-$carousel-arrow-color: #fff; // Couleur des flèches du carrousel
 
-// Container principal
-.animal_info-details{
+// =============================
+// Style du conteneur principal
+// =============================
+.animal_info-details {
   background-color: $background-color;
   padding: 20px;
   border-radius: 8px;
   max-width: 1500px;
   margin: 0 auto;
   min-height: 83.2vh;
-}
-
-// Détails de l'animal
-.animal_info-details {
-  text-align: center;
 
   .animal_info-name {
     font-size: 2rem;
     color: $primary-color;
     margin-bottom: 10px;
   }
+}
 
-  .animal_info-species,
-  .animal_info-breed,
-  .animal_info-gender,
-  .animal_info-age,
-  .animal_info-size {
-    font-size: 1rem;
-    color: $text-color;
-    margin: 5px 0;
+// =============================
+// Style des informations de l'animal
+// =============================
+.animal_info-left {
+  background-color: #f9f9f9; /* Fond gris clair */
+  padding: 20px; /* Espacement interne */
+  border-radius: 15px; /* Coins arrondis */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre élégante */
+  font-family: 'Roboto', sans-serif; /* Police moderne */
+  color: $text-color;
+
+  p {
+    margin: 10px 0; /* Espacement entre les paragraphes */
+    font-size: 1rem; /* Taille du texte */
+    display: flex; /* Alignement des icônes et du texte */
+    gap: 10px; /* Espacement entre l'icône et le texte */
+    align-items: center; /* Centrage vertical */
+  }
+
+  span {
+    font-weight: bold; /* Texte en gras pour les titres */
+    color: #555; /* Couleur différente pour les titres */
+  }
+
+  .value {
+    color: #7a2424; /* Couleur spécifique pour les valeurs */
+    font-weight: normal; /* Poids normal pour les valeurs */
   }
 
   .animal_info-description {
-    font-size: 1rem;
-    color: $text-color;
-    margin-top: 20px;
+    margin-top: 20px; /* Espacement supérieur */
+    color: #575555; /* Couleur légèrement atténuée */
+    border-top: 1px solid $border-color; /* Trait de séparation */
+    padding-top: 15px; /* Espacement entre le trait et le texte */
   }
 
-  .animal_info-association {
-    margin-top: 20px;
-    font-size: 1rem;
-    color: $text-color;
+  .info-icon {
+    font-size: 1.2rem; /* Taille des icônes */
+    color: $secondary-color; /* Couleur orange pour contraster */
   }
 }
 
-/* Pour les images affichées dans la page de détails de l'animal */
-.animal_info-photo {
-    width: 23%;  // Ajuste la largeur par rapport au parent
-    height: auto; // La hauteur est calculée automatiquement pour maintenir les proportions
-    object-fit: contain; // Garde l'intégralité de l'image
-    border-radius: 10px;
-    margin: 0 10px;
+// =============================
+// Style des images
+// =============================
+.animal_info-photos {
+  display: flex;
+  justify-content: center;
+  gap: 10px; // Espacement entre les images
+  flex-wrap: wrap;
+
+  .animal_info-photo {
+    width: 300px; // Taille fixe pour les images
+    height: 200px; // Carré parfait
+    object-fit: cover; // Recadrer pour remplir sans déformer
+    border-radius: $photo-border-radius;
+    margin: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: transform 0.3s ease;
-  }
-  
-  .animal_info-photo:hover {
-    transform: scale(1.05); // Légère augmentation au survol
-  }
 
-
-/* Style de la modale */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Fond sombre */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Modale au-dessus de tous les autres éléments */
+    &:hover {
+      transform: scale(1.05); // Légère augmentation au survol
+    }
   }
-  
-  .modal-content {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Centrer le contenu */
-    width: auto; /* Permet à la modale de s'ajuster à la taille de l'image */
-    height: auto; /* La hauteur s'ajuste en fonction de l'image */
-    max-width: 100%; /* Pas de limite de largeur de la modale */
-    max-height: 100%; /* Pas de limite de hauteur de la modale */
-    overflow: auto; /* Permet le défilement si l'image est trop grande */
+}
+
+// =============================
+// Style des sections principales
+// =============================
+.animal_info-sections {
+  display: flex;
+  justify-content: space-between; // Écarte les deux colonnes
+  gap: 20px; // Espace entre les deux colonnes
+  align-items: stretch; // Étire les colonnes à la même hauteur
+
+  .animal_info-left,
+  .animal_info-right {
+    flex: 1; // Chaque colonne prend un espace égal
+    background: #ffffff;
+    border-radius: 15px;
     padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
   }
-  
-  /* Image de la modale */
-  .modal-photo {
-    width: auto;  /* L'image prend sa taille réelle sans restriction */
-    height: auto; /* Maintient les proportions naturelles de l'image */
-    object-fit: contain; /* Conserve les proportions de l'image sans déformation */
-    max-width: none; /* Supprime toute limitation sur la largeur */
-    max-height: none; /* Supprime toute limitation sur la hauteur */
-    cursor: pointer;
+
+  .animal_info-right {
+    .animal_info-map {
+      width: 100%; // Assure que la carte occupe tout l’espace
+      height: 100%; // Ajuste la hauteur de la carte
+      min-height: 200px;
+    }
   }
-  
+}
+
+// =============================
+// Responsive design
+// =============================
+@media (max-width: 1024px) {
+  .animal_info-sections {
+    flex-direction: column; // Sections empilées sur tablette
+    gap: 10px;
+  }
+
+  .animal_info-photos {
+    justify-content: center;
+
+    .animal_info-photo {
+      width: 120px;
+      height: 120px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .animal_info-details {
+    padding: 10px;
+  }
+
+  .animal_info-name {
+    font-size: 1.5rem;
+  }
+
+  .animal_info-sections {
+    gap: 15px;
+  }
+
+  .animal_info-photo {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .animal_info-name {
+    font-size: 1.2rem;
+  }
+
+  .animal_info-photo {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+// =============================
+// Modale
+// =============================
+.modal_info-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); // Fond sombre
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // Modale au-dessus de tous les autres éléments
+}
+
+.modal_info-content {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto; // Permet à la modale de s'ajuster à la taille de l'image
+  height: auto;
+  max-width: 100%; // Pas de limite de largeur
+  max-height: 100%; // Pas de limite de hauteur
+  overflow: auto; // Permet le défilement si l'image est trop grande
+  padding: 20px;
+}
+
+.modal_info-photo {
+  border-radius: $photo-border-radius;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  max-width: none;
+  max-height: none;
+  cursor: pointer;
+}

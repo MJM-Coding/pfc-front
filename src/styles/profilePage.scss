@@ -1,17 +1,24 @@
-/* Variables */
-$primary-color: #0044cc;           // Couleur principale
-$secondary-color: #F4F4F4;         // Couleur secondaire (background)
-$accent-color: #ff6b6b;            // Couleur d'accent
-$text-color: #413e3e;              // Couleur du texte
-$font-family: 'Roboto', sans-serif; // Police
-$border-radius: 5px;               // Rayon de bordure
-$spacing: 16px;                    // Espacement général
+/* ============================= */
+/* Variables                    */
+/* ============================= */
+$primary-color: #0044cc;
+$secondary-color: #F4F4F4;
+$accent-color: #ff6b6b;
+$text-color: #413e3e;
+$font-family: 'Roboto', sans-serif;
+$border-radius: 5px;
+$spacing: 16px;
 
-/* Styles principaux */
+/* ============================= */
+/* Style général de la page      */
+/* ============================= */
 #root {
   background-color: $secondary-color;
 }
 
+/* ============================= */
+/* Conteneur principal du profil */
+/* ============================= */
 .containerProfile {
   display: flex;
   flex-direction: column;
@@ -27,6 +34,7 @@ $spacing: 16px;                    // Espacement général
     position: relative;
     text-transform: uppercase;
     margin-bottom: $spacing;
+
     &::after {
       content: attr(data-title);
       position: absolute;
@@ -39,6 +47,9 @@ $spacing: 16px;                    // Espacement général
   }
 }
 
+/* ============================= */
+/* Section des informations      */
+/* ============================= */
 .infoSection {
   width: 100%;
   background-color: white;
@@ -200,7 +211,9 @@ $spacing: 16px;                    // Espacement général
   }
 }
 
-/* Toast */
+/* ============================= */
+/* Toast                         */
+/* ============================= */
 .Toast {
   position: fixed;
   bottom: $spacing * 2;
@@ -213,7 +226,9 @@ $spacing: 16px;                    // Espacement général
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsiveness */
+/* ============================= */
+/* Responsiveness                */
+/* ============================= */
 @media (max-width: 1024px) {
   .containerProfile {
     padding: calc($spacing * 2);
@@ -244,7 +259,7 @@ $spacing: 16px;                    // Espacement général
   }
 
   .fieldsWrap {
-    grid-template-columns: 1fr; /* Stacking the fields on small screens */
+    grid-template-columns: 1fr;
   }
 
   .formBtns {

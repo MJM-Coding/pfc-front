@@ -1,23 +1,29 @@
-/* Définition des variables de couleur */
-:root {
-  --footer-bg-color: #262e33;
-  --text-color: white;
-  --social-icon-color: white;
-  --social-icon-hover-color: #1da1f2; /* Bleu pour Instagram */
-  --copyright-font-size: 0.9rem;
-}
+/* ============================= */
+/* Variables de couleur          */
+/* ============================= */
+$footer-bg-color: #262e33; /* Couleur de fond du pied de page */
+$text-color: white; /* Couleur du texte */
+$social-icon-color: white; /* Couleur des icônes sociales */
+$social-icon-hover-color: #1da1f2; /* Couleur des icônes au survol */
+$copyright-font-size: 0.9rem; /* Taille de la police pour le copyright */
 
+/* ============================= */
+/* Style principal du footer     */
+/* ============================= */
 .footer {
-  background-color: var(--footer-bg-color);
-  color: var(--text-color);
+  background-color: $footer-bg-color;
+  color: $text-color;
   padding: 10px;
   text-align: center;
   position: relative;
   bottom: 0;
-  width: 100vw; /* Remplacé de 100vw à 100% pour éviter les débordements */
+  width: 100%; /* Utilisation de 100% pour éviter les débordements */
   box-sizing: border-box;
 }
 
+/* ============================= */
+/* Contenu du footer             */
+/* ============================= */
 .footer-content {
   display: flex;
   justify-content: space-between;
@@ -25,6 +31,9 @@
   flex-wrap: wrap;
 }
 
+/* ============================= */
+/* Icônes de réseaux sociaux     */
+/* ============================= */
 .social-media {
   display: flex;
   justify-content: center;
@@ -34,19 +43,25 @@
 
 .social-icon {
   font-size: 1.5rem;
-  color: var(--social-icon-color);
+  color: $social-icon-color;
   transition: color 0.3s ease;
+
+  &:hover {
+    color: $social-icon-hover-color; /* Couleur au survol */
+  }
 }
 
-.social-icon:hover {
-  color: var(--social-icon-hover-color); /* Utilisation de la variable pour le survol */
-}
-
+/* ============================= */
+/* Texte du copyright            */
+/* ============================= */
 .copyright p {
-  font-size: var(--copyright-font-size);
+  font-size: $copyright-font-size;
   margin: 0;
 }
 
+/* ============================= */
+/* Liens de navigation           */
+/* ============================= */
 .nav-link {
   font-size: 1rem;
   margin-right: 20px;

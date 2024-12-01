@@ -1,51 +1,50 @@
-/* Variables de couleur */
+/* ============================= */
+/* Variables de couleur          */
+/* ============================= */
 $background-dark: #141414;
 $text-color: white;
-$semi-transparent-dark: rgba(20, 40, 64, 0); /* Plus de transparence */
+$semi-transparent-dark: rgba(20, 40, 64, 0.5);
 
-
-/* Mobile-first styles */
+/* ============================= */
+/* Mobile-first styles           */
+/* ============================= */
 .home-container {
   width: 100vw;
   height: 83.2vh; 
   background-image: url('../../assets/images/img-homepage.webp');
-  background-size: cover; /* L'image occupe toute la largeur et hauteur sans se déformer */
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position: center; /* L'image est centrée */
+  background-position: center;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Le titre reste en haut */
-
+  justify-content: flex-start;
 }
 
 .home-title {
-  display: inline-block; /* Permet au fond de s'adapter à la largeur du texte */
-  text-align: center; /* Centrer le texte horizontalement */
-  margin-top: 2rem; /* Un peu d'espace en haut */
-  font-size: 2.5rem; /* Taille un peu plus grande pour mobile */
+  display: inline-block;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 2.5rem;
   color: $text-color;
-  font-weight: bold; /* Ajout du gras pour plus d'impact */
-  background: #02011060; /* Fond semi-transparent autour du texte */
-  padding: 10px 20px; /* Ajoute du padding autour du texte pour un espacement agréable */
-  border-radius: 8px; /* Arrondir légèrement les coins */
+  font-weight: bold;
+  background: #02011060;
+  padding: 10px 20px;
+  border-radius: 8px;
 }
-
-
 
 .home-content {
   display: flex;
-  flex-direction: column; /* Empile les éléments sur mobile */
+  flex-direction: column;
   align-items: center;
   width: 100%;
   height: auto;
-  justify-content: center; /* Centrer verticalement */
- 
+  justify-content: center;
 }
 
 .home-content-wrapper {
   display: flex;
-  width: 100%; /* Prend toute la largeur */
-  height: 100%; /* Prend toute la hauteur */
+  width: 100%;
+  height: 100%;
   align-items: flex-start;
 }
 
@@ -55,28 +54,27 @@ $semi-transparent-dark: rgba(20, 40, 64, 0); /* Plus de transparence */
   justify-content: center;
   align-items: center;
   color: $text-color;
-
-  border-radius: 25px; /* Arrondi plus doux pour un effet plus moderne */
+  border-radius: 25px;
   padding: 20px;
-  width: 50%; /* Le texte occupe la moitié droite de l'écran */
+  width: 50%;
   height: 100%;
   margin-left: 2rem;
-
-  backdrop-filter: blur(10px); /* Effet flou derrière le texte */
+  backdrop-filter: blur(10px);
 }
 
 .home-content1,
 .home-content2 {
   font-size: 1.1rem;
-  
-  line-height: 1.5; /* Espacement entre les lignes pour plus de lisibilité */
+  line-height: 1.5;
 }
 
 .bold-text {
-  font-weight: 700; /* Texte en gras */
+  font-weight: 700;
 }
 
+/* ============================= */
 /* Styles pour les écrans plus larges */
+/* ============================= */
 @media (min-width: 768px) {
   .home-title {
     font-size: 3rem;
@@ -84,21 +82,20 @@ $semi-transparent-dark: rgba(20, 40, 64, 0); /* Plus de transparence */
   }
 
   .home-content {
-    flex-direction: row; /* Positionner l'image à gauche et le texte à droite */
+    flex-direction: row;
     margin-left: 0;
     width: 100%;
     height: 100%;
   }
 
   .home-content-wrapper {
-    width: 100%; /* Largeur complète */
+    width: 100%;
     height: 100%;
   }
 
   .home-text-right {
-    width: 50%; /* Le texte occupe 50% de l'écran */
+    width: 50%;
     margin-left: 2rem;
-
   }
 
   .home-content1,
@@ -109,17 +106,14 @@ $semi-transparent-dark: rgba(20, 40, 64, 0); /* Plus de transparence */
 
 @media (min-width: 1024px) {
   .home-text-right {
-    border-radius: 30px; /* Bordure plus ronde pour un effet plus prononcé */
+    border-radius: 30px;
     padding: 0;
-    margin-left: 65rem; /* Plus grande marge pour l'espacement sur desktop */
-    width: 40%; /* Réduit encore la largeur sur des écrans plus larges */
-
+    margin-left: 65rem;
+    width: 40%;
     height: 350px;
-
- 
   }
 
-  .home-content{
+  .home-content {
     margin-bottom: 10rem;
   }
 
@@ -127,24 +121,21 @@ $semi-transparent-dark: rgba(20, 40, 64, 0); /* Plus de transparence */
   .home-content2 {
     font-size: 1.4rem;
     padding-left: 10px;
-    
   }
 
-  .home-content2{
+  .home-content2 {
     padding-top: 1rem;
   }
 
   .home-title {
-   display: inline-block; /* Permet au fond de s'adapter à la largeur du texte */
- width: 40vw;
- align-self: center;
-  text-align: center; /* Centrer le texte horizontalement */
-  margin-top: 1rem; /* Un peu d'espace en haut */
-  font-size: 2.5rem; /* Taille un peu plus grande pour mobile */
-
-  font-weight: bold; /* Ajout du gras pour plus d'impact */
-  
-  padding: 10px 20px; /* Ajoute du padding autour du texte pour un espacement agréable */
-  border-radius: 8px; /* Arrondir légèrement les coins */
-}
+    display: inline-block;
+    width: 40vw;
+    align-self: center;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+  }
 }
