@@ -2,11 +2,10 @@ import React, { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./header.scss";
 import logo from "../../assets/images/logosimple.png";
-import ModalLogin from "../modalLogin/modalLogin";
-import "../../styles/commun.scss";
+import ModalLogin from "../longinSigninModale/loginSigninModale";
 import AuthContext from "../../contexts/authContext";
-import type { IUserAssociation } from "../../@types/association";
-import DropdownMenu from "../dopdownMenu/dropdownMenu";
+import type { IAssociation } from "../../@types/association";
+import DropdownMenu from "../dropdownMenu/dropdownMenu";
 
 const Header: React.FC = () => {
   const { user, token, login, logout } = useContext(AuthContext) || {};
@@ -58,7 +57,7 @@ const Header: React.FC = () => {
       console.log("Génération des liens pour une association");
       return [
         { path: `/espace-association/profil-association/${associationId || userId}`, label: "Mon Profil" },
-        { path: "/espace-association/Informations-de-connexion", label: "Informations de connexion" },
+        { path: `/espace-association/Mon-compte/${associationId || userId}`, label: "Mon compte" },
         { path: "/espace-association/animaux", label: "Mes animaux" },
         { path: "/espace-association/demandes", label: "Demandes d'accueil" },
       ];
@@ -66,7 +65,7 @@ const Header: React.FC = () => {
       console.log("Génération des liens pour une famille");
       return [
         { path: `/espace-famille/profil-famille/${familyId || userId}`, label: "Mon profil" },
-        { path: "/espace-famille/Informations-de-connexion", label: "Informations de connexion" },
+        { path: `/espace-famille/Mon-compte/${familyId || userId}`, label: "Mon compte" },
         { path: "/espace-famille/demandes", label: "Mes demandes d'accueil" },
       ];
     }
@@ -112,8 +111,8 @@ const Header: React.FC = () => {
                 <>
                   <i className="fa-solid fa-user"></i>
                   <span className="user-firstname">
-                    {/* Affiche le nom du représentant ou du prénom */}
-                    {(user?.role === "association" && (user as unknown as IUserAssociation).representative) || user.firstname}
+                    {/* Affiche le nom de l'association si le rôle est "association" */}
+                    {(user?.role === "association" && (user as unknown as IAssociation).representative) || user.firstname}
                   </span>
                 </>
               }

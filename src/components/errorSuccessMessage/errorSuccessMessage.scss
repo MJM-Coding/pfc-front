@@ -1,0 +1,28 @@
+.message {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 1rem;
+
+  &.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+
+  &.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+
+  .icon {
+    margin-right: 10px;
+  }
+
+  p {
+    margin: 0;
+  }
+}

@@ -1,0 +1,137 @@
+// Variables de couleur
+$primary-color: #007bff; // Bleu vif pour les éléments interactifs
+$background-color: #262E33; // Fond de la modale (blanc pour un contraste net)
+$error-color: #e74c3c; // Couleur des erreurs
+$input-border-color: #ccc; // Bordure claire des champs
+$input-focus-color: #007bff; // Bordure lors du focus
+$text-color: #ffffff; // Texte sombre pour une bonne lisibilité
+$button-hover-color: #207bdd; // Couleur au survol du bouton
+$bg-button-long:#007bff;
+$modal-bg-color: rgba(0, 0, 0, 0.5); // Fond semi-transparent de la modale
+
+// Styles globaux
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+// Modale en arrière-plan sombre
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $modal-bg-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+// Formulaire de connexion dans la modale
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  background-color: $background-color;
+  padding: 30px;
+  border-radius: 8px;
+ 
+  position: relative;
+  z-index: 1100;
+}
+
+// Titre de la modale
+.login-form h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: $text-color;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+// Champ d'entrée
+.input-group {
+  margin-bottom: 1.2rem;
+  
+}
+
+label {
+  font-weight: 600;
+  font-size: 14px;
+  color: $text-color;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid $input-border-color;
+  border-radius: 6px;
+  background-color: #fafafa;
+  font-size: 16px;
+  color: #111111;  // Utilisation d'une couleur de texte plus sombre
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.input-group input:focus {
+  border-color: $input-focus-color;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+// Message d'erreur
+.error {
+  color: $error-color;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+// Bouton de soumission
+.login-button{
+  width: 100%;
+  padding: 14px;
+  color: #fff;
+  font-size: 16px;
+  background: $bg-button-long;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: $button-hover-color;
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    background-color: #1d1b1b;
+    cursor: not-allowed;
+  }
+}
+
+// Pour fermer la modale
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  color: $text-color;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+

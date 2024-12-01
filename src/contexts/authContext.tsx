@@ -1,7 +1,7 @@
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { IUser, IAuthContext } from "../@types/auth";
 import { refreshToken } from "../api/signin.api"; // Fonction pour rafraîchir le token
-import ModalLogin from "../components/modalLogin/modalLogin"; // Assurez-vous que le chemin est correct
+import ModalLogin from "../components/longinSigninModale/loginSigninModale"; 
 
 
 

@@ -21,12 +21,15 @@ export const GetAllFamilies = async (token: string): Promise<IFamily[]> => {
 };
 
 /**
- * Récupère une famille spécifique par son ID.
+ *! Récupère une famille spécifique par son ID.
  * @param id L'identifiant unique de la famille.
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec l'objet IFamily.
  */
-export const GetFamilyById = async (id: number, token: string): Promise<IFamily> => {
+export const GetFamilyById = async (
+  id: number, 
+  token: string): 
+  Promise<IFamily> => {
   try {
     const response = await api.get<IFamily>(`/family/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +86,7 @@ export const PatchFamily = async (
  * @returns Une promesse qui résout sans valeur après la suppression.
  */
 export const DeleteFamily = async (
-  id: string,
+  id: number,
   token: string
 ): Promise<void> => {
   try {

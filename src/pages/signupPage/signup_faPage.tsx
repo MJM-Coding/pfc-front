@@ -1,12 +1,20 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import "./signup_fa.scss";
+import "../../styles/signupPage.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationFamily } from "../../@types/signupForm";
-import Toast from "../../toast/toast"; // Importation du composant Toast pour afficher des messages
-import ModalLogin from "../../components/modalLogin/modalLogin";
+import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Import du composant Message
+import ModalLogin from "../../components/longinSigninModale/loginSigninModale";
+import Toast from "../../components/toast/toast"; // Import du composant Toast
+import { validateForm } from "../../components/validateForm/validateForm"; // Import de la fonction de validation des champs après l'envoi
+import {
+  validatePhone,
+  validatePostalCode,
+  validateEmail,
+  validatePassword,
+} from "../../components/validateForm/validateForm"; // Import des fonctions de validation des champs
+import "../../components/validateForm/validateForm.scss";
 
 const Signup_faPage = () => {
-  //! State pour gérer les données du formulaire
   const [formData, setFormData] = useState<IUserRegistrationFamily>({
     firstname: "",
     lastname: "",
@@ -21,111 +29,121 @@ const Signup_faPage = () => {
     },
   });
 
-  // State pour les messages d'erreur et de succès
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordConfirmationError, setPasswordConfirmationError] =
+    useState("");
 
   // State pour gérer l'affichage de Toast
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
-  // State pour gérer l'affichage du modal
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
-  //! Fonction pour gérer les changements dans les champs du formulaire
+  //! Gère les changements dans les champs du formulaire
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    //vérifie si le champ modifié fait parti de la liste ci-dessous
     if (["address", "postal_code", "city", "phone"].includes(name)) {
-      // Met à jour le state formData pour les champs liés à l'objet family
       setFormData((prevData) => ({
-        ...prevData, // Copie toutes les propriétés existantes de formData
+        ...prevData,
         family: {
-          ...prevData.family, // Copie toutes les propriétés existantes de l'objet family
+          ...prevData.family,
           [name]: value,
         },
       }));
 
-      // Validation du numéro de téléphone en temps réel
       if (name === "phone") {
-        if (!/^\d{10}$/.test(value)) {
-          setPhoneError("Le numéro de téléphone doit comporter 10 chiffres.");
-        } else {
-          setPhoneError("");
-        }
+        const phoneError = validatePhone(value);
+        setPhoneError(phoneError || "");
       }
 
-      // Validation du code postal en temps réel
       if (name === "postal_code") {
-        if (!/^\d{5}$/.test(value)) {
-          setPostalCodeError("Le code postal doit être composé de 5 chiffres.");
-        } else {
-          setPostalCodeError("");
-        }
+        const postalCodeError = validatePostalCode(value);
+        setPostalCodeError(postalCodeError || "");
       }
     } else {
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
+
+      if (name === "email") {
+        const emailError = validateEmail(value);
+        setEmailError(emailError || "");
+      }
+
+      if (name === "password" || name === "passwordConfirmation") {
+        const passwordError = validatePassword(
+          name === "password" ? value : formData.password,
+          name === "passwordConfirmation"
+            ? value
+            : formData.passwordConfirmation
+        );
+        if (name === "password") {
+          setPasswordError(passwordError || "");
+        } else {
+          setPasswordConfirmationError(passwordError || "");
+        }
+      }
     }
   };
-  //! Fonction pour gérer la soumission du formulaire
+
+  // Soumission du formulaire
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Permet de ne pas envoyer les donnés si le formulaire n'est pas valide
-    let formIsValid = true;
+    //! Utilisation de validateForm pour valider tous les champs nécessaires
+    const errors = validateForm(
+      {
+        ...formData,
+        postal_code: formData.family.postal_code,
+        phone: formData.family.phone,
+      },
+      ["postal_code", "phone", "email", "password"]
+    );
 
-    // Vérification du code postal
-    if (!/^\d{5}$/.test(formData.family.postal_code)) {
-      setErrorMessage("Le code postal doit être composé de 5 chiffres.");
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
-    }
-
-    // Vérification du numéro de téléphone
-    if (!/^\d{10}$/.test(formData.family.phone)) {
-      setPhoneError("Le numéro de téléphone doit comporter 10 chiffres.");
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
-    }
-
-    // Vérification de la confirmation du mot de passe
-    if (formData.password !== formData.passwordConfirmation) {
-      setErrorMessage("Les mots de passe ne correspondent pas.");
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
-    }
-
-    // Vérification de l'email
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailPattern.test(formData.email)) {
-      setErrorMessage("L'email est invalide.");
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
-    }
-
-    // Permet de ne pas envoyer les données si le formulaire n'est pas valide
-    if (!formIsValid) {
+    // Vérifier s'il y a des erreurs
+    if (Object.keys(errors).length > 0) {
+      // Gérer les erreurs
+      if (errors.postal_code) {
+        setPostalCodeError(errors.postal_code);
+      }
+      if (errors.phone) {
+        setPhoneError(errors.phone);
+      }
+      if (errors.email || errors.password) {
+        setErrorMessage(errors.email || errors.password);
+      }
+      if (errors.password) {
+        setPasswordError(errors.password);
+        setPasswordConfirmationError(errors.password);
+      }
       return;
     }
 
-    //! Envoi des données au Backend
+    // Envoi du formulaire
     try {
       const { passwordConfirmation, ...dataToSend } = formData;
-      await CreateUser(dataToSend); // CreateUser est une fonction d'appel API dans user.api
+      await CreateUser(dataToSend);
 
-      //! Affichage du message de succès avec Toast
       setToastMessage(
         "Inscription réussie ! Vous pouvez maintenant vous connecter."
       );
       setToastType("success");
-      setShowToast(true);
+      setShowToast(true); // Ajout de cette ligne pour afficher le toast
 
-      // Ouvrir la modal de connexion dès que l'inscription est réussie
-      setShowLoginModal(true); // Active l'affichage de la modal
+       // Retarder la redirection de 5 secondes (5000ms)
+setTimeout(() => {
+  window.location.href = "/";
+}, 5000); // 5000ms = 5 secondes
 
-      //! Réinitialisation du formulaire
+
+      // Réinitialisation du formulaire après soumission réussie
       setFormData({
         firstname: "",
         lastname: "",
@@ -139,15 +157,17 @@ const Signup_faPage = () => {
           phone: "",
         },
       });
+
+      // Réinitialisation des erreurs
       setErrorMessage("");
       setPhoneError("");
       setPostalCodeError("");
     } catch (error: any) {
-      //! Affichage du message d'erreur avec Toast
       const errorMessage =
         error?.response?.data?.message ||
-        "Une erreur s'est produite lors de l'inscription.";
-      setToastMessage(errorMessage);
+        `Une erreur s'est produite lors de l'inscription: ${error.message}`;
+
+      setToastMessage(`errorMessage : ${errorMessage}`);
       setToastType("error");
       setShowToast(true);
     }
@@ -155,207 +175,216 @@ const Signup_faPage = () => {
 
   //! Affichage du formulaire d'inscription
   return (
-    <div className="faPage-container">
-    <section className="signup-fa">
-      <div className="signup_Header-fa">
-        <h1>Inscription famille d'accueil</h1>
-      </div>
-      <div className="subscribeFormContainer-fa">
-        <form
-          onSubmit={handleSubmit}
-          className="formConnexionPage-fa"
-          id="subscribeForm"
-        >
-          <div className="formColumns">
-            {/* Colonne de gauche */}
-            <div className="formColumnLeft">
-              {/* Nom  */}
-              <div className="fieldContainer-fa">
-                <label className="labelConnexionPage-fa" htmlFor="lastname">
-                  Nom
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="text"
-                  name="lastname"
-                  id="lastname"
-                  value={formData.lastname}
-                  onChange={handleChange}
-                  required
-                />
+    <div className="containerSignup">
+      <section className="signup">
+        <div className="signup_Header">
+          <h1>Inscription famille d'accueil</h1>
+        </div>
+        <div className="subscribeFormContainer">
+          <form
+            onSubmit={handleSubmit}
+            className="formConnexionPage"
+            id="subscribeForm"
+          >
+            <div className="formColumns">
+              {/* Colonne de gauche */}
+              <div className="formColumnLeft">
+                {/* Nom */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="lastname">
+                    Nom
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="lastname"
+                    id="lastname"
+                    value={formData.lastname}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Prénom */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="firstname">
+                    Prénom
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="firstname"
+                    id="firstname"
+                    value={formData.firstname}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Adresse */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="address">
+                    Adresse
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="address"
+                    id="address"
+                    value={formData.family.address}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Code postal */}
+                <div className="fieldContainer">
+                  <label
+                    className="labelConnexionPage"
+                    htmlFor="postal_code"
+                  >
+                    Code postal
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="postal_code"
+                    id="postal_code"
+                    value={formData.family.postal_code}
+                    onChange={handleChange}
+                    required
+                  />
+                  {postalCodeError && (
+                    <p className="errorMessage">{postalCodeError}</p>
+                  )}
+                </div>
+
+                {/* Ville */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="city">
+                    Ville
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="city"
+                    id="city"
+                    value={formData.family.city}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               </div>
 
-              {/* Prénom  */}
-              <div className="fieldContainer-fa">
-                <label className="labelConnexionPage-fa" htmlFor="firstname">
-                  Prénom
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="text"
-                  name="firstname"
-                  id="firstname"
-                  value={formData.firstname}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              {/* Colonne de droite */}
+              <div className="formColumnRight">
+                {/* Téléphone */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="phone">
+                    Téléphone
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    value={formData.family.phone}
+                    onChange={handleChange}
+                    required
+                  />
+                  {phoneError && <p className="errorMessage">{phoneError}</p>}
+                </div>
 
-              {/* Adresse */}
-              <div className="fieldContainer-fa">
-                <label className="labelConnexionPage-fa" htmlFor="address">
-                  Adresse
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="text"
-                  name="address"
-                  id="address"
-                  value={formData.family.address}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+                {/* Email */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    style={{ textTransform: "lowercase" }}
+                  />
+                  {emailError && <p className="errorMessage">{emailError}</p>}
+                </div>
 
-              {/* Code postal */}
-              <div className="fieldContainer-fa">
-                <label className="labelConnexionPage-fa" htmlFor="postal_code">
-                  Code postal
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="text"
-                  name="postal_code"
-                  id="postal_code"
-                  value={formData.family.postal_code}
-                  onChange={handleChange}
-                  required
-                />
-                {postalCodeError && (
-                  <p className="errorMessage-fa">{postalCodeError}</p>
-                )}
-              </div>
-
-              {/* Ville */}
-              <div className="fieldContainer-fa">
-                <label className="labelConnexionPage-fa" htmlFor="city">
-                  Ville
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="text"
-                  name="city"
-                  id="city"
-                  value={formData.family.city}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Colonne de droite */}
-
-            <div className="formColumnRight">
-              {/* Téléphone */}
-              <div className="fieldContainer-fa">
-                <label className="labelConnexionPage-fa" htmlFor="phone">
-                  Téléphone
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="tel"
-                  name="phone"
-                  id="phone"
-                  value={formData.family.phone}
-                  onChange={handleChange}
-                  required
-                />
-                {phoneError && <p className="errorMessage-fa">{phoneError}</p>}
-              </div>
-
-              {/* Email */}
-              <div className="fieldContainer-fa">
-                <label className="labelConnexionPage-fa" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  style={{ textTransform: "lowercase" }}
-                />
-              </div>
-
-              {/*  Mot de passe */}
-              <div className="fieldContainer-fa">
-                <label className="labelConnexionPage-fa" htmlFor="password">
-                  Mot de passe
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Confirmation du mot de passe */}
-              <div className="fieldContainer-fa">
-                <label
-                  className="labelConnexionPage-fa"
-                  htmlFor="passwordConfirmation"
-                >
-                  Confirmer le mot de passe
-                </label>
-                <input
-                  className="inputConnexionPage-fa"
-                  type="password"
-                  name="passwordConfirmation"
-                  id="passwordConfirmation"
-                  value={formData.passwordConfirmation}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              {/* Bouton de validation */}
-              <button type="submit" className="buttonConnexionPage-fa">
+                {/* Mot de passe */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="password">
+                    Mot de passe
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="password"
+                    name="password"
+                    id="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  {passwordError && (
+                    <p className="errorMessage">{passwordError}</p>
+                  )}
+                </div>
+                {/* Confirmation du mot de passe */}
+                <div className="fieldContainer">
+                  <label
+                    className="labelConnexionPage"
+                    htmlFor="passwordConfirmation"
+                  >
+                    Confirmer le mot de passe
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="password"
+                    name="passwordConfirmation"
+                    id="passwordConfirmation"
+                    value={formData.passwordConfirmation}
+                    onChange={handleChange}
+                    required
+                  />
+                  {passwordConfirmationError && (
+                    <p className="errorMessage">{passwordConfirmationError}</p>
+                  )}
+                </div>
+            {/* Bouton de validation */}
+            <div className="submitContainer">
+              <button className="buttonConnexionPage" type="submit">
                 Créer un compte
               </button>
             </div>
-          </div>
+              </div>
+            </div>
+          </form>
+        </div>
 
-          {/* Affichage des erreurs */}
-          {errorMessage && <p className="errorMessage-fa">{errorMessage}</p>}
-        </form>
-      </div>
+        {/* Message d'erreur */}
+        {errorMessage && <Message type="error" message={errorMessage} />}
 
-      {/* Affichage du Toast avec le message */}
-      {showToast && (
-        <Toast
-          setToast={setShowToast}
-          message={toastMessage}
-          type={toastType}
-        />
-      )}
-
-      {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
-      {showLoginModal && (
-        <ModalLogin
-          show={showLoginModal}
-          onClose={() => setShowLoginModal(false)}
-          login={() => {
-            /* gestion du login */
-          }}
-        />
-      )}
-    </section>
+        {/* Affichage du Toast avec le message */}
+        {showToast && (
+          <Toast
+            setToast={setShowToast}
+            message={toastMessage}
+            type={toastType}
+          />
+        )}
+        {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
+        {showLoginModal && (
+          <ModalLogin
+            show={showLoginModal}
+            onClose={() => setShowLoginModal(false)}
+            login={() => {
+              /* gestion du login */
+            }}
+          />
+        )}
+      </section>
     </div>
   );
 };

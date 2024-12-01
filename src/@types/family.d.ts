@@ -5,6 +5,9 @@ export interface IUser {
   lastname: string;
   email: string;
   password: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
   role: 'family';
   id_family: number;
   created_at: string;
@@ -14,7 +17,7 @@ export interface IUser {
     address: string;
     city: string;
     description: string;
-    garden: false;
+    garden: false | null;
     id_user: number;
     number_of_animals: number | null;
     number_of_children: number | null;
@@ -35,7 +38,7 @@ export interface IFamily {
   phone: string | undefined;
   number_of_children: number | undefined;
   number_of_animals: number | undefined;
-  garden: boolean | undefined;
+  garden: null | boolean | undefined;
   description: string | undefined;
   profile_photo?:  string | null;
   imageUrl?: string | File | null;

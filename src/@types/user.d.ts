@@ -4,6 +4,9 @@ export interface IUser {
   firstname: string | null ;
   email: string | null;
   password: string | null ; 
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
   role: "family" | "association" | "admin";
   id_family: number | null;
   id_association: number | null;

@@ -9,7 +9,11 @@ $button-hover-bg-color: #375d68;
 $label-color: #495057;
 $error-color: $danger-color;
 
-.faPage-container {
+
+body {
+  background: $background-color;
+}
+.containerSignup {
   width: 100vw;
   height: 83vh; /* Prend toute la hauteur de la fenêtre */
   background: $background-color;
@@ -21,27 +25,25 @@ $error-color: $danger-color;
 }
 
 // Style global du formulaire
-.signup-fa {
+.signup {
   padding: 10px 20px;
 
-
-
-  .signup_Header-fa {
+  .signup_Header {
     text-align: center;
     margin-bottom: 10px;
 
     h1 {
       color: $primary-color;
       font-size: 2.5rem;
-      margin-bottom: 90px;
+      margin-bottom: 70px;
     }
   }
 
-  .subscribeFormContainer-fa {
+  .subscribeFormContainer {
     display: flex;
     justify-content: center;
     
-    .formConnexionPage-fa {
+    .formConnexionPage {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -59,7 +61,7 @@ $error-color: $danger-color;
           flex: 1;
           min-width: 300px;
           
-          .fieldContainer-fa {
+          .fieldContainer {
             margin-bottom: 20px;
 
             label {
@@ -86,7 +88,7 @@ $error-color: $danger-color;
               }
             }
 
-            .errorMessage-fa {
+            .errorMessage {
               font-size: 0.875rem;
               color: $error-color;
               margin-top: 5px;
@@ -99,7 +101,7 @@ $error-color: $danger-color;
           flex: 1;
           min-width: 300px;
           
-          .fieldContainer-fa {
+          .fieldContainer {
             margin-bottom: 20px;
 
             label {
@@ -126,7 +128,7 @@ $error-color: $danger-color;
               }
             }
 
-            .errorMessage-fa {
+            .errorMessage {
               font-size: 0.875rem;
               color: $error-color;
               margin-top: 5px;
@@ -153,7 +155,7 @@ $error-color: $danger-color;
       }
 
       // Message d'erreur général
-      .errorMessage-fa {
+      .errorMessage {
         color: $danger-color;
         font-size: 1rem;
         margin-top: 15px;
@@ -161,5 +163,5 @@ $error-color: $danger-color;
     }
   }
 
-
+ 
 }

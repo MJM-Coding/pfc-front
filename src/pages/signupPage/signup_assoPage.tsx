@@ -1,10 +1,18 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import "./signup_asso.scss";
+import "../../styles/signupPage.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationAssociation } from "../../@types/signupForm";
-import Toast from "../../toast/toast";
-import ModalLogin from "../../components/modalLogin/modalLogin";
-
+import Toast from "../../components/toast/toast";
+import ModalLogin from "../../components/longinSigninModale/loginSigninModale";
+import { validateForm } from "../../components/validateForm/validateForm";
+import {
+  validatePostalCode,
+  validatePhone,
+  validateRNA,
+  validateEmail,
+  validatePassword,
+} from "../../components/validateForm/validateForm";
+import "../../components/validateForm/validateForm.scss"; // css des message erreur en temps réel
 
 const signup_assoPage = () => {
   //! State pour gérer les données du formulaire
@@ -29,6 +37,9 @@ const signup_assoPage = () => {
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
   const [rnaNumberError, setRnaNumberError] = useState<string>("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordConfirmationError, setPasswordConfirmationError] = useState("");
 
   // State pour gérer l'affichage de Toast
   const [showToast, setShowToast] = useState<boolean>(false);
@@ -42,14 +53,15 @@ const signup_assoPage = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
+    // Vérifie si le champ modifié fait partie des champs associés
     if (
       [
-        "address",
-        "postal_code",
-        "city",
         "phone",
-        "representative",
+        "postal_code",
         "rna_number",
+        "address",
+        "city",
+        "representative",
       ].includes(name)
     ) {
       setFormData((prevData) => ({
@@ -60,83 +72,102 @@ const signup_assoPage = () => {
         },
       }));
 
-      // Validation du numéro de téléphone en temps réel
+      // Validation spécifique pour chaque champ
       if (name === "phone") {
-        if (!/^\d{10}$/.test(value)) {
-          setPhoneError("Le numéro de téléphone doit comporter 10 chiffres.");
-        } else {
-          setPhoneError("");
-        }
+        const phoneError = validatePhone(value);
+        setPhoneError(phoneError || "");
       }
-      // Validation du code postal en temps réel
+
       if (name === "postal_code") {
-        if (!/^\d{5}$/.test(value)) {
-          setPostalCodeError("Le code postal doit être composé de 5 chiffres.");
-        } else {
-          setPostalCodeError("");
-        }
+        const postalCodeError = validatePostalCode(value);
+        setPostalCodeError(postalCodeError || "");
       }
-      // Validation du RNA number en temps réel
+
       if (name === "rna_number") {
-        if (!/^W\d{9}$/.test(value)) {
-          setRnaNumberError(
-            "Le numéro RNA doit commencer par W suivi de 9 chiffres."
-          );
-        } else {
-          setRnaNumberError("");
-        }
+        const normalizedRnaNumber = value.toUpperCase(); // Convertir en majuscule
+        const rnaNumberError = validateRNA(normalizedRnaNumber);
+        setRnaNumberError(rnaNumberError || "");
       }
     } else {
+      // Pour les autres champs, met à jour directement l'état du formulaire
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value,
+        [name]: value, // Cela doit mettre à jour le champ lastname correctement
       }));
+
+      // Validation pour l'email
+      if (name === "email") {
+        const emailError = validateEmail(value);
+        setEmailError(emailError || "");
+      }
+
+      // Validation pour le mot de passe et sa confirmation
+      if (name === "password" || name === "passwordConfirmation") {
+        const passwordError = validatePassword(
+          name === "password" ? value : formData.password,
+          name === "passwordConfirmation"
+            ? value
+            : formData.passwordConfirmation
+        );
+
+        if (name === "password") {
+          setPasswordError(passwordError || "");
+        } else {
+          setPasswordConfirmationError(passwordError || "");
+        }
+      }
     }
   };
 
-  //! Fonction pour gérer les soumissions du formulaire
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  //! Fonction de soumission du formulaire
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    // Permet de ne pas envoyer les donnés si le formulaire n'est pas valide
-    let formIsValid = true;
+    // Affichage du formulaire et des erreurs dans la console
+    console.log("formData", formData);
+    console.log("rnaNumberError", rnaNumberError);
 
-    // Vérification du code postal
-    if (!/^\d{5}$/.test(formData.association.postal_code)) {
-      setErrorMessage("Le code postal doit être composé de 5 chiffres.");
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
-    }
+    // Réinitialiser les messages d'erreur avant la soumission
+    setPhoneError("");
+    setPostalCodeError("");
+    setEmailError("");
+    setPasswordError("");
+    setPasswordConfirmationError("");
+    setRnaNumberError("");
 
-    // Vérification du numéro de téléphone
-    if (!/^\d{10}$/.test(formData.association.phone)) {
-      setPhoneError("Le numéro de téléphone doit comporter 10 chiffres.");
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
-    }
+    // Utilisation de validateForm pour valider tous les champs nécessaires
+    const errors = validateForm(
+      {
+        ...formData,
+        postal_code: formData.association.postal_code,
+        phone: formData.association.phone,
+        email: formData.email,
+        rna_number: formData.association.rna_number,
+        password: formData.password,
+      },
+      ["postal_code", "phone", "email", "rna_number", "password"]
+    );
 
-    // Vérification de la confirmation du mot de passe
-    if (formData.password !== formData.passwordConfirmation) {
-      setErrorMessage("Les mots de passe ne correspondent pas.");
-      formIsValid = false; // Si la validation a échoué, on arrêt le processus
-    }
+    // Vérifier s'il y a des erreurs
+    if (Object.keys(errors).length > 0) {
+      // Gérer les erreurs
+      if (errors.postal_code) {
+        setPostalCodeError(errors.postal_code);
+      }
+      if (errors.phone) {
+        setPhoneError(errors.phone);
+      }
+      if (errors.email) {
+        setEmailError(errors.email);
+      }
+      if (errors.rna_number) {
+        setRnaNumberError(errors.rna_number);
+      }
+      if (errors.password) {
+        setPasswordError(errors.password);
+      }
 
-    //Vérification de l'email
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailPattern.test(formData.email)) {
-      setErrorMessage("L'email est invalide.");
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
-    }
-
-    // Vérification du NRA number
-    if (!/^W\d{9}$/.test(formData.association.rna_number)) {
-      setRnaNumberError(
-        "Le numéro RNA doit commencer par W suivi de 9 chiffres."
-      );
-      formIsValid = false; // Si la validation a échoué, on arrête le processus
-    }
-
-    // Permet de ne pas envoyer les données si le formulaire n'est pas valide
-    if (!formIsValid) {
-      return;
+      return; // Sortir si des erreurs existent
     }
 
     //! Envoi des données au Backend
@@ -147,15 +178,17 @@ const signup_assoPage = () => {
       //! Affichage du message de success avec Toast
 
       setToastMessage(
-        "Inscription reussie ! Vous pouvez maintenant vous connecter."
+        "Inscription réussie ! Vous pouvez maintenant vous connecter."
       );
       setToastType("success");
-      setShowToast(true);
+      setShowToast(true); // Ajout de cette ligne pour afficher le toast
 
-      // Ouvrir la modal de connexion dès que l'inscription est réussie
-      setShowLoginModal(true); // Active l'affichage de la modal
+      // Retarder la redirection de 5 secondes (5000ms)
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 5000); // 5000ms = 5 secondes
 
-      //!  Reinitialisation du formulaire
+      //!  Reinitialisation du formulaire après soumission résussie
       setFormData({
         firstname: "",
         lastname: "",
@@ -171,6 +204,8 @@ const signup_assoPage = () => {
           representative: "",
         },
       });
+
+      // Reinitialisation des messages d'erreur
       setErrorMessage("");
       setPhoneError("");
       setPostalCodeError("");
@@ -179,9 +214,9 @@ const signup_assoPage = () => {
       //! Affichage du message d'erreur avec Toast
       const errorMessage =
         error?.response?.data?.message ||
-        "Une erreur s'est produite lors de l'inscription.";
+        `Une erreur s'est produite lors de l'inscription: ${error.message}`;
 
-      setToastMessage(errorMessage);
+      setToastMessage(`errorMessage : ${errorMessage}`);
       setToastType("error");
       setShowToast(true);
     }
@@ -189,251 +224,263 @@ const signup_assoPage = () => {
 
   //! Affichage du formulaire d'inscription
   return (
-    <div className="assoPage-container">
-    <section className="signup-asso">
-      <div className="signup_Header-asso">
-        <h1>Inscription association</h1>
-      </div>
-      <div className="subscribeFormContainer-asso">
-        <form
-          onSubmit={handleSubmit}
-          className="formConnexionPage-asso"
-          id="subscribeForm"
-        >
-          <div className="formColumns">
-            {/* Colonne de gauche */}
-            <div className="formColumnLeft">
-              {/* Nom de l'association */}
-              <div className="fieldContainer-asso">
-                <label
-                  className="labelConnexionPage-asso"
-                  htmlFor="representative"
-                >
-                  Nom de l'association
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="representative"
-                  id="representative"
-                  value={formData.association.representative}
-                  onChange={handleChange}
-                  required
-                />
+    <div className="containerSignup">
+      <section className="signup">
+        <div className="signup_Header">
+          <h1>Inscription association</h1>
+        </div>
+        <div className="subscribeFormContainer">
+          <form
+            onSubmit={handleSubmit}
+            className="formConnexionPage"
+            id="subscribeForm"
+          >
+            <div className="formColumns">
+              {/* Colonne de gauche */}
+              <div className="formColumnLeft">
+                {/* Nom de l'association */}
+                <div className="fieldContainer">
+                  <label
+                    className="labelConnexionPage"
+                    htmlFor="representative"
+                  >
+                    Nom de l'association
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="representative"
+                    id="representative"
+                    value={formData.association.representative}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Nom du representant */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="lastname">
+                    Nom
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="lastname"
+                    id="lastname"
+                    value={formData.lastname}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Prénom du représentant */}
+                <div className="fieldContainer">
+                  <label
+                    className="labelConnexionPage"
+                    htmlFor="firstname"
+                  >
+                    Prénom du représentant
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="firstname"
+                    id="firstname"
+                    value={formData.firstname}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Adresse */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="address">
+                    Adresse
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="address"
+                    id="address"
+                    value={formData.association.address}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                {/* Code postal */}
+                <div className="fieldContainer">
+                  <label
+                    className="labelConnexionPage"
+                    htmlFor="postal_code"
+                  >
+                    Code postal
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="postal_code"
+                    id="postal_code"
+                    value={formData.association.postal_code}
+                    onChange={handleChange}
+                    required
+                  />
+
+                  {postalCodeError && (
+                    <p className="errorMessage">{postalCodeError}</p>
+                  )}
+                </div>
+
+                {/* Ville */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="city">
+                    Ville
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="city"
+                    id="city"
+                    value={formData.association.city}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               </div>
 
-              {/* Nom du représentant */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="lastname">
-                  Nom du représentant
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="lastname"
-                  id="lastname"
-                  value={formData.lastname}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              {/* Colonne de droite */}
 
-              {/* Prénom du représentant */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="firstname">
-                  Prénom du représentant
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="firstname"
-                  id="firstname"
-                  value={formData.firstname}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="formColumnRight">
+                {/* RNA */}
+                <div className="fieldContainer">
+                  <label
+                    className="labelConnexionPage"
+                    htmlFor="rna_number"
+                  >
+                    RNA
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="text"
+                    name="rna_number"
+                    id="rna_number"
+                    value={formData.association.rna_number}
+                    onChange={handleChange}
+                    required
+                  />
+                  {rnaNumberError && (
+                    <p className="errorMessage">{rnaNumberError}</p>
+                  )}
+                </div>
 
-              {/* Adresse */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="address">
-                  Adresse
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="address"
-                  id="address"
-                  value={formData.association.address}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+                {/* Téléphone */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="phone">
+                    Téléphone
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    value={formData.association.phone}
+                    onChange={handleChange}
+                    required
+                  />
+                  {phoneError && (
+                    <p className="errorMessage">{phoneError}</p>
+                  )}
+                </div>
 
-              {/* Code postal */}
-              <div className="fieldContainer-asso">
-                <label
-                  className="labelConnexionPage-asso"
-                  htmlFor="postal_code"
-                >
-                  Code postal
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="postal_code"
-                  id="postal_code"
-                  value={formData.association.postal_code}
-                  onChange={handleChange}
-                  required
-                />
-                {postalCodeError && (
-                  <p className="errorMessage-asso">{postalCodeError}</p>
-                )}
-              </div>
+                {/* Email */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  {emailError && <p className="errorMessage">{emailError}</p>}
+                </div>
 
-              {/* Ville */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="city">
-                  Ville
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="city"
-                  id="city"
-                  value={formData.association.city}
-                  onChange={handleChange}
-                  required
-                />
+                {/*  Mot de passe */}
+                <div className="fieldContainer">
+                  <label className="labelConnexionPage" htmlFor="password">
+                    Mot de passe
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="password"
+                    name="password"
+                    id="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  {passwordError && (
+                    <p className="errorMessage">{passwordError}</p>
+                  )}
+                </div>
+
+                {/* Confirmation du mot de passe */}
+                <div className="fieldContainer">
+                  <label
+                    className="labelConnexionPage"
+                    htmlFor="passwordConfirmation"
+                  >
+                    Confirmer le mot de passe
+                  </label>
+                  <input
+                    className="inputConnexionPage"
+                    type="password"
+                    name="passwordConfirmation"
+                    id="passwordConfirmation"
+                    value={formData.passwordConfirmation}
+                    onChange={handleChange}
+                    required
+                  />
+                  {passwordConfirmationError && (
+                    <p className="errorMessage">{passwordConfirmationError}</p>
+                  )}
+                </div>
+                {/* Bouton de validation */}
+                <button type="submit" className="buttonConnexionPage">
+                  Créer un compte
+                </button>
               </div>
             </div>
 
-            {/* Colonne de droite */}
+            {/* Affichage des erreurs */}
+            {errorMessage && <p className="errorMessage">{errorMessage}</p>}
+          </form>
+        </div>
 
-            <div className="formColumnRight">
-              {/* RNA */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="rna_number">
-                  RNA
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="text"
-                  name="rna_number"
-                  id="rna_number"
-                  value={formData.association.rna_number}
-                  onChange={handleChange}
-                  required
-                  style={{ textTransform: "uppercase" }}
-                />
-                {rnaNumberError && (
-                  <p className="errorMessage-asso">{rnaNumberError}</p>
-                )}
-              </div>
+        {/* Affichage du Toast avec le message */}
+        {showToast && (
+          <Toast
+            setToast={setShowToast}
+            message={toastMessage}
+            type={toastType}
+          />
+        )}
 
-              {/* Téléphone */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="phone">
-                  Téléphone
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="tel"
-                  name="phone"
-                  id="phone"
-                  value={formData.association.phone}
-                  onChange={handleChange}
-                  required
-                />
-                {phoneError && (
-                  <p className="errorMessage-asso">{phoneError}</p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  style={{ textTransform: "lowercase" }}
-                />
-              </div>
-
-              {/*  Mot de passe */}
-              <div className="fieldContainer-asso">
-                <label className="labelConnexionPage-asso" htmlFor="password">
-                  Mot de passe
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Confirmation du mot de passe */}
-              <div className="fieldContainer-asso">
-                <label
-                  className="labelConnexionPage-asso"
-                  htmlFor="passwordConfirmation"
-                >
-                  Confirmer le mot de passe
-                </label>
-                <input
-                  className="inputConnexionPage-asso"
-                  type="password"
-                  name="passwordConfirmation"
-                  id="passwordConfirmation"
-                  value={formData.passwordConfirmation}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              {/* Bouton de validation */}
-              <button type="submit" className="buttonConnexionPage-asso">
-                Créer un compte
-              </button>
-            </div>
-          </div>
-
-          {/* Affichage des erreurs */}
-          {errorMessage && <p className="errorMessage-asso">{errorMessage}</p>}
-        </form>
-      </div>
-
-      {/* Affichage du Toast avec le message */}
-      {showToast && (
-        <Toast
-          setToast={setShowToast}
-          message={toastMessage}
-          type={toastType}
-        />
-      )}
-
-      {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
-      {showLoginModal && (
-        <ModalLogin
-          show={showLoginModal}
-          onClose={() => setShowLoginModal(false)}
-          login={() => {
-            /* gestion du login */
-          }}
-        />
-      )}
-    </section>
+        {/* Affichage de la modal de connexion lorsque showLoginModal est true */}
+        {showLoginModal && (
+          <ModalLogin
+            show={showLoginModal}
+            onClose={() => setShowLoginModal(false)}
+            login={() => {
+              /* gestion du login */
+            }}
+          />
+        )}
+      </section>
     </div>
   );
 };
