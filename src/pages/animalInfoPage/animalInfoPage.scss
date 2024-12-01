@@ -9,7 +9,7 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
 $carousel-arrow-color: #fff; // Couleur des flèches du carrousel
 
 // Container principal
-.animalDetail-container {
+.animal_info-details{
   background-color: $background-color;
   padding: 20px;
   border-radius: 8px;
@@ -18,76 +18,42 @@ $carousel-arrow-color: #fff; // Couleur des flèches du carrousel
 }
 
 // Détails de l'animal
-.animal-details {
+.animal_info-details {
   text-align: center;
 
-  .animal-name {
+  .animal_info-name {
     font-size: 2rem;
     color: $primary-color;
     margin-bottom: 10px;
   }
 
-  .animal-species,
-  .animal-breed,
-  .animal-gender,
-  .animal-age,
-  .animal-size {
+  .animal_info-species,
+  .animal_info-breed,
+  .animal_info-gender,
+  .animal_info-age,
+  .animal_info-size {
     font-size: 1rem;
     color: $text-color;
     margin: 5px 0;
   }
 
-  .animal-description {
+  .animal_info-description {
     font-size: 1rem;
     color: $text-color;
     margin-top: 20px;
   }
 
-  .animal-association {
+  .animal_info-association {
     margin-top: 20px;
     font-size: 1rem;
     color: $text-color;
   }
 }
 
-// Style du carrousel
-.slick-carousel {
-  .slick-slide {
-    display: flex;
-    justify-content: center;
-  }
 
-  .slick-track {
-    display: flex;
-    align-items: center;
-  }
-
-  .slick-prev,
-  .slick-next {
-    color: $carousel-arrow-color;
-    font-size: 24px;
-    z-index: 1;
-  }
-
-  .slick-prev {
-    left: -40px;  // Position des flèches
-  }
-
-  .slick-next {
-    right: -40px;
-  }
-
-  .slick-arrow {
-    transition: all 0.3s ease;
-    &:hover {
-      opacity: 0.7;
-    }
-  }
-}
-
-.animal-photo {
-    width: 50%;  // S'adapte à la largeur du parent
-    height: 50%; // La hauteur sera ajustée automatiquement pour préserver les proportions
+.animal_info-photo {
+    width: 30%;  // S'adapte à la largeur du parent
+    height: auto; // La hauteur sera ajustée automatiquement pour préserver les proportions
     object-fit: contain; // Garde l'intégralité de l'image
     border-radius: 10px;
     margin: 0 10px;

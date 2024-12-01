@@ -42,8 +42,8 @@ const AnimalInfoPage: React.FC = () => {
 
   //! Affichage des détails de l'animal
   const renderAnimalDetails = (animal: IAnimal) => (
-    <div className="animal-details">
-      <h2 className="animal-name">{animal.name}</h2>
+    <div className="animal_info-details">
+      <h2 className="animal_info-name">{animal.name}</h2>
 
       {/* photo de profil */}
       {animal.profile_photo && (
@@ -54,7 +54,7 @@ const AnimalInfoPage: React.FC = () => {
               : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
           }
           alt={animal.name}
-          className="animal-photo"
+          className="animal_info-photo"
         />
       )}
 
@@ -66,7 +66,7 @@ const AnimalInfoPage: React.FC = () => {
             : `${import.meta.env.VITE_STATIC_URL}${animal.photo1}`
         }
         alt={animal.name}
-        className="animal-photo"
+        className="animal_info-photo"
       />
 
       {/* Photo 2 */}
@@ -77,7 +77,7 @@ const AnimalInfoPage: React.FC = () => {
             : `${import.meta.env.VITE_STATIC_URL}${animal.photo2}`
         }
         alt={animal.name}
-        className="animal-photo"
+        className="animal_info-photo"
       />
 
       {/* Photo 3 */}
@@ -88,19 +88,19 @@ const AnimalInfoPage: React.FC = () => {
             : `${import.meta.env.VITE_STATIC_URL}${animal.photo3}`
         }
         alt={animal.name}
-        className="animal-photo"
+        className="animal_info-photo"
       />
 
-      <p className="animal-species">Espèce: {animal.species}</p>
-      <p className="animal-breed">Race: {animal.breed}</p>
-      <p className="animal-gender">Race: {animal.gender}</p>
-      <p className="animal-age"> {animal.age} ans </p>
-      <p className="animal-size">Taille: {animal.size}</p>
+      <p className="animal_info-species">Espèce: {animal.species}</p>
+      <p className="animal_info-breed">Race: {animal.breed}</p>
+      <p className="animal_info-gender">Race: {animal.gender}</p>
+      <p className="animal_info-age"> {animal.age} ans </p>
+      <p className="animal_info-size">Taille: {animal.size}</p>
 
       {/* Association + adresse */}
-      <p className="animal-description">{animal.description}</p>
+      <p className="animal_info-description">{animal.description}</p>
       {association && (
-        <p className="animal-association">
+        <p className="animal_info-association">
           Association : {association.representative}
           Adresse : {association.address} {association.postal_code}{" "}
           {association.city}
