@@ -3,8 +3,8 @@
 /* ============================= */
 $page-background: #f4f4f4; /* Couleur de fond principale */
 
-$background-filters: #fdfdfc; /* Couleur de fond des filtres */
-$select-filter-bg: #f4f4f4; /* Couleur de fond des menus déroulants */
+$background-filters: #e9e6e6; /* Couleur de fond des filtres */
+$select-filter-bg: #ffffff; /* Couleur de fond des menus déroulants */
 $button-primary: #ffffff; /* Texte bouton "appliquer les filtres" */
 $border-filter: #a39789; /* Couleur des bordures des filtres */
 $text-filter: #313030; /* Couleur du texte des filtres */
@@ -100,12 +100,11 @@ main.Animals {
   width: 100%;
   height: 40px;
 }
-.filters select.selected {
-  background-color: #e3f2fd; /* Couleur de fond pour les champs sélectionnés */
-  border-color: #276e47; /* Bordure verte pour indiquer la sélection */
-  font-weight: bold; /* Accentue le texte pour les champs sélectionnés */
-}
 
+.filters select.selected {
+  background-color: $input-focus-bg; /* Fond coloré pour les champs sélectionnés */
+  border-color: $hover-button; /* Accentuation de la bordure */
+}
 
 /* Effet pour le champ sélectionné */
 .filters select:focus {
@@ -124,6 +123,40 @@ main.Animals {
 /* Style pour les options sélectionnées */
 .filters select:not(:placeholder-shown) {
   color: $text-main; /* Accentue la couleur pour les options choisies */
+}
+
+#apply-filters-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  background-color: $hover-button;
+  color: $button-primary;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  gap: 10px; /* Ajoute un espace entre le texte et l'icône */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#apply-filters-btn:hover {
+  background-color: $hover-card; /* Couleur au survol */
+  transform: translateY(-2px); /* Effet de survol */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
+}
+
+#apply-filters-btn:active {
+  transform: translateY(0); /* Effet de clic */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre réinitialisée */
+}
+
+#apply-filters-btn i {
+  font-size: 1rem; /* Taille de l'icône */
 }
 
 /* ============================= */
@@ -155,14 +188,13 @@ main.Animals {
 }
 
 .animal-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 colonnes pour 4 cartes */
+  gap: 30px; /* Espace entre les cartes */
   list-style-type: none;
-  padding: 0;
-  margin: 0;
-  width: 100%;
+  padding-left: 130px;
+  margin: 0 auto; /* Centrage global des cartes */
+  max-width: 1400px; /* Limite la largeur totale */
 }
 
 .animal-item {
@@ -173,7 +205,7 @@ main.Animals {
   flex-direction: column;
   align-items: center;
   padding: 15px;
-  width: 100%;
+  width: 100%; /* Prend 1/4 de la ligne */
   max-width: 300px;
   border-radius: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -236,7 +268,11 @@ main.Animals {
 }
 
 @media (min-width: 1000px) {
+  .animal-list {
+    grid-template-columns: repeat(4, 1fr); /* Assure 4 cartes par ligne */
+  }
+
   .animal-item {
-    width: calc(33.333% - 20px);
+    width: auto; /* Laisse le grid gérer la largeur */
   }
 }

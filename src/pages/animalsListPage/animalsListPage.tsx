@@ -298,7 +298,8 @@ const AnimalsPage: React.FC = () => {
   </select>
 
   <button type="button" id="apply-filters-btn" onClick={applyFilters}>
-    Appliquer les filtres
+  <i className="fa-solid fa-filter"></i>
+  Filtrer
   </button>
 </div>
 
