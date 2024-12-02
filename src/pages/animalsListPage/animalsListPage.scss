@@ -16,6 +16,8 @@ $card-border: #cfcbc6; /* Couleur des bordures des cartes */
 
 $hover-card: #27586E; /* Couleur de survol des cartes */
 $hover-button: #276e47; /* Couleur de survol des boutons */
+$input-focus-bg: #e0f7e9; /* Couleur de fond des inputs en focus */
+
 /* ============================= */
 /* Style principal de la page    */
 /* ============================= */
@@ -56,6 +58,17 @@ main.Animals {
 }
 
 /* ============================= */
+/* Style des titres des filtres  */
+/* ============================= */
+.filters label {
+  font-size: 1rem;
+  color: $text-filter; /* Couleur de texte standard */
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: rgba($text-filter, 0.7); /* Ajuste l'opacité pour un effet plus clair */
+}
+
+/* ============================= */
 /* Style des filtres             */
 /* ============================= */
 .filters {
@@ -83,15 +96,23 @@ main.Animals {
   font-size: 0.9rem;
   color: $border-filter; /* Placeholder couleur initiale */
   cursor: pointer;
-  transition: border-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   width: 100%;
   height: 40px;
 }
+.filters select.selected {
+  background-color: #e3f2fd; /* Couleur de fond pour les champs sélectionnés */
+  border-color: #276e47; /* Bordure verte pour indiquer la sélection */
+  font-weight: bold; /* Accentue le texte pour les champs sélectionnés */
+}
 
-.filters select:hover,
+
+/* Effet pour le champ sélectionné */
 .filters select:focus {
-  border-color: $hover-button;
+  background-color: $input-focus-bg; /* Fond coloré pour le champ sélectionné */
+  border-color: $hover-button; /* Accentue la bordure */
   outline: none;
+  box-shadow: 0 0 5px rgba($hover-button, 0.5); /* Ajoute un effet lumineux */
 }
 
 /* Placeholder différencié */
@@ -103,10 +124,11 @@ main.Animals {
 /* Style pour les options sélectionnées */
 .filters select:not(:placeholder-shown) {
   color: $text-main; /* Accentue la couleur pour les options choisies */
-  border-color: $hover-button; /* Ajoute une bordure colorée */
-  box-shadow: 0 0 5px rgba(39, 110, 71, 0.5); /* Ajoute un effet lumineux */
 }
 
+/* ============================= */
+/* Bouton Reset                 */
+/* ============================= */
 .reset-btn {
   background: none;
   border: none;

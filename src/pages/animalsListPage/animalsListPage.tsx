@@ -70,22 +70,22 @@ const AnimalsPage: React.FC = () => {
         setSizes(uniqueSizes); // Met à jour les tailles uniques
 
         //! Récupère des localisations uniques
-        const uniqueLocations = Array.from(
-          new Set(
-            associationsData.map(
-              (association) =>
-                `${association.city}, ${association.postal_code}`
-            )
-          )
-        )
-          .filter(Boolean)
-          .sort((a, b) => {
-            // Tri par code postal
-            const codeA = parseInt(a.split(", ")[1] || "0", 10); // Extrait le code postal
-            const codeB = parseInt(b.split(", ")[1] || "0", 10);
-            return codeA - codeB;
-          });
-        
+       const uniqueLocations = Array.from(
+  new Set(
+    associationsData.map(
+      (association) =>
+        `${association.city}, ${association.postal_code}`
+    )
+  )
+)
+  .filter(Boolean)
+  .sort((a, b) => {
+    // Tri par code postal
+    const codeA = parseInt(a.split(", ")[1] || "0", 10); // Extrait le code postal
+    const codeB = parseInt(b.split(", ")[1] || "0", 10);
+    return codeA - codeB;
+  });
+
 
         setLocations(uniqueLocations); // Stocke les localisations uniques
       } catch (err) {
@@ -164,6 +164,8 @@ const AnimalsPage: React.FC = () => {
       location: "",
     });
     setFilteredAnimals(animals); // Réinitialise la liste des animaux affichés
+
+
   };
 
   //! Fonction pour rendre l'affichage d'un animal
@@ -207,93 +209,99 @@ const AnimalsPage: React.FC = () => {
         {error && <p className="error">{error}</p>}
 
         <div className="filters">
-          <button
-            id="reset-filters-btn"
-            className="reset-btn"
-            onClick={resetFilters}
-          >
-            <i className="fa-sharp fa-solid fa-eraser"></i>
-          </button>
+  <button
+    id="reset-filters-btn"
+    className="reset-btn"
+    onClick={resetFilters}
+  >
+    <i className="fa-sharp fa-solid fa-eraser"></i>
+  </button>
 
-          {/* Filtre par espèce */}
-          <select
-            name="species"
-            value={filters.species}
-            onChange={handleFilterChange}
-          >
-            <option value="" className="default-option">
-              Espèce
-            </option>
-            {species.map((species) => (
-              <option key={species} value={species}>
-                {species}
-              </option>
-            ))}
-          </select>
+  {/* Filtre par espèce */}
+  <select
+    name="species"
+    value={filters.species}
+    onChange={handleFilterChange}
+    className={filters.species ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Espèce
+    </option>
+    {species.map((species) => (
+      <option key={species} value={species}>
+        {species}
+      </option>
+    ))}
+  </select>
 
-          {/* Filtre par taille */}
-          <select
-            name="size"
-            value={filters.size}
-            onChange={handleFilterChange}
-          >
-            <option value="" className="default-option">
-              Taille
-            </option>
-            {sortedSizes.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
+  {/* Filtre par taille */}
+  <select
+    name="size"
+    value={filters.size}
+    onChange={handleFilterChange}
+    className={filters.size ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Taille
+    </option>
+    {sortedSizes.map((size) => (
+      <option key={size} value={size}>
+        {size}
+      </option>
+    ))}
+  </select>
 
-          {/* Filtre par tranche d'âge */}
-          <select
-            name="ageRange"
-            value={filters.ageRange}
-            onChange={handleFilterChange}
-          >
-            <option value="" className="default-option">
-              Âge
-            </option>
-            <option value="under-2">Moins de 2 ans</option>
-            <option value="2-7">Entre 2 et 7 ans</option>
-            <option value="over-7">Plus de 7 ans</option>
-          </select>
+  {/* Filtre par tranche d'âge */}
+  <select
+    name="ageRange"
+    value={filters.ageRange}
+    onChange={handleFilterChange}
+    className={filters.ageRange ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Âge
+    </option>
+    <option value="under-2">Moins de 2 ans</option>
+    <option value="2-7">Entre 2 et 7 ans</option>
+    <option value="over-7">Plus de 7 ans</option>
+  </select>
 
-          {/* Filtre par genre */}
-          <select
-            name="gender"
-            value={filters.gender}
-            onChange={handleFilterChange}
-          >
-            <option value="" className="default-option">
-              Sexe
-            </option>
-            <option value="M">Mâle</option>
-            <option value="F">Femelle</option>
-          </select>
+  {/* Filtre par genre */}
+  <select
+    name="gender"
+    value={filters.gender}
+    onChange={handleFilterChange}
+    className={filters.gender ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Sexe
+    </option>
+    <option value="M">Mâle</option>
+    <option value="F">Femelle</option>
+  </select>
 
-          {/* Filtre par localisation */}
-          <select
-            name="location"
-            value={filters.location}
-            onChange={handleFilterChange}
-          >
-            <option value="" className="default-option">
-              Localisation
-            </option>
-            {locations.map((location) => (
-              <option key={location} value={location}>
-                {location}
-              </option>
-            ))}
-          </select>
+  {/* Filtre par localisation */}
+  <select
+    name="location"
+    value={filters.location}
+    onChange={handleFilterChange}
+    className={filters.location ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Localisation
+    </option>
+    {locations.map((location) => (
+      <option key={location} value={location}>
+        {location}
+      </option>
+    ))}
+  </select>
 
-          <button type="button" id="apply-filters-btn" onClick={applyFilters}>
-            Appliquer les filtres
-          </button>
-        </div>
+  <button type="button" id="apply-filters-btn" onClick={applyFilters}>
+    Appliquer les filtres
+  </button>
+</div>
+
 
         {!isLoading &&
           !error &&
