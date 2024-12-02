@@ -8,7 +8,7 @@ import { IAssociation } from "../@types/association";
  ** Cette fonction est accessible publiquement.
  * @returns Une promesse qui résout avec un tableau d'objets IAssociation.
  */
-export const GetAllAssociations = async (token: string): Promise<IAssociation[]> => {
+export const GetAllAssociations = async (token?: string): Promise<IAssociation[]> => {
   try {
     const response: AxiosResponse<IAssociation[]> = await api.get(
       "/association",{

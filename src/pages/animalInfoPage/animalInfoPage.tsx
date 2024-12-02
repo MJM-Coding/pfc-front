@@ -200,8 +200,13 @@ const AnimalInfoPage: React.FC = () => {
                 <strong></strong> {association.representative}
               </p>
               <p className="animal_info-address">
+                <i className="info-icon fas fa-map-marker-alt"></i> {/* Icône adresse */}
                 <strong></strong> {association.address},{" "}
                 {association.postal_code} {association.city}
+              </p>
+              <p className="animal_info-phone">
+              <i className="info-icon fas fa-phone"></i> {/* Icône téléphone */}
+                <strong></strong> {association.phone}
               </p>
               {/* Carte de localisation */}
               <div className="animal_info-map">

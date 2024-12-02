@@ -1,5 +1,7 @@
 // src/@types/animal.ts
 
+import { IAssociation } from "./association";
+
 /**
  *! Interface pour représenter un animal dans le système.
  */
@@ -19,6 +21,7 @@
 
   id_family? :number|null; // ID de la famille d'accueil (optionnel)
   id_association? :number|null; // ID de l'association (optionnel)
+  association?: IAssociation | null;
   
   created_at:Date; // Date création (obligatoire)
   updated_at:Date; // Date mise à jour (obligatoire)
