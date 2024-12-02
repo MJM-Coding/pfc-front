@@ -6,6 +6,7 @@ import { GetAssociationById } from "../../api/association.api";
 import type { IAnimal } from "../../@types/animal";
 import type { IAssociation } from "../../@types/association";
 import Map from "../../components/map/map"; // Composant Map
+import { Link } from 'react-router-dom';
 
 interface Coordinates {
   latitude: number;
@@ -193,42 +194,49 @@ const AnimalInfoPage: React.FC = () => {
 
 
         {/* Section Association */}
-        <div className="animal_info-right">
-          {association && (
-            <>
-              <p className="animal_info-association">
-                <strong></strong> {association.representative}
-              </p>
-              <p className="animal_info-address">
-                <i className="info-icon fas fa-map-marker-alt"></i> {/* Icône adresse */}
-                <strong></strong> {association.address},{" "}
-                {association.postal_code} {association.city}
-              </p>
-              <p className="animal_info-phone">
-              <i className="info-icon fas fa-phone"></i> {/* Icône téléphone */}
-                <strong></strong> {association.phone}
-              </p>
-              {/* Carte de localisation */}
-              <div className="animal_info-map">
-                {coordinates ? (
-                  <Map
-                    latitude={coordinates.latitude}
-                    longitude={coordinates.longitude}
-                    address={`${association.address}, ${association.postal_code} ${association.city}`}
-                  />
-                ) : (
-                  <p>Chargement de la carte...</p>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+<div className="animal_info-right">
+  {association && (
+    <>
+      <h3 className="association-title">{association.representative}</h3> {/* Titre ajouté */}
+   
+      <p className="animal_info-address">
+        <i className="info-icon fas fa-map-marker-alt"></i>
+        <strong></strong> {association.address},{" "}
+        {association.postal_code} {association.city}
+      </p>
+      <p className="animal_info-phone">
+        <i className="info-icon fas fa-phone"></i>
+        <strong></strong> {association.phone}
+      </p>
+      {/* Carte de localisation */}
+      <div className="animal_info-map">
+        {coordinates ? (
+          <Map
+            latitude={coordinates.latitude}
+            longitude={coordinates.longitude}
+            address={`${association.address}, ${association.postal_code} ${association.city}`}
+          />
+        ) : (
+          <p>Chargement de la carte...</p>
+        )}
+      </div>
+    </>
+  )}
+</div>
+
       </div>
     </div>
   );
 
   return (
     <div className="animalDetail-container">
+    {/* Bouton de retour */}
+    <div className="back-button-container">
+      <Link to="/animaux" className="back-button">
+        <i className="fas fa-arrow-left"></i> Retour à la liste
+      </Link>
+    </div>
+
       {animal ? renderAnimalDetails(animal) : <p>Chargement de l'animal...</p>}
 
       {/* Modale d'agrandissement de l'image */}

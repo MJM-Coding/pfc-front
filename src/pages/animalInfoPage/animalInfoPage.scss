@@ -11,19 +11,33 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
 // =============================
 // Style du conteneur principal
 // =============================
+.animalDetail-container {
+  position: relative; /* Permet de positionner les éléments enfants relativement */
+  padding-top: 20px; /* Espace en haut pour le bouton et le titre */
+  height: auto;
+  min-height: 83.2vh;
+}
 .animal_info-details {
   background-color: $background-color;
-  padding: 20px;
+  padding: 0;
   border-radius: 8px;
   max-width: 1500px;
   margin: 0 auto;
-  min-height: 83.2vh;
+  
 
   .animal_info-name {
-    font-size: 2rem;
-    color: $primary-color;
-    margin-bottom: 10px;
+    position: absolute; /* Permet de placer le titre absolument */
+    top: 40px; /* Place le titre en haut avec un léger espacement */
+    left: 50%; /* Centre le titre horizontalement */
+    transform: translateX(-50%); /* Ajuste pour un centrage parfait */
+    font-size: 2rem; /* Taille du texte */
+    font-weight: bold; /* Texte en gras */
+    color: $primary-color; /* Couleur principale */
+    text-align: center; /* Centre le texte */
+    z-index: 10; /* Assure que le titre est au-dessus des autres éléments */
   }
+  
+  
 }
 
 // =============================
@@ -68,6 +82,61 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   }
 }
 
+
+
+.back-button-container {
+  margin-bottom: 20px; /* Espacement entre le bouton et le contenu */
+  text-align: left; /* Aligne le bouton à gauche */
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #276e47; /* Couleur du bouton */
+  color: #ffffff; /* Couleur du texte */
+  text-decoration: none; /* Supprime le soulignement */
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+// =============================
+// Style bouton de retour à la liste
+// =============================
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  margin: 20px; /* Espacement autour du bouton */
+  background-color: #f5f5f5; /* Couleur de fond neutre */
+  color: #27586e; /* Couleur principale du texte */
+  border: 2px solid #27586e; /* Bordure subtile */
+  border-radius: 8px; /* Coins arrondis */
+  text-decoration: none; /* Supprime le soulignement */
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease; /* Transition fluide pour les effets */
+  cursor: pointer;
+}
+
+.back-button i {
+  margin-right: 8px; /* Espacement entre l'icône et le texte */
+}
+
+.back-button:hover {
+  background-color: #27586e; /* Couleur de fond au survol */
+  color: #ffffff; /* Texte blanc au survol */
+  border-color: #27586e; /* Bordure assortie */
+  transform: translateY(-2px); /* Soulèvement au survol */
+}
+
+.back-button:active {
+  transform: translateY(0); /* Réinitialise l'effet de soulèvement */
+}
+
 // =============================
 // Style des images
 // =============================
@@ -99,15 +168,16 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
 .animal_info-sections {
   display: flex;
   justify-content: space-between; // Écarte les deux colonnes
-  gap: 20px; // Espace entre les deux colonnes
+  gap: 20px; 
   align-items: stretch; // Étire les colonnes à la même hauteur
+
 
   .animal_info-left,
   .animal_info-right {
     flex: 1; // Chaque colonne prend un espace égal
     background: #ffffff;
     border-radius: 15px;
-    padding: 20px;
+    padding: 0 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 50px;
   }
@@ -116,11 +186,45 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
     .animal_info-map {
       width: 100%; // Assure que la carte occupe tout l’espace
       height: 100%; // Ajuste la hauteur de la carte
-      min-height: 200px;
+      min-height: 220px;
     }
   }
 }
 
+.animal_info-right {
+  background-color: #f9f9f9; /* Fond gris clair */
+  padding: 20px; /* Espacement interne */
+  border-radius: 15px; /* Coins arrondis */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre élégante */
+  font-family: 'Roboto', sans-serif; /* Police moderne */
+  color: #333; /* Couleur de texte principale */
+  margin-top: 20px; /* Espace entre les sections */
+}
+
+.association-title {
+  margin-top: 10px;
+  font-size: 1.5rem; /* Taille de la police */
+  font-weight: bold; /* Texte en gras */
+  color: #262E33; /* Couleur principale */
+  margin-bottom: 15px; /* Espacement inférieur */
+  text-align: center; /* Aligner à gauche */
+}
+
+.animal_info-association,
+.animal_info-address,
+.animal_info-phone {
+  margin: 10px 0; /* Espacement entre les éléments */
+  font-size: 1rem; /* Taille du texte */
+  display: flex; /* Pour aligner les icônes avec le texte */
+  gap: 10px; /* Espacement entre l'icône et le texte */
+  align-items: center; /* Centrage vertical */
+}
+
+
+.info-icon {
+  font-size: 1.2rem; /* Taille de l'icône */
+  color: #FF5722; /* Couleur des icônes */
+}
 // =============================
 // Responsive design
 // =============================
@@ -195,7 +299,7 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   height: auto;
   max-width: 100%; // Pas de limite de largeur
   max-height: 100%; // Pas de limite de hauteur
-  overflow: auto; // Permet le défilement si l'image est trop grande
+  overflow: hidden; // Permet le défilement si l'image est trop grande
   padding: 20px;
 }
 
