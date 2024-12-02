@@ -57,9 +57,9 @@ const Header: React.FC = () => {
       console.log("Génération des liens pour une association");
       return [
         { path: `/espace-association/profil-association/${associationId || userId}`, label: "Mon Profil" },
-        { path: `/espace-association/Mon-compte/${associationId || userId}`, label: "Mon compte" },
-        { path: "/espace-association/animaux", label: "Mes animaux" },
+        { path: `/espace-association/animaux-association/${associationId || userId}`, label: "Gérer mes animaux" },
         { path: "/espace-association/demandes", label: "Demandes d'accueil" },
+        { path: `/espace-association/Mon-compte/${associationId || userId}`, label: "Mon compte" },
       ];
     } else if (role === "family") {
       console.log("Génération des liens pour une famille");

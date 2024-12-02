@@ -160,7 +160,7 @@ const AnimalInfoPage: React.FC = () => {
       <div className="animal_info-sections">
         {/* Section Animal */}
         <div className="animal_info-left">
-  <h3>Informations sur l'animal</h3>
+
   <p className="animal_info-species">
     <i className="info-icon fas fa-paw"></i> 
     <span>Espèce :</span> 
