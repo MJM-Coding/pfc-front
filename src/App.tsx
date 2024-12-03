@@ -13,6 +13,7 @@ import Signup_assoPage from "./pages/signupPage/signup_assoPage"; // page de l'i
 import ProfilePageAsso from "./pages/spaceAsso/associationProfile/associationProfile"; // page du profil de l'association
 import AssociationAccount from "./pages/spaceAsso/associationAccount/associationAccount"; // page du compte de l'association
 import AssociationAnimalsPage from "./pages/associationAnimalsPage/associationAnimalsPage"; // page de la liste des animaux de l'association
+import AddAnimal from "./components/animalsCrud/addAnimal"; // composant pour ajouter un animal
 
 import Signup_faPage from "./pages/signupPage/signup_faPage"; // page de l'inscription d'une famille
 import ProfilePageFamily from "./pages/spaceFamily/familyProfile/familyProfile"; // page du profil de la famille
@@ -31,12 +32,13 @@ const App: React.FC = () => {
 
         <Route path="/inscription-association" element={<Signup_assoPage />} />
         <Route path="/espace-association/profil-association/:associationId" element={<ProfilePageAsso />} />
-        <Route path="/espace-association/Mon-compte/:associationId" element={<AssociationAccount />} />
+        <Route path="/espace-association/mon-compte/:associationId" element={<AssociationAccount />} />
         <Route path="/espace-association/animaux-association/:associationId" element={<AssociationAnimalsPage />} />
+        <Route path="/espace-association/animaux-association/ajout-animal/:associationId" element={<AddAnimal />} />
 
         <Route path="/inscription-famille" element={<Signup_faPage />} />
         <Route path="/espace-famille/profil-famille/:familyId" element={<ProfilePageFamily />} />
-        <Route path="/espace-famille/Mon-compte/:familyId" element={<FamilyAccount />} />
+        <Route path="/espace-famille/mon-compte/:familyId" element={<FamilyAccount />} />
 
         {/* Vous pouvez ajouter d'autres routes ici */}
       </Routes>

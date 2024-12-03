@@ -1,6 +1,6 @@
 //! Composant qui affiche la liste des animaux de l'association
 import React, { useContext } from "react";
-import { Link } from "react-router-dom"; // Pour la navigation
+import { useParams, Link } from "react-router-dom"; // Pour la navigation
 import type { IAnimal } from "../../@types/animal"; // Import du type pour Animal
 import "./animalsList.scss";
 import AuthContext from "../../contexts/authContext"; // Contexte pour l'authentification
@@ -20,13 +20,18 @@ const AnimalList: React.FC<AnimalListProps> = ({ animals, isLoading, error, onDe
   //! Vérification si authContext est défini et accès au token
   const token = authContext ? authContext.token : null;
 
+  const { associationId } = useParams<{ associationId?: string }>();
+
   return (
     <div className="custom-animal-list-container">
       <div className="custom-actions">
+
         {/* Bouton Ajouter un animal */}
-        <Link to="/add-animal" className="custom-add-button">
-          <i className="fas fa-plus-circle"></i> Ajouter un animal
-        </Link>
+        <Link to={`/espace-association/animaux-association/ajout-animal/${associationId}`} className="custom-add-button">
+  <i className="fas fa-plus-circle"></i> Ajouter un animal
+</Link>
+
+
       </div>
 
       {/* Affichage du message de chargement pendant la récupération des animaux */}
@@ -54,8 +59,7 @@ const AnimalList: React.FC<AnimalListProps> = ({ animals, isLoading, error, onDe
                   />
                 )}
                 <h4 className="custom-animal-name">{animal.name}</h4>
-                <p className="custom-animal-species">Espèce : {animal.species}</p>
-                <p className="custom-animal-age">Âge : {animal.age} ans</p>
+                
 
                 {/* Actions : Modifier et Supprimer */}
                 <div className="custom-animal-actions">

@@ -53,15 +53,15 @@ export const GetFamilyById = async (
 // Dans le fichier family.api.ts
 
 export const PatchFamily = async (
-  id: number, 
-  familyData: Partial<IFamily>, 
+  id: number,
+  familyData: FormData, // FormData est utilisé pour inclure le fichier
   token: string
 ): Promise<IFamily> => {
   try {
     const response = await api.patch<IFamily>(`/family/${id}`, familyData, {
-      headers: { 
+      headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json', // Indique que nous envoyons des données JSON
+        "Content-Type": "multipart/form-data", // Indique que FormData est envoyé
       },
     });
     return response.data;
@@ -70,6 +70,8 @@ export const PatchFamily = async (
     throw error;
   }
 };
+
+
 
 
 

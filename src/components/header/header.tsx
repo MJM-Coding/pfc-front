@@ -59,13 +59,13 @@ const Header: React.FC = () => {
         { path: `/espace-association/profil-association/${associationId || userId}`, label: "Mon Profil" },
         { path: `/espace-association/animaux-association/${associationId || userId}`, label: "Gérer mes animaux" },
         { path: "/espace-association/demandes", label: "Demandes d'accueil" },
-        { path: `/espace-association/Mon-compte/${associationId || userId}`, label: "Mon compte" },
+        { path: `/espace-association/mon-compte/${associationId || userId}`, label: "Mon compte" },
       ];
     } else if (role === "family") {
       console.log("Génération des liens pour une famille");
       return [
         { path: `/espace-famille/profil-famille/${familyId || userId}`, label: "Mon profil" },
-        { path: `/espace-famille/Mon-compte/${familyId || userId}`, label: "Mon compte" },
+        { path: `/espace-famille/mon-compte/${familyId || userId}`, label: "Mon compte" },
         { path: "/espace-famille/demandes", label: "Mes demandes d'accueil" },
       ];
     }

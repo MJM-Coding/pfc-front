@@ -225,6 +225,13 @@ $spacing: 16px;
   border-radius: $border-radius;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+.uploadMessage {
+  margin-top: 8px; /* Espacement au-dessus */
+  font-size: 14px; /* Taille de police */
+  text-align: center; /* Centrer sous l'image */
+  color: #28a745; /* Exemple : Vert (succès) */
+}
+
 
 /* ============================= */
 /* Responsiveness                */

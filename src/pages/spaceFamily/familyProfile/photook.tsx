@@ -5,7 +5,7 @@ import AuthContext from "../../../contexts/authContext"; // Importation du conte
 import type { IFamily, IFamilyForm } from "../../../@types/family"; // Importation des types pour les données de famille
 import ImageUpload from "../../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
 import Toast from "../../../components/toast/toast"; // Importation du composant Toast pour les notifications
-import Message from "../../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de succès
+import Message from "../../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de_succès
 import { validateForm } from "../../../components/validateForm/validateForm";
 import "../../../components/validateForm/validateForm.scss";
 
@@ -17,16 +17,20 @@ function FamilyProfile() {
   const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
   const familyId = user?.id_family; // Récupération de l'ID de la famille de l'utilisateur
   const [isUploading, setIsUploading] = useState<boolean>(false);
+
+
   const [isEditable, setIsEditable] = useState<boolean>(false); // Etat pour gérer l'édition
 
   // State pour les messages d'erreur et de succès
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
+
+  // State pour gérer l'affichage de Toast
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
-  // Charger les données de la famille
+  // Utilisation d'un effet secondaire pour charger les données de la famille
   useEffect(() => {
     if (!familyId || !token) {
       console.log("Aucun familyId ou token trouvé !");
@@ -50,24 +54,21 @@ function FamilyProfile() {
           postal_code,
           profile_photo,
           user: { email, firstname, lastname },
-        } = response || {};
+        } = response;
 
         const familyData: IFamily = {
           id_user,
           address,
           city,
-          postal_code,
           description: description || "",
           garden: garden || false,
           number_of_animals: number_of_animals || 0,
           number_of_children: number_of_children || 0,
           phone,
+          postal_code,
           profile_photo,
           user: { email, firstname, lastname },
         };
-
-        // Log des données de famille avant mise à jour de l'état
-        console.log("Données de famille préparées :", familyData);
 
         setFamilyData(familyData);
         setFormData(familyData);
@@ -80,12 +81,12 @@ function FamilyProfile() {
     fetchFamilyData();
   }, [familyId, token]);
 
-  // Fonction pour mettre à jour uniquement la photo
+  //! Fonction pour mettre à jour uniquement la photo
   const updateProfilePhoto = async (image: File) => {
     const formDataToSend = new FormData();
     formDataToSend.append("profile_photo", image);
     setIsUploading(true);
-
+  
     try {
       const updatedFamily = await PatchFamily(
         familyId as number,
@@ -106,8 +107,9 @@ function FamilyProfile() {
       setShowToast(true);
     }
   };
-
-  // Gérer le changement d'image
+  
+  
+  //! Gérer le changement d'image
   const handleImageChange = (image: File | null) => {
     if (image) {
       console.log("Image sélectionnée :", image);
@@ -118,14 +120,15 @@ function FamilyProfile() {
     }
   };
 
-  // Gérer la soumission des champs autres que la photo
-  // Gérer la soumission des champs autres que la photo
+  //! Fonction de gestion de la soumission du formulaire
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   
+    // Réinitialiser les erreurs
     setPhoneError("");
     setPostalCodeError("");
   
+    // Validation des champs
     const errors = validateForm(
       {
         ...formData,
@@ -135,60 +138,53 @@ function FamilyProfile() {
       ["postal_code", "phone"]
     );
   
-    console.log("Erreurs de validation :", errors);
-  
     if (Object.keys(errors).length > 0) {
       if (errors.postal_code) setPostalCodeError(errors.postal_code);
       if (errors.phone) setPhoneError(errors.phone);
       return;
     }
   
-    const formDataToSend = new FormData();
+    // Préparation des données à envoyer
+    const updatedFamilyData: Partial<IFamily> = {
+      address: formData?.address || "",
+      city: formData?.city || "",
+      postal_code: formData?.postal_code || "",
+      phone: formData?.phone || "",
+      number_of_children: formData?.number_of_children || 0,
+      number_of_animals: formData?.number_of_animals || 0,
+      garden: formData?.garden || null,
+      description: formData?.description || "",
+      profile_photo: imageUrl || null, // Photo de profil mise à jour
+      user: {
+        firstname: formData?.user?.firstname || "", // Mettre à jour le prénom
+        lastname: formData?.user?.lastname || "",  // Mettre à jour le nom
+        email: formData?.user?.email || "",        // Email de l'utilisateur
+        id: formData?.user?.id || 0,               // ID de l'utilisateur, nécessaire pour le backend
+      },
+    };
+    
   
-    console.log("Données à envoyer :", formData);
-  
-    // Ajouter les champs simples
-    formDataToSend.append("address", formData?.address || "");
-    formDataToSend.append("city", formData?.city || "");
-    formDataToSend.append("description", formData?.description || "");
-    formDataToSend.append("garden", String(formData?.garden || false));
-    formDataToSend.append(
-      "number_of_animals",
-      String(formData?.number_of_animals || 0)
-    );
-    formDataToSend.append(
-      "number_of_children",
-      String(formData?.number_of_children || 0)
-    );
-    formDataToSend.append("phone", formData?.phone || "");
-    formDataToSend.append("postal_code", formData?.postal_code || "");
-  
-    // Ajouter les champs utilisateur directement au FormData
-    formDataToSend.append("firstname", formData?.user?.firstname || "");
-    formDataToSend.append("lastname", formData?.user?.lastname || "");
-  
-    console.log("Payload envoyé :", formDataToSend);
+    console.log("Données envoyées au backend :", updatedFamilyData);
   
     try {
-      // Mise à jour via PatchFamily
-      await PatchFamily(familyId as number, formDataToSend, token as string);
+      const updatedFamily = await PatchFamily(
+        familyId as number,
+        updatedFamilyData,
+        token as string
+      );
   
-      // Recharger les données à jour depuis l'API
-      const refreshedFamily = await GetFamilyById(Number(familyId),  token as string);
-      console.log("Données rechargées :", refreshedFamily);
+      console.log("Réponse du backend :", updatedFamily);
   
-      // Mettre à jour l'état avec les nouvelles données
-      setFamilyData(refreshedFamily);
-      setFormData(refreshedFamily);
+      // Met à jour les états locaux avec les nouvelles données
+      setFamilyData(updatedFamily);
+      setFormData(updatedFamily); // IMPORTANT : synchroniser formData
   
-      // Notifications de succès
       setToastMessage("Mise à jour réussie !");
       setToastType("success");
       setShowToast(true);
       setIsEditable(false);
     } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.message || error.message || "Erreur inconnue.";
+      const errorMessage = error?.response?.data?.message || error.message || "Erreur inconnue.";
       console.error("Erreur lors de la mise à jour :", errorMessage);
       setToastMessage(`Erreur : ${errorMessage}`);
       setToastType("error");
@@ -197,8 +193,9 @@ function FamilyProfile() {
   };
   
   
+  
   const toggleEdit = () => {
-    setIsEditable(!isEditable);
+    setIsEditable(!isEditable); // Bascule entre édition et non-édition
   };
 
   if (!user)
@@ -207,22 +204,23 @@ function FamilyProfile() {
 
   return (
     <div className="containerProfile">
-      <h1 data-title="Mon profil">Mon profil</h1>
+           <h1 data-title="Mon profil">Mon profil</h1>
       <section className="infoSection">
-        <div className="infoTitle"></div>
+        <div className="infoTitle">
+        </div>
         <div className="infoBody">
           <form className="forms" onSubmit={handleSubmit}>
             {/* Utilisation du composant ImageUpload pour gérer l'upload et la prévisualisation de l'image */}
             <ImageUpload
               initialImageUrl={imageUrl}
               onImageChange={handleImageChange}
-              />
-              {isUploading && <p className="uploadMessage">Envoi de l'image en cours...</p>}
-
+            />
+           
 
             {/* Champs du formulaire */}
             <div className="fieldsWrap">
-              {/* Nom */}
+
+                {/* Nom */}
               <div className="infoFieldContainer row">
                 <label className="infoLabel" htmlFor="lastName">
                   Nom
@@ -230,18 +228,15 @@ function FamilyProfile() {
                 <input
                   className="infoInput"
                   type="text"
-                  id="lastname"
+                  id="lastName"
                   value={formData?.user?.lastname || ""}
                   required
-                  onChange={(e) => {
+                  onChange={(e) =>
                     setFormData({
                       ...formData,
-                      user: {
-                        ...formData?.user,
-                        lastname: e.target.value, // Mise à jour du nom uniquement
-                      },
-                    });
-                  }}
+                      user: { ...formData?.user, lastname: e.target.value },
+                    })
+                  }
                   disabled={!isEditable}
                 />
               </div>
@@ -257,15 +252,12 @@ function FamilyProfile() {
                   id="firstname"
                   value={formData?.user?.firstname || ""}
                   required
-                  onChange={(e) => {
+                  onChange={(e) =>
                     setFormData({
                       ...formData,
-                      user: {
-                        ...formData?.user,
-                        firstname: e.target.value, // Mise à jour du prénom uniquement
-                      },
-                    });
-                  }}
+                      user: { ...formData?.user, firstname: e.target.value },
+                    })
+                  }
                   disabled={!isEditable}
                 />
               </div>
@@ -428,7 +420,7 @@ function FamilyProfile() {
                   {/* Option "Plus de 3" */}
                 </select>
               </div>
-              {/* garden */}
+    {/* garden */}
               <div className="infoFieldContainer-radio row">
                 <label className="infoLabel" htmlFor="garden">
                   Jardin
@@ -517,7 +509,7 @@ function FamilyProfile() {
             type={toastType}
           />
         )}
-       
+        {isUploading && <p>Envoi de l'image en cours...</p>}
       </section>
     </div>
   );

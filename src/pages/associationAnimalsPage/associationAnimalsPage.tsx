@@ -5,6 +5,7 @@ import { GetAllAnimals } from "../../api/animal.api"; // API pour récupérer le
 import AnimalList from "../../components/animalsCrud/animalsList"; // Import du composant AnimalList
 import Toast from "../../components/toast/toast"; // Import du composant Toast
 import { IAnimal } from "../../@types/animal"; // Import de type pour Animal
+import "./associationAnimalsPage.scss";
 
 const AssociationAnimalsPage: React.FC = () => {
   //! Récupération de l'ID de l'association depuis l'URL
@@ -55,11 +56,12 @@ const AssociationAnimalsPage: React.FC = () => {
   }, [associationId]); // La dépendance associationId permet de relancer la récupération des animaux quand cet ID change
 
   return (
-    <div className="association-animals-container">
-      <h3 className="association-animals-title">Animaux de l'Association</h3>
+    <div className="association-animals-containerPage">
+      <h3 data-title="Mes animaux">Mes animaux</h3>
 
       {/* Affichage du message de succès ou d'erreur dans un toast */}
       {toast && <Toast setToast={setToast} message={toastMessage} type={toastType} />}
+
 
       {/* Le composant AnimalList affiche la liste des animaux avec la fonction onDelete après suppression */}
       <AnimalList
@@ -68,6 +70,8 @@ const AssociationAnimalsPage: React.FC = () => {
         error={error} // Message d'erreur, s'il y en a un
         onDelete={handleDeleteSuccess} // Passe la fonction onDeleteSuccess pour actualiser la liste après suppression
       />
+
+
     </div>
   );
 };
