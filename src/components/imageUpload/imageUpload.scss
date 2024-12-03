@@ -1,49 +1,45 @@
-// Définition des variables de couleur
-$primary-color: #FF6F61;  // Couleur principale du bouton
-$hover-color: #CC594E;    // Couleur au survol du bouton
-$text-color: #ffffff;     // Couleur du texte (blanc)
-
-// Style du conteneur de l'image et du bouton
 .profileImgWrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
+  margin-top: 20px;
 
-  .family-asso-photo{
-    width: 150px; /* Largeur fixe de l'image */
-    height: 150px; /* Hauteur fixe pour garder la forme carrée */
-    object-fit: cover; /* Ajuste le contenu de l'image pour qu'elle s'adapte */
+  .profileImgPreview {
+    width: 200px; /* Taille de l'image */
+    height: 200px; /* Taille de l'image */
     border-radius: 50%; /* Rend l'image ronde */
-    border: 2px solid #ccc; /* Optionnel : ajoute une bordure */
-    display: block; /* S'assure qu'elle suit les règles de box-sizing */
-    margin: 0 auto; /* Centre l'image horizontalement */
+    object-fit: cover; /* Adapte l'image à la zone tout en gardant ses proportions */
+    border: 2px solid #ccc; /* Bordure grise */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Effet d'ombre légère */
+    margin-bottom: 10px; /* Espacement avec le bouton */
   }
 
   .profileImgBtns {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
 
-    .profilImgBtn {
-      background-color: $primary-color;
-      color: $text-color;
+    .profileImgBtn {
+      display: inline-block;
+      background-color: #007bff; /* Couleur bleue */
+      color: white;
       padding: 8px 16px;
       font-size: 14px;
-      cursor: pointer;
-      border-radius: 4px;
+      font-weight: bold;
+      text-align: center;
       border: none;
+      border-radius: 20px; /* Bouton arrondi */
+      cursor: pointer;
       transition: background-color 0.3s ease;
-      margin-top: 10px; /* Espacement au-dessus du bouton */
 
       &:hover {
-        background-color: $hover-color;
+        background-color: #0056b3; /* Bleu foncé au survol */
       }
     }
 
-    input[type="file"] {
-      display: none; /* Cache l'input réel */
+    #image-upload {
+      display: none; /* Masquer l'input file */
     }
   }
 }

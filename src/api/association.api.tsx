@@ -8,7 +8,7 @@ import { IAssociation } from "../@types/association";
  ** Cette fonction est accessible publiquement.
  * @returns Une promesse qui résout avec un tableau d'objets IAssociation.
  */
-export const GetAllAssociations = async (token: string): Promise<IAssociation[]> => {
+export const GetAllAssociations = async (token?: string): Promise<IAssociation[]> => {
   try {
     const response: AxiosResponse<IAssociation[]> = await api.get(
       "/association",{
@@ -31,12 +31,20 @@ export const GetAllAssociations = async (token: string): Promise<IAssociation[]>
  */
  export const GetAssociationById = async (
   id: number, 
-  token: string): 
-  Promise<IAssociation> => {
+  token?: string // Le token est optionnel
+): Promise<IAssociation> => {
   try {
+    const headers: Record<string, string> = {};
+
+    // Si un token est fourni, l'ajouter dans les en-têtes
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await api.get<IAssociation>(`/association/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers,
     });
+
     return response.data;
   } catch (error) {
     handleApiError(error, `Impossible de récupérer l'association avec l'ID ${id}`);

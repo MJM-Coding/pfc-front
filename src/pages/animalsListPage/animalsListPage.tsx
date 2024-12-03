@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { GetAllAnimals } from "../../api/animal.api"; // appel la fonction getallanimals
+import { GetAllAnimals } from "../../api/animal.api"; // Appel la fonction getallanimals
 import type { IAnimal } from "../../@types/animal";
+import { GetAllAssociations } from "../../api/association.api";
+
 import "./animalsListPage.scss";
 import "../../styles/commun/commun.scss";
+import { Link } from "react-router-dom";
 
 const AnimalsPage: React.FC = () => {
-  // Déclare les états pour gérer les animaux, les filtres et les erreurs
+  // États pour gérer les animaux, les filtres et les erreurs
   const [animals, setAnimals] = useState<IAnimal[]>([]);
   const [filteredAnimals, setFilteredAnimals] = useState<IAnimal[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -15,54 +18,88 @@ const AnimalsPage: React.FC = () => {
     size: "",
     ageRange: "",
     gender: "",
+    location: "",
   });
 
   // États pour stocker les options uniques des filtres
   const [species, setSpecies] = useState<string[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
+  const [locations, setLocations] = useState<string[]>([]);
 
-  //! Permet d'afficher les tailles dans cet ordre dans le input select "filtrer par taille"
+  //! Permet d'afficher les tailles dans un ordre précis dans le select "Taille"
   const predefinedSizes = ["Petit", "Moyen", "Grand"];
   const sortedSizes = sizes.sort((a, b) => {
     return predefinedSizes.indexOf(a) - predefinedSizes.indexOf(b);
   });
 
-  //! Effet pour charger les données des animaux au montage du composant
+  //! Chargement des données des animaux et des localisations
   useEffect(() => {
-    document.body.classList.add("animals-page"); // Ajoute une classe pour la page actuelle
-
-    const loadAnimals = async () => {
+    const loadAnimalsAndLocations = async () => {
       try {
-        setIsLoading(true); // Indique que les données sont en cours de chargement
-        const data = await GetAllAnimals();
-        setAnimals(data); // Stocke tous les animaux récupérés
-        setFilteredAnimals(data); // Initialise les animaux filtrés avec toutes les données
+        setIsLoading(true);
 
-        // Récupère des valeurs uniques pour les filtres (espèce, taille)
+        //! Appel API pour obtenir tous les animaux
+        const animalsData = await GetAllAnimals();
+
+        //! Appel API pour obtenir toutes les associations
+        const associationsData = await GetAllAssociations();
+
+        //! Enrichir les animaux avec les données de localisation de leurs associations
+        const enrichedAnimals = animalsData.map((animal) => {
+          const association = associationsData.find(
+            (assoc) => assoc.id === animal.id_association
+          );
+          return {
+            ...animal,
+            association: association || null,
+          };
+        });
+
+        setAnimals(enrichedAnimals); // Stocke les animaux enrichis
+        setFilteredAnimals(enrichedAnimals); // Initialise les animaux filtrés
+
+        //! Récupère des valeurs uniques pour les espèces et les tailles
         const uniqueSpecies = Array.from(
-          new Set(data.map((animal) => animal.species))
+          new Set(enrichedAnimals.map((animal) => animal.species))
         ).filter(Boolean);
         const uniqueSizes = Array.from(
-          new Set(data.map((animal) => animal.size))
+          new Set(enrichedAnimals.map((animal) => animal.size))
         ).filter(Boolean);
 
         setSpecies(uniqueSpecies); // Met à jour les espèces uniques
         setSizes(uniqueSizes); // Met à jour les tailles uniques
+
+        //! Récupère des localisations uniques
+       const uniqueLocations = Array.from(
+  new Set(
+    associationsData.map(
+      (association) =>
+        `${association.city}, ${association.postal_code}`
+    )
+  )
+)
+  .filter(Boolean)
+  .sort((a, b) => {
+    // Tri par code postal
+    const codeA = parseInt(a.split(", ")[1] || "0", 10); // Extrait le code postal
+    const codeB = parseInt(b.split(", ")[1] || "0", 10);
+    return codeA - codeB;
+  });
+
+
+        setLocations(uniqueLocations); // Stocke les localisations uniques
       } catch (err) {
-        setError("Erreur lors du chargement des animaux"); // Gère une éventuelle erreur
+        setError("Erreur lors du chargement des données");
         console.error(err);
       } finally {
-        setIsLoading(false); // Indique que le chargement est terminé
+        setIsLoading(false);
       }
     };
-    loadAnimals();
 
-    return () => {
-      document.body.classList.remove("animals-page"); // Nettoie la classe au démontage
-    };
+    loadAnimalsAndLocations();
   }, []);
 
-  //! Fonction pour appliquer les filtres sur la liste des animaux
+  //! Application des filtres sur la liste des animaux
   const applyFilters = () => {
     let filtered = [...animals];
 
@@ -95,6 +132,16 @@ const AnimalsPage: React.FC = () => {
       filtered = filtered.filter((animal) => animal.gender === filters.gender);
     }
 
+    // Filtrer par localisation
+    if (filters.location) {
+      filtered = filtered.filter((animal) => {
+        if (!animal.association) return false;
+        const location =
+          `${animal.association.city}, ${animal.association.postal_code}`.toLowerCase();
+        return location.includes(filters.location.toLowerCase());
+      });
+    }
+
     setFilteredAnimals(filtered); // Met à jour la liste filtrée
   };
 
@@ -114,121 +161,159 @@ const AnimalsPage: React.FC = () => {
       size: "",
       ageRange: "",
       gender: "",
+      location: "",
     });
     setFilteredAnimals(animals); // Réinitialise la liste des animaux affichés
+
+
   };
 
   //! Fonction pour rendre l'affichage d'un animal
   const renderAnimal = (animal: IAnimal) => (
     <li key={animal.id} className="animal-item">
-      {/* Affichage du nom de l'animal */}
-      <h2 className="animal-name">{animal.name}</h2>
-
-      {/* Affichage de la photo de l'animal si elle existe */}
-      {animal.profile_photo && (
-        <img
-          src={
-            animal.profile_photo.startsWith("http")
-              ? animal.profile_photo
-              : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
-          }
-          alt={animal.name}
-          className="animal-photo"
-        />
-      )}
-
-      {/* Détails supplémentaires sur l'animal */}
-      <div className="animal-details">
-        {animal.species && <p>Espèce: {animal.species}</p>}
-
-        {animal.age && <p>Âge: {animal.age} ans</p>}
-      </div>
+      <Link to={`/animal-info/${animal.id}`} className="animal-link">
+        <h2 className="animal-name">{animal.name}</h2>
+        {animal.profile_photo && (
+          <img
+            src={
+              animal.profile_photo.startsWith("http")
+                ? animal.profile_photo
+                : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+            }
+            alt={animal.name}
+            className="animal-photo"
+          />
+        )}
+        <div className="animal-details">
+          {animal.species && <p>Espèce: {animal.species}</p>}
+          {animal.age && <p>Âge: {animal.age} ans</p>}
+          {animal.gender && (
+            <p>
+              {" "}
+              {animal.gender === "M" ? (
+                <i className="fa-solid fa-mars" title="Mâle"></i> // Icône pour Mâle
+              ) : (
+                <i className="fa-solid fa-venus" title="Femelle"></i> // Icône pour Femelle
+              )}
+            </p>
+          )}
+        </div>
+      </Link>
     </li>
   );
 
   return (
     <div className="animals-container">
-    <main className="Animals">
-      {isLoading && <p className="loading">Chargement...</p>}
-      {error && <p className="error">{error}</p>}
+      <main className="Animals">
+        {isLoading && <p className="loading">Chargement...</p>}
+        {error && <p className="error">{error}</p>}
 
-      <div className="filters">
-        <button
-          id="reset-filters-btn"
-          className="reset-btn"
-          onClick={resetFilters}
-        >
-          <i className="fa-sharp fa-solid fa-eraser"></i>
-        </button>
+        <div className="filters">
+  <button
+    id="reset-filters-btn"
+    className="reset-btn"
+    onClick={resetFilters}
+  >
+    <i className="fa-sharp fa-solid fa-eraser"></i>
+  </button>
 
-        {/* Filtre par espèce */}
-        <select
-          name="species"
-          value={filters.species}
-          onChange={handleFilterChange}
-        >
-          <option value="" className="default-option">
-            Espèce
-          </option>
-          {species.map((species) => (
-            <option key={species} value={species}>
-              {species}
-            </option>
+  {/* Filtre par espèce */}
+  <select
+    name="species"
+    value={filters.species}
+    onChange={handleFilterChange}
+    className={filters.species ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Espèce
+    </option>
+    {species.map((species) => (
+      <option key={species} value={species}>
+        {species}
+      </option>
+    ))}
+  </select>
+
+  {/* Filtre par taille */}
+  <select
+    name="size"
+    value={filters.size}
+    onChange={handleFilterChange}
+    className={filters.size ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Taille
+    </option>
+    {sortedSizes.map((size) => (
+      <option key={size} value={size}>
+        {size}
+      </option>
+    ))}
+  </select>
+
+  {/* Filtre par tranche d'âge */}
+  <select
+    name="ageRange"
+    value={filters.ageRange}
+    onChange={handleFilterChange}
+    className={filters.ageRange ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Âge
+    </option>
+    <option value="under-2">Moins de 2 ans</option>
+    <option value="2-7">Entre 2 et 7 ans</option>
+    <option value="over-7">Plus de 7 ans</option>
+  </select>
+
+  {/* Filtre par genre */}
+  <select
+    name="gender"
+    value={filters.gender}
+    onChange={handleFilterChange}
+    className={filters.gender ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Sexe
+    </option>
+    <option value="M">Mâle</option>
+    <option value="F">Femelle</option>
+  </select>
+
+  {/* Filtre par localisation */}
+  <select
+    name="location"
+    value={filters.location}
+    onChange={handleFilterChange}
+    className={filters.location ? "selected" : ""}
+  >
+    <option value="" className="default-option">
+      Localisation
+    </option>
+    {locations.map((location) => (
+      <option key={location} value={location}>
+        {location}
+      </option>
+    ))}
+  </select>
+
+  <button type="button" id="apply-filters-btn" onClick={applyFilters}>
+  <i className="fa-solid fa-filter"></i>
+  Filtrer
+  </button>
+</div>
+
+
+        {!isLoading &&
+          !error &&
+          (filteredAnimals.length > 0 ? (
+            <ul className="animal-list">{filteredAnimals.map(renderAnimal)}</ul>
+          ) : (
+            <p id="no-animals-found">Aucun animal trouvé</p>
           ))}
-        </select>
-
-        {/* Filtre par taille */}
-        <select name="size" value={filters.size} onChange={handleFilterChange}>
-          <option value="" className="default-option">
-            Taille
-          </option>
-          {sortedSizes.map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-
-        {/* Filtre par tranche d'âge */}
-        <select
-          name="ageRange"
-          value={filters.ageRange}
-          onChange={handleFilterChange}
-        >
-          <option value="" className="default-option">
-            Âge
-          </option>
-          <option value="under-2">Moins de 2 ans</option>
-          <option value="2-7">Entre 2 et 7 ans</option>
-          <option value="over-7">Plus de 7 ans</option>
-        </select>
-
-        <select
-          name="gender"
-          value={filters.gender}
-          onChange={handleFilterChange}
-        >
-          <option value="" className="default-option">
-            Sexe
-          </option>
-          <option value="M">Mâle</option>
-          <option value="F">Femelle</option>
-        </select>
-
-        <button type="button" id="apply-filters-btn" onClick={applyFilters}>
-          Appliquer les filtres
-        </button>
-      </div>
-
-      {!isLoading &&
-        !error &&
-        (filteredAnimals.length > 0 ? (
-          <ul className="animal-list">{filteredAnimals.map(renderAnimal)}</ul>
-        ) : (
-          <p id="no-animals-found">Aucun animal trouvé</p>
-        ))}
-    </main>
+      </main>
     </div>
   );
 };
+
 export default AnimalsPage;

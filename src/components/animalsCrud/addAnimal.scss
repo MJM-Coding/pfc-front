@@ -1,0 +1,175 @@
+// Variables de couleur
+$primary-color: #28a745;
+$hover-color: #218838;
+$error-color: #e21b1b;
+$success-color: #079442;
+$background-color: #f9f9f9;
+$input-border-color: #ddd;
+
+// Conteneur principal de la page d'ajout d'animal
+.add-animal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: $background-color;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  margin: 0 auto;
+}
+
+// Section principale avec le formulaire à gauche et les images à droite
+.form-and-images {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+}
+
+// Style du formulaire sur la gauche
+.add-animal-form {
+  width: 60%; /* Prend 60% de la largeur */
+}
+
+// Styles pour chaque groupe de champ dans le formulaire
+.add-animal-form-group {
+  margin-bottom: 20px;
+}
+
+// Label pour les champs de formulaire
+.add-animal-form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+// Champs de saisie dans le formulaire
+.add-animal-form-group input,
+.add-animal-form-group select,
+.add-animal-form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid $input-border-color;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+  margin-top: 5px;
+}
+
+// Texte d'erreur sous les champs
+.error-message {
+  color: $error-color;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+// Bouton de soumission du formulaire
+.add-animal-button {
+  background-color: $primary-color;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+}
+
+// Section des images à droite
+.image-preview-container {
+  width: 35%; /* Prend 35% de la largeur */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// Prévisualisation des images téléchargées
+.image-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.image-preview img {
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+// Style d'image générique si aucune photo n'est téléchargée
+.default-image {
+  background-color: #ccc;
+  width: 100%;
+  max-height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+  border-radius: 8px;
+}
+
+// Style des Toasts (messages de confirmation)
+.toast {
+  background-color: $success-color;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.toast.success {
+  background-color: $success-color;
+}
+
+.toast.error {
+  background-color: $error-color;
+}
+
+// Ajoute des marges en haut pour les sections du formulaire et les images
+h3 {
+  margin-top: 20px;
+  color: #333;
+  text-align: center;
+}
+
+// Style du conteneur d'upload des images (par exemple dans le composant ImageUpload)
+.profileImgWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.profileImgBtns {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.profilImgBtn {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  width: 200px;
+  text-align: center;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
+input[type="file"] {
+  display: none;
+}

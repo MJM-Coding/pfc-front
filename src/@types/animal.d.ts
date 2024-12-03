@@ -1,5 +1,7 @@
 // src/@types/animal.ts
 
+import { IAssociation } from "./association";
+
 /**
  *! Interface pour représenter un animal dans le système.
  */
@@ -12,13 +14,14 @@
   age:number; // Âge de l'animal (obligatoire)
   size:string; // Taille de l'animal (obligatoire)
   description?:string; // Description de l'animal (optionnel)
-  profile_photo?:string; // Photo de profil de l'animal (optionnel)
-  photo1?:string|null; // Photo supplémentaire (optionnel)
-  photo2?:string|null; // Photo supplémentaire (optionnel)
-  photo3?:string|null; // Photo supplémentaire (optionnel)
+  profile_photo:string; // Photo de profil de l'animal (optionnel)
+  photo1:string; // Photo supplémentaire (optionnel)
+  photo2:string; // Photo supplémentaire (optionnel)
+  photo3:string; // Photo supplémentaire (optionnel)
 
   id_family? :number|null; // ID de la famille d'accueil (optionnel)
   id_association? :number|null; // ID de l'association (optionnel)
+  association?: IAssociation | null;
   
   created_at:Date; // Date création (obligatoire)
   updated_at:Date; // Date mise à jour (obligatoire)

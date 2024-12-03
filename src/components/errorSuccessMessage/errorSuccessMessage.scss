@@ -6,22 +6,26 @@
   margin-top: 10px;
   font-size: 1rem;
 
+  // Style pour un message d'erreur
   &.error {
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
     color: #721c24;
   }
 
+  // Style pour un message de succès
   &.success {
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
     color: #155724;
   }
 
+  // Style pour l'icône à gauche du message
   .icon {
     margin-right: 10px;
   }
 
+  // Style pour le paragraphe du message
   p {
     margin: 0;
   }

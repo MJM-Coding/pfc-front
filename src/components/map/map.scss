@@ -1,0 +1,17 @@
+.map-container {
+    width: 100% !important;
+    height: 200px !important ; // Augmentez cette valeur pour une carte plus grande
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+
+.leaflet-container {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  font-size: 14px;
+  color: #333;
+}

@@ -1,17 +1,24 @@
-/* Variables */
-$primary-color: #0044cc;           // Couleur principale
-$secondary-color: #F4F4F4;         // Couleur secondaire (background)
-$accent-color: #ff6b6b;            // Couleur d'accent
-$text-color: #413e3e;              // Couleur du texte
-$font-family: 'Roboto', sans-serif; // Police
-$border-radius: 5px;               // Rayon de bordure
-$spacing: 16px;                    // Espacement général
+/* ============================= */
+/* Variables                    */
+/* ============================= */
+$primary-color: #0044cc;
+$secondary-color: #F4F4F4;
+$accent-color: #ff6b6b;
+$text-color: #413e3e;
+$font-family: 'Roboto', sans-serif;
+$border-radius: 5px;
+$spacing: 16px;
 
-/* Styles principaux */
+/* ============================= */
+/* Style général de la page      */
+/* ============================= */
 #root {
   background-color: $secondary-color;
 }
 
+/* ============================= */
+/* Conteneur principal du profil */
+/* ============================= */
 .containerProfile {
   display: flex;
   flex-direction: column;
@@ -27,6 +34,7 @@ $spacing: 16px;                    // Espacement général
     position: relative;
     text-transform: uppercase;
     margin-bottom: $spacing;
+
     &::after {
       content: attr(data-title);
       position: absolute;
@@ -39,10 +47,13 @@ $spacing: 16px;                    // Espacement général
   }
 }
 
+/* ============================= */
+/* Section des informations      */
+/* ============================= */
 .infoSection {
   width: 100%;
   background-color: white;
-  padding: $spacing * 1.5;
+  padding: calc($spacing * 1.5);
   border-radius: $border-radius;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
@@ -116,7 +127,7 @@ $spacing: 16px;                    // Espacement général
 
         .radio-group {
           display: flex;
-          gap: $spacing / 2;
+          gap: calc($spacing * 2);
 
           .radio-label {
             display: flex;
@@ -200,10 +211,12 @@ $spacing: 16px;                    // Espacement général
   }
 }
 
-/* Toast */
+/* ============================= */
+/* Toast                         */
+/* ============================= */
 .Toast {
   position: fixed;
-  bottom: $spacing * 2;
+  bottom: calc($spacing * 2);
   left: 50%;
   transform: translateX(-50%);
   background-color: $accent-color;
@@ -212,8 +225,59 @@ $spacing: 16px;                    // Espacement général
   border-radius: $border-radius;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+.uploadMessage {
+  margin-top: 8px; /* Espacement au-dessus */
+  font-size: 14px; /* Taille de police */
+  text-align: center; /* Centrer sous l'image */
+  color: #28a745; /* Exemple : Vert (succès) */
+}
 
-/* Responsiveness */
+
+/* ============================= */
+/* Boutons de suppression d'image */
+/* ============================= */
+.button-container {
+  text-align: center; /* Centre horizontalement tous les éléments enfants */
+}
+
+.deletePhotoBtn {
+  padding: 8px 16px; /* Réduit la taille du padding */
+  width:  auto; /* Utilise une largeur automatique */
+  background-color: #ff4d4f; /* Couleur rouge principale */
+  color: #fff; /* Couleur du texte */
+  font-size: 14px; /* Taille du texte plus petite */
+  font-weight: bold; /* Texte en gras */
+  border: 2px solid transparent; /* Bordure transparente pour l'effet focus */
+  border-radius: 20px; /* Coins légèrement arrondis */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; /* Transition fluide pour les changements */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère pour donner un relief */
+
+  &:hover {
+    background-color: #d9363e; /* Rouge plus foncé au survol */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
+    transform: translateY(-2px); /* Légère élévation */
+  }
+
+  &:active {
+    background-color: #c02c2e; /* Rouge encore plus foncé pour le clic */
+    transform: translateY(1px); /* Effet d'enfoncement */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1); /* Réduction de l'ombre */
+  }
+
+  &:focus {
+    outline: none;
+    border: 2px solid #fff; /* Bordure blanche pour focus accessible */
+    box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.5); /* Effet de halo rouge clair */
+  }
+}
+
+
+
+
+/* ============================= */
+/* Responsiveness                */
+/* ============================= */
 @media (max-width: 1024px) {
   .containerProfile {
     padding: calc($spacing * 2);
@@ -244,7 +308,7 @@ $spacing: 16px;                    // Espacement général
   }
 
   .fieldsWrap {
-    grid-template-columns: 1fr; /* Stacking the fields on small screens */
+    grid-template-columns: 1fr;
   }
 
   .formBtns {

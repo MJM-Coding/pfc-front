@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import { IAnimal } from "../@types/vieuxtypes/animal2";
+import { IAnimal } from "../@types/animal";
 
 /**
  *! Récupère la liste de tous les animaux.
@@ -23,7 +23,7 @@ export const GetAllAnimals = async (): Promise<IAnimal[]> => {
  * @param id L'identifiant unique de l'animal.
  * @returns Une promesse qui résout avec un objet IAnimal.
  */
-export const GetAnimalById = async (id: string): Promise<IAnimal> => {
+export const GetAnimalById = async (id: number): Promise<IAnimal> => {
   try {
     const response: AxiosResponse<IAnimal> = await api.get(`/animal/${id}`);
     return response.data;

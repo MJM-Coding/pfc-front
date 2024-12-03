@@ -9,6 +9,7 @@ const AuthContext = createContext<IAuthContext | null>(null);
 
 interface AuthProviderProps {
   children: ReactNode;
+  token: string | null;
 }
 
 

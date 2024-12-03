@@ -1,0 +1,177 @@
+// Variables de couleurs
+$primary-color: #28a745;  // Couleur principale (vert)
+$hover-color: #218838;  // Couleur au survol pour les boutons principaux
+$edit-button-bg: #007bff;  // Couleur de fond du bouton de modification
+$edit-button-hover-bg: #0056b3;  // Couleur au survol du bouton de modification
+$delete-button-bg: #ff4d4d;  // Couleur de fond du bouton de suppression
+$delete-button-hover-bg: #e60000;  // Couleur au survol du bouton de suppression
+$success-color: #079442;  // Vert pour succès
+$error-color: #e21b1b;  // Rouge pour erreur
+$warning-color: #ff7a22;  // Orange pour avertissement
+$background-color: #F4F4F4;  // Couleur de fond des éléments de la liste
+
+// Container de la liste des animaux
+.custom-animal-list-container {
+  padding: 20px;
+  min-height: 70vh;
+  width: 95vw;
+}
+
+// Styles des messages d'erreur, de chargement et lorsqu'il n'y a pas d'animaux
+.custom-loading-message,
+.custom-error-message,
+.custom-no-animals {
+  text-align: center;
+  color: #555;
+  font-size: 1rem;
+  margin: 10px 0;
+}
+
+// Liste des animaux
+.custom-animal-list {
+  list-style: none;
+  padding: 0;
+  margin-left: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+// Élément individuel d'un animal
+.custom-animal-item {
+  background-color: $background-color;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  max-width: 220px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+// Image de l'animal
+.custom-animal-photo {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+// Nom de l'animal
+.custom-animal-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+// Espèce et âge de l'animal
+.custom-animal-species,
+.custom-animal-age {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+// Section d'actions (modifier, supprimer)
+.custom-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+//* Bouton Ajouter un animal */
+.custom-add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;  // Centrer l'icône et le texte
+  background-color: $primary-color;
+  color: #fff;
+  padding: 12px 18px;  // Plus de padding pour un bouton plus large et plus esthétique
+  border-radius: 50px;  // Bords arrondis pour un style plus moderne
+  text-decoration: none;
+  font-weight: 600;  // Poids de la police plus important pour plus d'impact
+  font-size: 1.1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  // Ombre portée pour plus de profondeur
+  transition: all 0.3s ease;  // Transition fluide pour tous les effets de survol
+
+  // Espace entre l'icône et le texte
+  i {
+    margin-right: 10px;
+    font-size: 1.3rem;  // Taille de l'icône légèrement plus grande pour mieux s'intégrer
+  }
+
+  &:hover {
+    background-color: $hover-color;
+    transform: translateY(-2px);  // Légère élévation lors du survol
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);  // Ombre plus marquée lors du survol
+  }
+
+  &:active {
+    background-color: darken($hover-color, 10%);  // Une couleur un peu plus foncée lors du clic
+    transform: translateY(1px);  // Petite compression lors du clic pour l'effet visuel
+  }
+
+  &:focus {
+    outline: none;  // Suppression de l'outline de focus
+  }
+}
+
+
+// Actions liées à chaque animal (modifier, supprimer)
+.custom-animal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+// Styles communs pour les boutons de modification et de suppression
+.custom-edit-button,
+.delete-animal-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;  // Largeur du bouton
+  height: 35px;  // Hauteur du bouton
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1.2rem;  // Taille de la police pour l'icône
+}
+
+// Bouton de modification (bleu)
+.custom-edit-button {
+  background-color: $edit-button-bg;
+  color: #fff;
+
+  &:hover {
+    background-color: $edit-button-hover-bg;
+  }
+}
+
+// Bouton de suppression (rouge)
+.delete-animal-button {
+  background-color: $delete-button-bg;
+  color: #fff;
+
+  &:hover {
+    background-color: $delete-button-hover-bg;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// Assure que l'icône de suppression et de modification aient la même taille
+.custom-edit-button i.fas,
+.delete-animal-button i.fas.fa-trash {
+  font-size: 18px;  // Taille uniforme pour les icônes
+  color: white;  // Couleur de l'icône
+}
