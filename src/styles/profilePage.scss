@@ -53,7 +53,7 @@ $spacing: 16px;
 .infoSection {
   width: 100%;
   background-color: white;
-  padding: $spacing * 1.5;
+  padding: calc($spacing * 1.5);
   border-radius: $border-radius;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
@@ -127,7 +127,7 @@ $spacing: 16px;
 
         .radio-group {
           display: flex;
-          gap: $spacing / 2;
+          gap: calc($spacing * 2);
 
           .radio-label {
             display: flex;
@@ -216,7 +216,7 @@ $spacing: 16px;
 /* ============================= */
 .Toast {
   position: fixed;
-  bottom: $spacing * 2;
+  bottom: calc($spacing * 2);
   left: 50%;
   transform: translateX(-50%);
   background-color: $accent-color;
@@ -231,6 +231,48 @@ $spacing: 16px;
   text-align: center; /* Centrer sous l'image */
   color: #28a745; /* Exemple : Vert (succès) */
 }
+
+
+/* ============================= */
+/* Boutons de suppression d'image */
+/* ============================= */
+.button-container {
+  text-align: center; /* Centre horizontalement tous les éléments enfants */
+}
+
+.deletePhotoBtn {
+  padding: 8px 16px; /* Réduit la taille du padding */
+  width:  auto; /* Utilise une largeur automatique */
+  background-color: #ff4d4f; /* Couleur rouge principale */
+  color: #fff; /* Couleur du texte */
+  font-size: 14px; /* Taille du texte plus petite */
+  font-weight: bold; /* Texte en gras */
+  border: 2px solid transparent; /* Bordure transparente pour l'effet focus */
+  border-radius: 20px; /* Coins légèrement arrondis */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; /* Transition fluide pour les changements */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère pour donner un relief */
+
+  &:hover {
+    background-color: #d9363e; /* Rouge plus foncé au survol */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
+    transform: translateY(-2px); /* Légère élévation */
+  }
+
+  &:active {
+    background-color: #c02c2e; /* Rouge encore plus foncé pour le clic */
+    transform: translateY(1px); /* Effet d'enfoncement */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1); /* Réduction de l'ombre */
+  }
+
+  &:focus {
+    outline: none;
+    border: 2px solid #fff; /* Bordure blanche pour focus accessible */
+    box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.5); /* Effet de halo rouge clair */
+  }
+}
+
+
 
 
 /* ============================= */

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
 import "../../../styles/profilePage.scss"; // Importation du fichier SCSS pour les styles
 import { GetFamilyById, PatchFamily } from "../../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
+import { DeleteProfilePhoto } from "../../../api/family.api";
 import AuthContext from "../../../contexts/authContext"; // Importation du contexte d'authentification
 import type { IFamily, IFamilyForm } from "../../../@types/family"; // Importation des types pour les données de famille
 import ImageUpload from "../../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
@@ -26,7 +27,9 @@ function FamilyProfile() {
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
-  // Charger les données de la famille
+  const defaultImage = "/images/profile.webp";
+
+  //! Charger les données de la famille
   useEffect(() => {
     if (!familyId || !token) {
       console.log("Aucun familyId ou token trouvé !");
@@ -66,12 +69,13 @@ function FamilyProfile() {
           user: { email, firstname, lastname },
         };
 
-        // Log des données de famille avant mise à jour de l'état
         console.log("Données de famille préparées :", familyData);
 
         setFamilyData(familyData);
         setFormData(familyData);
-        setImageUrl(profile_photo || null);
+
+        // Utiliser l'image par défaut si aucune image n'est disponible
+        setImageUrl(profile_photo || defaultImage);
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       }
@@ -80,7 +84,7 @@ function FamilyProfile() {
     fetchFamilyData();
   }, [familyId, token]);
 
-  // Fonction pour mettre à jour uniquement la photo
+  //! Fonction pour mettre à jour uniquement la photo
   const updateProfilePhoto = async (image: File) => {
     const formDataToSend = new FormData();
     formDataToSend.append("profile_photo", image);
@@ -118,14 +122,14 @@ function FamilyProfile() {
     }
   };
 
-  // Gérer la soumission des champs autres que la photo
-  // Gérer la soumission des champs autres que la photo
+ 
+  //! Gérer la soumission des champs sauf la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     setPhoneError("");
     setPostalCodeError("");
-  
+
     const errors = validateForm(
       {
         ...formData,
@@ -134,19 +138,19 @@ function FamilyProfile() {
       },
       ["postal_code", "phone"]
     );
-  
+
     console.log("Erreurs de validation :", errors);
-  
+
     if (Object.keys(errors).length > 0) {
       if (errors.postal_code) setPostalCodeError(errors.postal_code);
       if (errors.phone) setPhoneError(errors.phone);
       return;
     }
-  
+
     const formDataToSend = new FormData();
-  
+
     console.log("Données à envoyer :", formData);
-  
+
     // Ajouter les champs simples
     formDataToSend.append("address", formData?.address || "");
     formDataToSend.append("city", formData?.city || "");
@@ -162,25 +166,28 @@ function FamilyProfile() {
     );
     formDataToSend.append("phone", formData?.phone || "");
     formDataToSend.append("postal_code", formData?.postal_code || "");
-  
+
     // Ajouter les champs utilisateur directement au FormData
     formDataToSend.append("firstname", formData?.user?.firstname || "");
     formDataToSend.append("lastname", formData?.user?.lastname || "");
-  
+
     console.log("Payload envoyé :", formDataToSend);
-  
+
     try {
       // Mise à jour via PatchFamily
       await PatchFamily(familyId as number, formDataToSend, token as string);
-  
+
       // Recharger les données à jour depuis l'API
-      const refreshedFamily = await GetFamilyById(Number(familyId),  token as string);
+      const refreshedFamily = await GetFamilyById(
+        Number(familyId),
+        token as string
+      );
       console.log("Données rechargées :", refreshedFamily);
-  
+
       // Mettre à jour l'état avec les nouvelles données
       setFamilyData(refreshedFamily);
       setFormData(refreshedFamily);
-  
+
       // Notifications de succès
       setToastMessage("Mise à jour réussie !");
       setToastType("success");
@@ -195,8 +202,28 @@ function FamilyProfile() {
       setShowToast(true);
     }
   };
+
+  //! Fonction pour effacer la photo de profil
+  const deleteProfilePhoto = async () => {
+    try {
+      await DeleteProfilePhoto(familyId as number, token as string);
   
+      // Mettre à jour l'état local après la suppression
+      setImageUrl(defaultImage);
+      setToastMessage("Photo supprimée avec succès !");
+      setToastType("success");
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || error.message || "Erreur inconnue.";
+      console.error("Erreur lors de la suppression de la photo :", errorMessage);
+      setToastMessage(`Erreur : ${errorMessage}`);
+      setToastType("error");
+    } finally {
+      setShowToast(true);
+    }
+  };
   
+
   const toggleEdit = () => {
     setIsEditable(!isEditable);
   };
@@ -216,9 +243,25 @@ function FamilyProfile() {
             <ImageUpload
               initialImageUrl={imageUrl}
               onImageChange={handleImageChange}
-              />
-              {isUploading && <p className="uploadMessage">Envoi de l'image en cours...</p>}
+            />
 
+            {/* Message d'envoi en cours */}
+            {isUploading && (
+              <p className="uploadMessage">Envoi de l'image en cours...</p>
+            )}
+
+            {/* Bouton pour supprimer la photo */}
+            {imageUrl !== defaultImage && (
+              <div className="button-container">
+              <button
+                type="button"
+                className="deletePhotoBtn"
+                onClick={deleteProfilePhoto}
+              >
+                Supprimer la photo
+              </button>
+              </div>
+            )}
 
             {/* Champs du formulaire */}
             <div className="fieldsWrap">
@@ -366,15 +409,18 @@ function FamilyProfile() {
                 <select
                   className="infoInput"
                   id="number_of_children"
-                  value={formData?.number_of_children ?? ""}
-                  required // utiliser "" si `undefined` ou `null`
+                  value={
+                    formData?.number_of_children === 5
+                      ? "4+"
+                      : formData?.number_of_children?.toString() || ""
+                  }
+                  required
                   onChange={(e) => {
                     const value = e.target.value;
-                    // Si "4 ou plus" est sélectionné, on attribue 5 (vous pouvez ajuster cette valeur si nécessaire)
                     setFormData({
                       ...formData,
                       number_of_children:
-                        value === "4"
+                        value === "4+"
                           ? 5
                           : value === ""
                           ? undefined
@@ -383,13 +429,12 @@ function FamilyProfile() {
                   }}
                   disabled={!isEditable}
                 >
-                  <option value="">Sélectionner</option>{" "}
-                  {/* Option par défaut */}
+                  <option value="">Sélectionner</option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
-                  <option value="4">4 ou plus</option>
+                  <option value="4+">4 ou plus</option>
                 </select>
               </div>
 
@@ -401,11 +446,14 @@ function FamilyProfile() {
                 <select
                   className="infoInput"
                   id="number_of_animals"
-                  value={formData?.number_of_animals ?? ""}
-                  required // Utilise "" si `undefined` ou `null`
+                  value={
+                    formData?.number_of_animals === 5
+                      ? "4+"
+                      : formData?.number_of_animals?.toString() || ""
+                  }
+                  required
                   onChange={(e) => {
                     const value = e.target.value;
-                    // Si "4+" est sélectionné, on attribue 5 (vous pouvez ajuster cette valeur si nécessaire)
                     setFormData({
                       ...formData,
                       number_of_animals:
@@ -413,21 +461,20 @@ function FamilyProfile() {
                           ? 5
                           : value === ""
                           ? undefined
-                          : Number(value), // Si "4+" sélectionné, 5, sinon conversion en nombre
+                          : Number(value),
                     });
                   }}
                   disabled={!isEditable}
                 >
-                  <option value="">Sélectionner</option>{" "}
-                  {/* Option par défaut */}
-                  <option value="1">0</option>
+                  <option value="">Sélectionner</option>
+                  <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
-                  <option value="4+">4 ou plus </option>{" "}
-                  {/* Option "Plus de 3" */}
+                  <option value="4+">4 ou plus</option>
                 </select>
               </div>
+
               {/* garden */}
               <div className="infoFieldContainer-radio row">
                 <label className="infoLabel" htmlFor="garden">
@@ -517,7 +564,6 @@ function FamilyProfile() {
             type={toastType}
           />
         )}
-       
       </section>
     </div>
   );

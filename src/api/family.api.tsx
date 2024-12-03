@@ -72,7 +72,30 @@ export const PatchFamily = async (
 };
 
 
+//! API pour supprimer la photo de profil
+export const DeleteProfilePhoto = async (
+  id: number, // ID de la famille
+  token: string // Token d'authentification
+): Promise<void> => {
+  try {
+    const response = await api.patch(
+      `/family/${id}/delete-photo`, // URL avec l'ID de la famille
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
+    if (!response.status || response.status !== 200) {
+      throw new Error("Erreur lors de la suppression de la photo.");
+    }
+  } catch (error) {
+    handleApiError(error, `Impossible de supprimer la photo pour la famille avec l'ID ${id}`);
+    throw error;
+  }
+};
 
 
 
