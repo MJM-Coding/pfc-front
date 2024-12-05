@@ -23,8 +23,11 @@ const AddAnimal: React.FC = () => {
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [photos, setPhotos] = useState<File[]>([]); // Tableau pour les photos optionnelles
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // Etat pour afficher le toast
   const [toast, setToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<"success" | "error" | "warning" | "info">("success");
 
   const defaultImage = "/images/profileAnimal.webp";
 
@@ -32,21 +35,22 @@ const AddAnimal: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
- // Validation de l'âge en utilisant la fonction validateAge
-const ageError = age !== undefined ? validateAge(age) : null;
-if (ageError) {
-  setToastMessage(ageError);  // Affiche le message d'erreur retourné par validateAge
-  setToast(true);
-  return;
-}
+    // Validation de l'âge en utilisant la fonction validateAge
+    const ageError = age !== undefined ? validateAge(age) : null;
+    if (ageError) {
+      setToastMessage(ageError); // Affiche le message d'erreur retourné par validateAge
+      setToastType("error");
+      setToast(true);
+      return;
+    }
 
-
-   if (!name || !species || (age ?? 0) <= 0 || !breed || !gender || !size) {
-     setErrorMessage("Tous les champs doivent être remplis correctement.");
-     setToastMessage("Veuillez remplir tous les champs !");
-     setToast(true);
-     return;
-   }
+    if (!name || !species || (age ?? 0) <= 0 || !breed || !gender || !size) {
+      setErrorMessage("Tous les champs doivent être remplis correctement.");
+      setToastMessage("Veuillez remplir tous les champs !");
+      setToastType("error");
+      setToast(true);
+      return;
+    }
 
     try {
       const formData = new FormData();
@@ -55,7 +59,7 @@ if (ageError) {
       formData.append("species", species);
       formData.append("breed", breed);
       formData.append("gender", gender);
-      formData.append("age", age?.toString() ?? '');
+      formData.append("age", age?.toString() ?? "");
       formData.append("size", size);
       formData.append("description", description);
       formData.append("id_association", associationId!);
@@ -72,11 +76,13 @@ if (ageError) {
       await PostAnimal(formData, token!);
 
       setToastMessage("Animal ajouté avec succès !");
+      setToastType("success");
       setToast(true);
       navigate(`/espace-association/animaux-association/${associationId}`);
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'animal :", error);
       setToastMessage("Erreur lors de l'ajout de l'animal.");
+      setToastType("error");
       setToast(true);
     }
   };
@@ -98,8 +104,9 @@ if (ageError) {
   return (
     <div className="add-animal-container">
       {toast && (
-        <Toast setToast={setToast} message={toastMessage} type="success" />
+        <Toast setToast={setToast} message={toastMessage} type={toastType} />
       )}
+
       <h3>Ajouter un animal</h3>
 
       <div className="add-animal-layout">
