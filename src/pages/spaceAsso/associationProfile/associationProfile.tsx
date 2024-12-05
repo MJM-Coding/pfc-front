@@ -128,6 +128,8 @@ function AssociationProfile() {
     }
   };
 
+
+
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {
     try {

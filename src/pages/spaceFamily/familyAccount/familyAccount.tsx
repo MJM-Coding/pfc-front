@@ -13,7 +13,7 @@ import { validateEmail } from "../../../components/validateForm/validateForm"; /
 import "../../../styles/accountPage.scss";
 import Toast from "../../../components/toast/toast";
 
-//* Composant de gestion du compte de l'family
+
 const familyAccount = () => {
   const { user, token } = useContext(AuthContext) || {}; // On récupère l'utilisateur et le token du contexte d'authentification
 
@@ -33,11 +33,11 @@ const familyAccount = () => {
     confirmPassword: "",
   });
 
-  //* États pour gérer l'état de chargement et les erreurs
+  // États pour gérer l'état de chargement et les erreurs
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  //* State pour gérer l'affichage de Toast
+  // State pour gérer l'affichage de Toast
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
@@ -72,105 +72,89 @@ const familyAccount = () => {
   //! Mise à jour de l'email
   const handleSubmitEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    const emailValidationError = validateEmail(emailFormData.newEmail); // On valide le nouvel email
+  
+    const emailValidationError = validateEmail(emailFormData.newEmail);
     if (emailValidationError) {
-      alert(emailValidationError); // Affichage d'une alerte en cas d'erreur
+      alert(emailValidationError);
       return;
     }
-
+  
     if (emailFormData.newEmail !== emailFormData.confirmNewEmail) {
       alert("Les nouveaux emails ne correspondent pas");
       return;
     }
-
-    const familyData = { user: { email: emailFormData.newEmail } };
-
+  
+    // Créez un FormData et ajoutez l'email
+    const formDataToSend = new FormData();
+    formDataToSend.append("email", emailFormData.newEmail);
+  
     try {
-      if (familyId === null || familyId === undefined) {
-        throw new Error("Identifiant de l'family manquant");
+      if (!familyId || !token) {
+        throw new Error("Identifiant ou token manquant");
       }
-
-      if (token === null || token === undefined) {
-        throw new Error("Token manquant");
-      }
-
-      //! Appel à l'API pour mettre à jour l'email
-      await PatchFamily(familyId, familyData, token);
+  
+      await PatchFamily(familyId, formDataToSend, token);
+  
       setToastMessage(
-        "Email mis à jour avec succès ! Merci de verci de vous reconnecter !"
+        "Email mis à jour avec succès ! Veuillez vous reconnecter."
       );
       setToastType("success");
       setShowToast(true);
-
-      // Déconnexion de l'utilisateur apres changement d'email
-      localStorage.removeItem("authToken"); // Suppression du token d'utilisateur du localStorage
-      localStorage.removeItem("authUser"); // Suppression de l'ancien email du localStorage
-      console.log("authToken et authUser supprimés");
-
-      // Ajouter un délai avant la redirection
+  
+      // Déconnexion après mise à jour de l'email
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
       setTimeout(() => {
-        // Redirection vers la page de connexion après 2 secondes
         window.location.href = "/";
-      }, 2000); // Délai de 2000ms (2 secondes)
-    } catch (err) {
-      setToastMessage(`Erreur lors de la mise à jour de l'adresse mail`);
+      }, 2000);
+    } catch (error) {
+      setToastMessage("Erreur lors de la mise à jour de l'email.");
       setToastType("error");
       setShowToast(true);
     }
   };
-
+  
   //! Mise à jour du mot de passe
   const handleSubmitPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+  
     if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
       alert("Les nouveaux mots de passe ne correspondent pas");
       return;
     }
-
-    const familyData = {
-      user: {
-        currentPassword: passwordFormData.currentPassword,
-        newPassword: passwordFormData.newPassword,
-        confirmPassword: passwordFormData.confirmPassword,
-      },
-    };
-
+  
+    // Créez un FormData et ajoutez les mots de passe
+    const formDataToSend = new FormData();
+    formDataToSend.append("currentPassword", passwordFormData.currentPassword);
+    formDataToSend.append("newPassword", passwordFormData.newPassword);
+    formDataToSend.append("confirmPassword", passwordFormData.confirmPassword);
+  
     try {
-      if (typeof familyId === "number") {
-        if (token) {
-          console.log(
-            "Données envoyées à l'API pour la mise à jour du mot de passe : ",
-            familyData
-          );
-          //! Appel à l'API pour mettre à jour le mot de passe
-          await PatchFamily(familyId, familyData, token);
-        } else {
-          setError("Erreur : Token manquant");
-        }
+      if (!familyId || !token) {
+        throw new Error("Identifiant ou token manquant");
       }
+  
+      await PatchFamily(familyId, formDataToSend, token);
+  
       setToastMessage(
-        "Mot de passe mis à jour avec succès ! Merci de vous reconnecter !"
+        "Mot de passe mis à jour avec succès ! Veuillez vous reconnecter."
       );
       setToastType("success");
       setShowToast(true);
-
-      // Déconnexion de l'utilisateur apres changement d'email
-      localStorage.removeItem("authToken"); // Suppression du token d'utilisateur du localStorage
-      localStorage.removeItem("authUser"); // Suppression de l'ancien email du localStorage
-      console.log("authToken et authUser supprimés");
-
-      // Ajouter un délai avant la redirection
+  
+      // Déconnexion après mise à jour du mot de passe
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
       setTimeout(() => {
-        // Redirection vers la page de connexion après 2 secondes
         window.location.href = "/";
-      }, 2000); // Délai de 2000ms (2 secondes)
-    } catch (err) {
-      setToastMessage(`Erreur lors de la mise à jour du mot de passe`);
+      }, 2000);
+    } catch (error) {
+      setToastMessage("Erreur lors de la mise à jour du mot de passe.");
       setToastType("error");
       setShowToast(true);
     }
   };
-
+  
   if (!familyId) {
     return <p>Erreur : Aucun ID d'family disponible.</p>;
   }
@@ -178,45 +162,51 @@ const familyAccount = () => {
   //! Suppression du compte avec confirmation
   const handleDeleteAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!isConfirmed) {
-      // Si l'utilisateur n'a pas encore confirmé, on demande la confirmation
+      // Demande de confirmation avant suppression
       setIsConfirmed(true);
-      return; // On s'arrête ici pour ne pas supprimer immédiatement
+      return;
     }
-
-    // Si l'utilisateur a confirmé, on procède à la suppression
+  
     try {
-      if (typeof familyId === "number") {
-        if (token) {
-          // Appel API pour supprimer l'family
-          await DeleteFamily(familyId, token);
-          setToastMessage("Compte supprimé avec succès");
-          setToastType("success");
-          setShowToast(true);
-
-          // Déconnexion de l'utilisateur apres suppression du compte
-          localStorage.removeItem("authToken"); // Suppression du token d'utilisateur du localStorage
-          localStorage.removeItem("authUser"); // Suppression de l'ancien email du localStorage
-          console.log("authToken et authUser supprimés");
-
-          // Ajouter un délai avant la redirection
-          setTimeout(() => {
-            // Redirection vers la page de connexion après 2 secondes
-            window.location.href = "/";
-          }, 2000); // Délai de 2000ms (2 secondes)
-        } else {
-          setError("Erreur : Token manquant");
-        }
-      } else {
-        setError("Erreur : ID d'family invalide");
+      if (!familyId || !token) {
+        throw new Error("Identifiant ou token manquant");
       }
-    } catch (err) {
-      setToastMessage(`Erreur lors de la suppression du compte`);
-      setToastType("error");
+  
+      // Appel API pour supprimer le compte
+      await DeleteFamily(familyId, token);
+  
+      // Afficher un message de succès si tout fonctionne
+      setToastMessage("Compte supprimé avec succès !");
+      setToastType("success");
+      setShowToast(true);
+  
+      // Déconnecter l'utilisateur après la suppression
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        // Gérer le code 409 (conflit) avec un message clair
+        setToastMessage(
+          "Impossible de supprimer votre compte : vous hébergez encore des animaux."
+        );
+        setToastType("error");
+      } else {
+        // Autres erreurs
+        setToastMessage(
+          "Erreur lors de la suppression du compte. Veuillez réessayer."
+        );
+        setToastType("error");
+      }
       setShowToast(true);
     }
   };
+  
+  
 
   return (
     <div className="containerAccount">

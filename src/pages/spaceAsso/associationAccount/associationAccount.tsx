@@ -72,104 +72,85 @@ const associationAccount = () => {
   //! Mise à jour de l'email
   const handleSubmitEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    const emailValidationError = validateEmail(emailFormData.newEmail); // On valide le nouvel email
+  
+    const emailValidationError = validateEmail(emailFormData.newEmail);
     if (emailValidationError) {
-      alert(emailValidationError); // Affichage d'une alerte en cas d'erreur
+      alert(emailValidationError);
       return;
     }
-
+  
     if (emailFormData.newEmail !== emailFormData.confirmNewEmail) {
       alert("Les nouveaux emails ne correspondent pas");
       return;
     }
-
-    const associationData = { user: { email: emailFormData.newEmail } };
-
+  
+    const formDataToSend = new FormData();
+    formDataToSend.append("email", emailFormData.newEmail);
+  
     try {
-      if (associationId === null || associationId === undefined) {
-        throw new Error("Identifiant de l'association manquant");
+      if (!associationId || !token) {
+        throw new Error("Identifiant ou token manquant");
       }
-
-      if (token === null || token === undefined) {
-        throw new Error("Token manquant");
-      }
-
-      //! Appel à l'API pour mettre à jour l'email
-      await PatchAssociation(associationId, associationData, token);
-      setToastMessage(
-        "Email mis à jour avec succès ! Merci de verci de vous reconnecter !"
-      );
+  
+      await PatchAssociation(associationId, formDataToSend, token);
+  
+      setToastMessage("Email mis à jour avec succès ! Veuillez vous reconnecter.");
       setToastType("success");
       setShowToast(true);
-
-      // Déconnexion de l'utilisateur apres changement d'email
-      localStorage.removeItem("authToken"); // Suppression du token d'utilisateur du localStorage
-      localStorage.removeItem("authUser"); // Suppression de l'ancien email du localStorage
-      console.log("authToken et authUser supprimés");
-
-      // Ajouter un délai avant la redirection
+  
+      // Déconnexion après mise à jour de l'email
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
       setTimeout(() => {
-        // Redirection vers la page de connexion après 2 secondes
         window.location.href = "/";
-      }, 2000); // Délai de 2000ms (2 secondes)
-    } catch (err) {
-      setToastMessage(`Erreur lors de la mise à jour de l'adresse mail`);
+      }, 2000);
+    } catch (error) {
+      setToastMessage("Erreur lors de la mise à jour de l'email.");
       setToastType("error");
       setShowToast(true);
     }
   };
-
+  
   //! Mise à jour du mot de passe
   const handleSubmitPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+  
     if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
       alert("Les nouveaux mots de passe ne correspondent pas");
       return;
     }
-
-    const associationData = {
-      user: {
-        currentPassword: passwordFormData.currentPassword,
-        newPassword: passwordFormData.newPassword,
-        confirmPassword: passwordFormData.confirmPassword,
-      },
-    };
-
+  
+    const formDataToSend = new FormData();
+    formDataToSend.append("currentPassword", passwordFormData.currentPassword);
+    formDataToSend.append("newPassword", passwordFormData.newPassword);
+    formDataToSend.append("confirmPassword", passwordFormData.confirmPassword);
+  
     try {
-      if (typeof associationId === "number") {
-        if (token) {
-          console.log(
-            "Données envoyées à l'API pour la mise à jour du mot de passe : ",
-            associationData
-          );
-          //! Appel à l'API pour mettre à jour le mot de passe
-          await PatchAssociation(associationId, associationData, token);
-        } else {
-          setError("Erreur : Token manquant");
-        }
+      if (!associationId || !token) {
+        throw new Error("Identifiant ou token manquant");
       }
+  
+      await PatchAssociation(associationId, formDataToSend, token);
+  
       setToastMessage(
-        "Mot de passe mis à jour avec succès ! Merci de vous reconnecter !"
+        "Mot de passe mis à jour avec succès ! Veuillez vous reconnecter."
       );
       setToastType("success");
       setShowToast(true);
-
-      // Déconnexion de l'utilisateur apres changement d'email
-      localStorage.removeItem("authToken"); // Suppression du token d'utilisateur du localStorage
-      localStorage.removeItem("authUser"); // Suppression de l'ancien email du localStorage
-      console.log("authToken et authUser supprimés");
-
-      // Ajouter un délai avant la redirection
+  
+      // Déconnexion après mise à jour du mot de passe
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
       setTimeout(() => {
-        // Redirection vers la page de connexion après 2 secondes
         window.location.href = "/";
-      }, 2000); // Délai de 2000ms (2 secondes)
-    } catch (err) {
-      setToastMessage(`Erreur lors de la mise à jour du mot de passe`);
+      }, 2000);
+    } catch (error) {
+      setToastMessage("Erreur lors de la mise à jour du mot de passe.");
       setToastType("error");
       setShowToast(true);
     }
   };
+  
 
   if (!associationId) {
     return <p>Erreur : Aucun ID d'association disponible.</p>;
@@ -217,6 +198,8 @@ const associationAccount = () => {
       setShowToast(true);
     }
   };
+
+
 
   return (
     <div className="containerAccount">
