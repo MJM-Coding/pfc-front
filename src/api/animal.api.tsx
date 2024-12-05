@@ -67,9 +67,9 @@ export const PostAnimal = async (
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec l'objet IAnimal modifié.
  */
-export const PathAnimal = async (
+export const PatchAnimal = async (
   id: string,
-  animalData: Partial<IAnimal>,
+  animalData: Partial<IAnimal> | FormData,
   token: string
 ): Promise<IAnimal> => {
   try {
@@ -77,9 +77,11 @@ export const PathAnimal = async (
       `/animal/${id}`,
       animalData,
       {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data", // Indique que FormData est envoyé
+        },
+      });
     return response.data;
   } catch (error) {
     handleApiError(error, `la modification de l'animal avec l'ID ${id}`);
