@@ -42,7 +42,7 @@ export const GetFamilyById = async (
 };
 
 /**
- *! Met à jour les données d'une famille.
+ *! Modifie une famille existante.
  * @param id L'identifiant de la famille à mettre à jour.
  * @param familyData Les nouvelles données de la famille.
  * @param token Le token d'authentification de l'utilisateur.
@@ -54,7 +54,7 @@ export const GetFamilyById = async (
 
 export const PatchFamily = async (
   id: number,
-  familyData: FormData, // FormData est utilisé pour inclure le fichier
+  familyData: Partial <IFamily> | FormData, // FormData est utilisé pour inclure le fichier
   token: string
 ): Promise<IFamily> => {
   try {
