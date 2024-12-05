@@ -5,9 +5,10 @@ import "./imageUpload.scss"; // Fichier de styles
 interface ImageUploadProps {
   initialImageUrl: string | null; // URL initiale pour l'image si existante
   onImageChange: (image: File | null) => void; // Fonction pour notifier le changement d'image
+  customClassName?: string; // Classe CSS personnalisée
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ initialImageUrl, onImageChange }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ initialImageUrl, onImageChange,  customClassName = "",  }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(initialImageUrl);
 
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +30,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ initialImageUrl, onImageChang
   }, [initialImageUrl]);
 
   return (
-    <div className="profileImgWrap">
+    <div className={`profileImgWrap ${customClassName}`}>
       <img
         src={imagePreview || initialImageUrl || "default-image-path.jpg"}
         alt="Preview"

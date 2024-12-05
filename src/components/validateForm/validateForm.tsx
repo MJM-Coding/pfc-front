@@ -1,10 +1,10 @@
-
-
 //! validation à l'envoi du formulaire
 
 //* Validation du code postal
 export const validatePostalCode = (postalCode: string): string | null => {
-  return /^\d{5}$/.test(postalCode) ? null : "Le code postal doit être composé de 5 chiffres.";
+  return /^\d{5}$/.test(postalCode)
+    ? null
+    : "Le code postal doit être composé de 5 chiffres.";
 };
 
 //* Validation du numéro de téléphone
@@ -24,8 +24,12 @@ export const validateEmail = (email: string): string | null => {
 };
 
 //* Validation du mot de passe
-export const validatePassword = (password: string, confirmation?: string): string | null => {
-  const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+export const validatePassword = (
+  password: string,
+  confirmation?: string
+): string | null => {
+  const passwordPattern =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
   if (!passwordPattern.test(password)) {
     return "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un symbole.";
   }
@@ -37,42 +41,72 @@ export const validatePassword = (password: string, confirmation?: string): strin
 
 //* Validation du numéro RNA
 export const validateRNA = (rna: string): string | null => {
-  return /^W\d{9}$/.test(rna) ? null : "Le numéro RNA doit commencer par W suivi de 9 chiffres.";
+  return /^W\d{9}$/.test(rna)
+    ? null
+    : "Le numéro RNA doit commencer par W suivi de 9 chiffres.";
 };
 
-//* Validation des champs du formulaire
-type ValidationField = 'postal_code' | 'phone' | 'email' | 'password' | 'rna_number';
 
+//* Validation de l'âge
+export const validateAge = (age: number | undefined): string | null => {
+  // Vérifie que l'âge est compris entre 1 et 99
+  if (age && age >= 1 && age <= 99) {
+    return null;  // Si l'âge est valide, retourne null
+  } else {
+    return "L'âge doit être un nombre compris entre 1 et 99.";
+  }
+};
+
+
+
+//* Validation des champs du formulaire
+type ValidationField =
+  | "postal_code"
+  | "phone"
+  | "email"
+  | "password"
+  | "rna_number"
+  | "age";
+
+//* Validation de l'âge
 
 //! Validation des champs du formulaire en temps réel
-export const validateForm = (formData: any, fieldsToValidate: ValidationField[]): Record<string, string> => {
+export const validateForm = (
+  formData: any,
+  fieldsToValidate: ValidationField[]
+): Record<string, string> => {
   const errors: Record<string, string> = {};
 
-  fieldsToValidate.forEach(field => {
+  fieldsToValidate.forEach((field) => {
     switch (field) {
-      case 'postal_code':
+      case "postal_code":
         const postalCodeError = validatePostalCode(formData.postal_code);
         if (postalCodeError) errors.postal_code = postalCodeError;
         break;
-      case 'phone':
+      case "phone":
         const phoneError = validatePhone(formData.phone);
         if (phoneError) errors.phone = phoneError;
         break;
-      case 'email':
+      case "email":
         const emailError = validateEmail(formData.email);
         if (emailError) errors.email = emailError;
         break;
-      case 'password':
-        const passwordError = validatePassword(formData.password, formData.passwordConfirmation);
+      case "password":
+        const passwordError = validatePassword(
+          formData.password,
+          formData.passwordConfirmation
+        );
         if (passwordError) errors.password = passwordError;
         break;
-      case 'rna_number':
+      case "rna_number":
         const rnaError = validateRNA(formData.rna_number);
         if (rnaError) errors.rna_number = rnaError;
         break;
+      case "age": // Ajout de la validation de l'âge
+        const ageError = validateAge(formData.age);
+        if (ageError) errors.age = ageError;
+        break;
     }
-
-    
   });
 
   return errors;

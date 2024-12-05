@@ -65,6 +65,7 @@ const Header: React.FC = () => {
       console.log("Génération des liens pour une famille");
       return [
         { path: `/espace-famille/profil-famille/${familyId || userId}`, label: "Mon profil" },
+        { path: `/espace-association/animaux-famille/${associationId || userId}`, label: "Gérer mes animaux" },
         { path: `/espace-famille/mon-compte/${familyId || userId}`, label: "Mon compte" },
         { path: "/espace-famille/demandes", label: "Mes demandes d'accueil" },
       ];

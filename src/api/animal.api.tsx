@@ -41,7 +41,7 @@ export const GetAnimalById = async (id: number): Promise<IAnimal> => {
  * @returns Une promesse qui résout avec l'objet IAnimal créé.
  */
 export const PostAnimal = async (
-  animalData: Partial<IAnimal>,
+  animalData: Partial<IAnimal> | FormData,
   token: string
 ): Promise<IAnimal> => {
   try {
