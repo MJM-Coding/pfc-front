@@ -52,8 +52,8 @@ export interface IFamily {
 // Représente les données d'une famille sous forme de formulaire.
 export interface IFamilyForm {
   address?: string | null | undefined;
-  city?: string | null | undefined;
   postal_code?: string | null | undefined;
+  city?: string | null | undefined;
   phone?: string | null | undefined;
   number_of_children?: number | null | undefined;
   number_of_animals?: number | null | undefined;

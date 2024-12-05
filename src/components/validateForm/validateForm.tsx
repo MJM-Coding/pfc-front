@@ -9,7 +9,10 @@ export const validatePostalCode = (postalCode: string): string | null => {
 
 //* Validation du numéro de téléphone
 export const validatePhone = (phone: string): string | null => {
-  return /^\d{10}$/.test(phone) ? null : "Le numéro de téléphone doit comporter 10 chiffres.";
+  const phoneRegex = /^0[1-9][0-9]{8}$/; // Regex tirée de Joi
+  return phoneRegex.test(phone)
+    ? null
+    : "Merci de renseigner un numéro de téléphone français valide.";
 };
 
 //* Validation de l'email

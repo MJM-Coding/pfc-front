@@ -62,7 +62,7 @@ export const GetAllAssociations = async (token?: string): Promise<IAssociation[]
  */
  export const PatchAssociation = async (
   id: number,
-  associationData: Partial<IAssociation>, // Permet des mises à jour partielles
+  associationData: Partial<IAssociation> | FormData, // Permet des mises à jour partielles
   token: string
 
 ): Promise<IAssociation> => {
@@ -70,7 +70,7 @@ export const GetAllAssociations = async (token?: string): Promise<IAssociation[]
     const response = await api.patch<IAssociation>(`/association/${id}`, associationData, {
       headers: { 
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json', // Indique que nous envoyons des données JSON
+        'Content-Type': 'multipart/form-data"', // Indique que nous envoyons des données JSON
       },
     });
     return response.data;
@@ -80,6 +80,30 @@ export const GetAllAssociations = async (token?: string): Promise<IAssociation[]
   }
 };
 
+//! API pour supprimer la photo de profil
+export const DeleteProfilePhoto = async (
+  id: number, // ID de l'association
+  token: string // Token d'authentification
+): Promise<void> => {
+  try {
+    const response = await api.patch(
+      `/association/${id}/delete-photo`, // URL avec l'ID de l'association
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.status || response.status !== 200) {
+      throw new Error("Erreur lors de la suppression de la photo.");
+    }
+  } catch (error) {
+    handleApiError(error, `Impossible de supprimer la photo pour l'association avec l'ID ${id}`);
+    throw error;
+  }
+};
 
 
 /**

@@ -43,7 +43,7 @@ export interface IAssociation {
   description: string| undefined; // Description de l'association (obligatoire)
   status: string| undefined; // Statut de l'association (ex : actif, inactif)
   imageUrl?: string | File | null;
-  profile_photo?: string ; // Photo de profil (optionnel)
+  profile_photo?: string | null; // Photo de profil (optionnel)
   profile_file?: File ; // Fichier de profil (optionnel)
   id_user: number; // ID utilisateur associé à cette association
   created_at?: Date; // Date de création
@@ -59,13 +59,13 @@ export interface IAssociation {
  */
 export interface IAssociationForm {
   representative?: string | null | undefined;
+  rna_number?: string 
   address?: string | null | undefined;
   postal_code?: string | null;
   city?: string | null | undefined;
-  profile_photo?:  File | string | undefined | null ;
-  profile_file?: File  ; // Fichier de profil (optionnel)
-  rna_number?: string 
   phone?: string | null;
   description?: string | null;
+  profile_photo?:  File | string | undefined | null ;
+  imageUrl?: string | File | null
   user?: Partial<IUser> | null 
 }
