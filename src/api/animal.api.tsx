@@ -59,6 +59,34 @@ export const PostAnimal = async (
   }
 };
 
+//! Pour supprimer une photo d'un animal
+export const DeleteAnimalPhoto = async (
+  animalId: number, // ID de l'animal
+  photoType: string, // Type de photo à supprimer (ex. : "profile_photo", "photo1")
+  token: string // Token d'authentification
+): Promise<void> => {
+  try {
+    const response = await api.patch(
+      `/animal/${animalId}/delete-photo/${photoType}`, // URL avec l'ID de l'animal et le type de photo
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.status || response.status !== 200) {
+      throw new Error("Erreur lors de la suppression de la photo.");
+    }
+  } catch (error) {
+    handleApiError(error, `Impossible de supprimer la photo ${photoType} pour l'animal avec l'ID ${animalId}`);
+    throw error;
+  }
+};
+
+
+
 /**
  *! Modifie un animal existant.
  ** Cette fonction nécessite également une authentification.

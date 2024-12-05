@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { GetAnimalById, PatchAnimal } from "../../api/animal.api";
+import {
+  GetAnimalById,
+  PatchAnimal,
+  DeleteAnimalPhoto,
+} from "../../api/animal.api";
 import Toast from "../toast/toast";
 import AuthContext from "../../contexts/authContext";
-import ImageUpload from "../imageUpload/imageUpload"; // Import du composant ImageUpload
+import ImageUpload from "../imageUpload/imageUpload";
 import "./addAnimal.scss";
-import { validateAge } from "../validateForm/validateForm";
 
 const ModifyAnimal: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext)!;
   const { animalId } = useParams<{ animalId: string }>();
 
-  // États pour gérer le formulaire et les photos
   const [name, setName] = useState<string>("");
   const [species, setSpecies] = useState<string>("");
   const [breed, setBreed] = useState<string>("");
@@ -22,16 +24,15 @@ const ModifyAnimal: React.FC = () => {
   const [description, setDescription] = useState<string>("");
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
-  const [existingPhotos, setExistingPhotos] = useState<string[]>([]); // Stocker les URLs des photos existantes
-
-  // État pour afficher le toast
+  const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
   const [toast, setToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<
     "success" | "error" | "warning" | "info"
   >("success");
 
-  // Récupération des données de l'animal
+  const BASE_URL = import.meta.env.VITE_STATIC_URL || "";
+
   useEffect(() => {
     const fetchAnimal = async () => {
       try {
@@ -44,12 +45,20 @@ const ModifyAnimal: React.FC = () => {
           setAge(data.age || undefined);
           setSize(data.size || "");
           setDescription(data.description || "");
-          setExistingPhotos([
+
+          const photoType = [
             data.profile_photo,
             data.photo1,
             data.photo2,
             data.photo3,
-          ].filter(Boolean)); // Ajoute seulement les photos non nulles
+          ]
+            .filter(Boolean)
+            .map((photo: string) =>
+              photo.startsWith("http") ? photo : `${BASE_URL}${photo}`
+            );
+
+          console.log("Photos générées :", photoType); // Debug
+          setExistingPhotos(photoType);
         } else {
           setToastMessage("Animal non trouvé");
           setToastType("error");
@@ -61,46 +70,14 @@ const ModifyAnimal: React.FC = () => {
         setToast(true);
       }
     };
-
     fetchAnimal();
   }, [animalId]);
 
-  // Gestion de l'ajout ou du remplacement des photos
-  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const newPhotos = Array.from(files);
-      setPhotos((prevPhotos) => [...prevPhotos, ...newPhotos].slice(0, 3)); // Limiter à 3 photos
-    }
-  };
-
-  // Suppression d'une photo existante
-  const removeExistingPhoto = (index: number) => {
-    setExistingPhotos((prevPhotos) =>
-      prevPhotos.filter((_, i) => i !== index)
-    );
-  };
-
-  // Suppression d'une photo nouvellement ajoutée
-  const removeNewPhoto = (index: number) => {
-    setPhotos((prevPhotos) => prevPhotos.filter((_, i) => i !== index));
-  };
-
-  // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation de l'âge
-    const ageError = age !== undefined ? validateAge(age) : null;
-    if (ageError) {
-      setToastMessage(ageError);
-      setToastType("error");
-      setToast(true);
-      return;
-    }
-
-    if (!name || !species || (age ?? 0) <= 0 || !breed || !gender || !size) {
-      setToastMessage("Veuillez remplir tous les champs !");
+    if (!name || !species || !breed || !gender || (age ?? 0) <= 0 || !size) {
+      setToastMessage("Veuillez remplir tous les champs requis !");
       setToastType("error");
       setToast(true);
       return;
@@ -114,42 +91,89 @@ const ModifyAnimal: React.FC = () => {
       formData.append("gender", gender);
       formData.append("age", age?.toString() ?? "");
       formData.append("size", size);
-      formData.append("description", description ?? "");
+      formData.append("description", description);
 
-      // Ajout des nouvelles photos
       if (profilePhoto) {
         formData.append("profile_photo", profilePhoto);
       }
-      photos.forEach((photo) => {
-        formData.append("image", photo);
+
+      photos.slice(0, 3).forEach((photo) => {
+        formData.append("photos", photo);
       });
 
-      // Ajout des photos existantes (optionnel, selon votre API)
-      existingPhotos.forEach((url) => {
-        formData.append("existing_photos", url); // Adaptez selon votre API
-      });
+      await PatchAnimal(animalId ?? "", formData, token!);
 
-      // Envoi de la mise à jour
-      await PatchAnimal(animalId!, formData, token!);
       setToastMessage("Animal modifié avec succès !");
       setToastType("success");
       setToast(true);
-      navigate(-1); // Retour à la page précédente
+
+      setTimeout(() => {
+        navigate(-1);
+      }, 3000);
     } catch (error) {
-      setToastMessage("Erreur lors de la modification de l'animal");
+      setToastMessage("Erreur lors de la modification");
       setToastType("error");
       setToast(true);
     }
   };
-  
+
+  const deletePhoto = async (index: number) => {
+    const photoTypes = ["profile_photo", "photo1", "photo2", "photo3"];
+
+    if (index < 0 || index >= photoTypes.length) {
+      setToastMessage("Type de photo invalide !");
+      setToastType("error");
+      setToast(true);
+      return;
+    }
+
+    const photoType = photoTypes[index];
+
+    try {
+      if (!animalId || isNaN(Number(animalId))) {
+        throw new Error("L'ID de l'animal est manquant ou invalide.");
+      }
+
+      await DeleteAnimalPhoto(Number(animalId), photoType, token!);
+
+      setExistingPhotos((prevPhotos) =>
+        prevPhotos.filter((_, i) => i !== index)
+      );
+      setToastMessage("Photo supprimée avec succès.");
+      setToastType("success");
+      setToast(true);
+    } catch (error) {
+      setToastMessage("Erreur lors de la suppression de la photo.");
+      setToastType("error");
+      setToast(true);
+    }
+  };
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newPhotos = Array.from(files);
+      const updatedPhotos = [...photos, ...newPhotos].slice(0, 3);
+      setPhotos(updatedPhotos);
+    }
+  };
+
+  const removeNewPhoto = (index: number) => {
+    setPhotos((prevPhotos) => prevPhotos.filter((_, i) => i !== index));
+  };
+
+  const removeProfilePhoto = () => {
+    deletePhoto(0);
+  };
+
   return (
     <div className="add-animal-container">
       {toast && (
         <Toast setToast={setToast} message={toastMessage} type={toastType} />
       )}
-  
+
       <h3>Modifier l'animal</h3>
-  
+
       <div className="add-animal-layout">
         <form onSubmit={handleSubmit} className="add-animal-form">
           <div className="add-animal-form-group">
@@ -161,8 +185,6 @@ const ModifyAnimal: React.FC = () => {
               required
             />
           </div>
-  
-          {/* Espèce */}
           <div className="add-animal-form-group">
             <label>Espèce</label>
             <select
@@ -175,8 +197,6 @@ const ModifyAnimal: React.FC = () => {
               <option value="Chien">Chien</option>
             </select>
           </div>
-  
-          {/* Race */}
           <div className="add-animal-form-group">
             <label>Race</label>
             <input
@@ -186,8 +206,6 @@ const ModifyAnimal: React.FC = () => {
               required
             />
           </div>
-  
-          {/* Genre */}
           <div className="add-animal-form-group">
             <label>Genre</label>
             <select
@@ -200,8 +218,6 @@ const ModifyAnimal: React.FC = () => {
               <option value="F">Femelle</option>
             </select>
           </div>
-  
-          {/* Age */}
           <div className="add-animal-form-group">
             <label>Âge</label>
             <input
@@ -211,8 +227,6 @@ const ModifyAnimal: React.FC = () => {
               required
             />
           </div>
-  
-          {/* Taille */}
           <div className="add-animal-form-group">
             <label>Taille</label>
             <select
@@ -226,8 +240,6 @@ const ModifyAnimal: React.FC = () => {
               <option value="Grand">Grand</option>
             </select>
           </div>
-  
-          {/* Description */}
           <div className="add-animal-form-group">
             <label>Description</label>
             <textarea
@@ -236,13 +248,10 @@ const ModifyAnimal: React.FC = () => {
               placeholder="Description de l'animal"
             />
           </div>
-  
           <button type="submit" className="add-animal-button">
             Modifier l'animal
           </button>
         </form>
-  
-        {/* Section d'affichage des images */}
         <div className="image-section">
           <div className="image-profile">
             <label>Photo de profil (obligatoire)</label>
@@ -251,43 +260,39 @@ const ModifyAnimal: React.FC = () => {
                 initialImageUrl={
                   profilePhoto
                     ? URL.createObjectURL(profilePhoto)
-                    : existingPhotos[0] // La première photo est la photo de profil existante
-                    ? existingPhotos[0].startsWith("http")
-                      ? existingPhotos[0]
-                      : `${import.meta.env.VITE_STATIC_URL}${existingPhotos[0]}`
-                    : null
+                    : existingPhotos[0]
+                    ? existingPhotos[0]
+                    : "/images/default-profile.png"
                 }
                 onImageChange={(image) => setProfilePhoto(image)}
               />
-              {profilePhoto && (
+              {existingPhotos[0] && (
                 <button
                   type="button"
                   className="remove-photo-btn"
-                  onClick={() => setProfilePhoto(null)} // Supprimer la photo de profil
+                  onClick={removeProfilePhoto}
                 >
                   ×
                 </button>
               )}
             </div>
           </div>
-  
           <div className="image-grid">
             <label>Photos existantes</label>
             <div className="photo-preview-grid">
-              {existingPhotos.slice(1).map((url, index) => (
+              {existingPhotos.slice(1, 4).map((url, index) => (
                 <div key={index} className="photo-thumbnail">
                   <img
-                    src={
-                      url.startsWith("http")
-                        ? url
-                        : `${import.meta.env.VITE_STATIC_URL}${url}`
+                    src={url}
+                    onError={(e) =>
+                      (e.currentTarget.src = "/images/default-photo.png")
                     }
                     alt={`Photo existante ${index + 1}`}
                   />
                   <button
                     type="button"
                     className="remove-photo-btn"
-                    onClick={() => removeExistingPhoto(index + 1)} // Supprime la photo existante
+                    onClick={() => deletePhoto(index + 1)} // Décalage pour correspondre aux indexes des autres photos
                   >
                     ×
                   </button>
@@ -295,39 +300,39 @@ const ModifyAnimal: React.FC = () => {
               ))}
             </div>
           </div>
-  
           <div className="image-grid">
-            <label>Ajouter des photos (optionnelles)</label>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handlePhotoChange}
-              className="optional-photo-input"
-            />
-            <div className="photo-preview-grid">
-              {photos.map((photo, index) => (
-                <div key={index} className="photo-thumbnail">
-                  <img
-                    src={URL.createObjectURL(photo)}
-                    alt={`Nouvelle photo ${index + 1}`}
-                  />
-                  <button
-                    type="button"
-                    className="remove-photo-btn"
-                    onClick={() => removeNewPhoto(index)}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
+  <label>Ajouter des photos (optionnelles)</label>
+  <input
+    type="file"
+    multiple
+    accept="image/*"
+    onChange={handlePhotoChange}
+    className="optional-photo-input"
+    disabled={existingPhotos.length >= 4} // Désactivez si 3 photos déjà présentes
+  />
+  {existingPhotos.length >= 4 && (
+    <p className="warning-message">Vous avez atteint la limite de 3 photos.</p>
+  )}
+  <div className="photo-preview-grid">
+    {photos.map((photo, index) => (
+      <div key={index} className="photo-thumbnail">
+        <img src={URL.createObjectURL(photo)} alt={`Nouvelle photo ${index + 1}`} />
+        <button
+          type="button"
+          className="remove-photo-btn"
+          onClick={() => removeNewPhoto(index)}
+        >
+          ×
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
+
         </div>
       </div>
     </div>
   );
-  
-  };
+};
 
-  export default ModifyAnimal;
+export default ModifyAnimal;
