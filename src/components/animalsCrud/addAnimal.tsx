@@ -4,8 +4,10 @@ import { PostAnimal } from "../../api/animal.api";
 import Toast from "../toast/toast";
 import AuthContext from "../../contexts/authContext";
 import ImageUpload from "../imageUpload/imageUpload";
-import "./addAnimal.scss";
+import "./add&modifyAnimal.scss";
 import { validateAge } from "../validateForm/validateForm";
+import { Link } from 'react-router-dom';
+
 
 const AddAnimal: React.FC = () => {
   const navigate = useNavigate();
@@ -97,14 +99,22 @@ const AddAnimal: React.FC = () => {
   };
 
   return (
-    <div className="add-animal-container">
+    
+    <div className="animal-container">
+      
       {toast && <Toast setToast={setToast} message={toastMessage} type={toastType} />}
 
-      <h3>Ajouter un animal</h3>
+  {/* Bouton de retour */}
+  <div className="back-button-animal-container">
+  <Link to={`/espace-association/animaux-association/${associationId}`} className="back-button-addAnimal">
+  <i className="fas fa-arrow-left"></i> Retour à la liste
+      </Link>
+      <h1 className="animal-title">Ajouter un animal</h1>
+    </div>
 
-      <div className="add-animal-layout">
-        <form onSubmit={handleSubmit} className="add-animal-form">
-          <div className="add-animal-form-group">
+      <div className="animal-layout">
+        <form onSubmit={handleSubmit} className="animal-form">
+          <div className="animal-form-group">
             <label>Nom de l'animal</label>
             <input
               type="text"
@@ -115,7 +125,7 @@ const AddAnimal: React.FC = () => {
             />
           </div>
 
-          <div className="add-animal-form-group">
+          <div className="animal-form-group">
             <label>Espèce</label>
             <select
               value={species}
@@ -128,7 +138,7 @@ const AddAnimal: React.FC = () => {
             </select>
           </div>
 
-          <div className="add-animal-form-group">
+          <div className="animal-form-group">
             <label>Race</label>
             <input
               type="text"
@@ -139,7 +149,7 @@ const AddAnimal: React.FC = () => {
             />
           </div>
 
-          <div className="add-animal-form-group">
+          <div className="animal-form-group">
             <label>Genre</label>
             <select
               value={gender}
@@ -152,7 +162,7 @@ const AddAnimal: React.FC = () => {
             </select>
           </div>
 
-          <div className="add-animal-form-group">
+          <div className="animal-form-group">
             <label>Âge</label>
             <input
               type="number"
@@ -170,7 +180,7 @@ const AddAnimal: React.FC = () => {
             />
           </div>
 
-          <div className="add-animal-form-group">
+          <div className="animal-form-group">
             <label>Taille</label>
             <select
               value={size}
@@ -184,7 +194,7 @@ const AddAnimal: React.FC = () => {
             </select>
           </div>
 
-          <div className="add-animal-form-group">
+          <div className="animal-form-group">
             <label>Description</label>
             <textarea
               value={description}
@@ -195,7 +205,7 @@ const AddAnimal: React.FC = () => {
 
           {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-          <button type="submit" className="add-animal-button">
+          <button type="submit" className="animal-button">
             Ajouter l'animal
           </button>
         </form>

@@ -64,7 +64,7 @@ const AnimalList: React.FC<AnimalListProps> = ({ animals, isLoading, error, onDe
                 {/* Actions : Modifier et Supprimer */}
                 <div className="custom-animal-actions">
                   {/* Bouton Modifier : redirige vers la page de modification */}
-                  <Link to={`/espace-association/animaux-association/modifier-animal/${animal.id}`} className="custom-edit-button">
+                  <Link to={`/espace-association/animaux-association/${associationId}/modifier-animal/${animal.id}`} className="custom-edit-button">
                     <i className="fas fa-edit"></i>
                   </Link>
 
