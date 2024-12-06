@@ -3,224 +3,258 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PostAnimal } from "../../api/animal.api";
 import Toast from "../toast/toast";
 import AuthContext from "../../contexts/authContext";
-import ImageUpload from "../imageUpload/imageUpload"; // Importation du composant ImageUpload
-import "./addAnimal.scss";
+import ImageUpload from "../imageUpload/imageUpload";
+import "./add&modifyAnimal.scss";
+import { validateAge } from "../validateForm/validateForm";
+import { Link } from 'react-router-dom';
+
 
 const AddAnimal: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext)!;
+  const { associationId } = useParams<{ associationId: string }>();
 
-  // États pour gérer le formulaire et les photos
   const [name, setName] = useState<string>("");
   const [species, setSpecies] = useState<string>("");
   const [breed, setBreed] = useState<string>("");
   const [gender, setGender] = useState<string>("");
-  const [age, setAge] = useState<number>(0);
+  const [age, setAge] = useState<number | undefined>(undefined);
   const [size, setSize] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
-  const [photo1, setPhoto1] = useState<File | null>(null);
-  const [photo2, setPhoto2] = useState<File | null>(null);
-  const [photo3, setPhoto3] = useState<File | null>(null);
+  const [photos, setPhotos] = useState<File[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
   const [toast, setToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
-  const { associationId } = useParams<{ associationId: string }>();
+  const [toastType, setToastType] = useState<"success" | "error" | "warning" | "info">("success");
 
-  // Fonction de soumission du formulaire
+  const defaultImage = "/images/profileAnimal.webp";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submission started"); // Log
 
-    if (!name || !species || age <= 0 || !breed || !gender || !size) {
-      setErrorMessage("Tous les champs doivent être remplis correctement.");
-      setToastMessage("Veuillez remplir tous les champs !");
+    const ageError = age !== undefined ? validateAge(age) : null;
+    if (ageError) {
+      setToastMessage(ageError);
+      setToastType("error");
       setToast(true);
       return;
     }
 
-    const newAnimal: any = {
-      name,
-      species,
-      breed,
-      gender,
-      age,
-      size,
-      description,
-      id_association: Number(associationId),
-    };
+    if (!name || !species || (age ?? 0) <= 0 || !breed || !gender || !size) {
+      setErrorMessage("Tous les champs doivent être remplis correctement.");
+      setToastMessage("Veuillez remplir tous les champs !");
+      setToastType("error");
+      setToast(true);
+      return;
+    }
 
-    // Upload des images uniquement si elles sont présentes
     try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("species", species);
+      formData.append("breed", breed);
+      formData.append("gender", gender);
+      formData.append("age", age?.toString() ?? "");
+      formData.append("size", size);
+      formData.append("description", description);
+      formData.append("id_association", associationId!);
+
       if (profilePhoto) {
-        console.log("Uploading profile photo..."); // Log
-        newAnimal.profile_photo = await ImageUpload(profilePhoto);
-        console.log("Profile photo uploaded successfully:", newAnimal.profile_photo); // Log
-      }
-      if (photo1) {
-        console.log("Uploading photo 1..."); // Log
-        newAnimal.photo1 = await ImageUpload(photo1);
-        console.log("Photo 1 uploaded successfully:", newAnimal.photo1); // Log
-      }
-      if (photo2) {
-        console.log("Uploading photo 2..."); // Log
-        newAnimal.photo2 = await ImageUpload(photo2);
-        console.log("Photo 2 uploaded successfully:", newAnimal.photo2); // Log
-      }
-      if (photo3) {
-        console.log("Uploading photo 3..."); // Log
-        newAnimal.photo3 = await ImageUpload(photo3);
-        console.log("Photo 3 uploaded successfully:", newAnimal.photo3); // Log
+        formData.append("image", profilePhoto); // La première photo est la photo de profil
       }
 
-      // Envoi des données à l'API pour la création de l'animal
-      if (token !== null) {
-        console.log("Sending data to API for animal creation..."); // Log
-        await PostAnimal(newAnimal, token);
-      } else {
-        setErrorMessage("Erreur : token non disponible.");
-        setToastMessage("Erreur lors de l'ajout de l'animal.");
-        setToast(true);
-      }
+      photos.forEach((photo) => {
+        formData.append("image", photo); // Les autres photos
+      });
 
-      // Réinitialiser les champs après soumission
-      setName("");
-      setSpecies("");
-      setBreed("");
-      setGender("");
-      setAge(0);
-      setSize("");
-      setDescription("");
-      setProfilePhoto(null);
-      setPhoto1(null);
-      setPhoto2(null);
-      setPhoto3(null);
+      await PostAnimal(formData, token!);
 
       setToastMessage("Animal ajouté avec succès !");
+      setToastType("success");
       setToast(true);
-      navigate(`/espace-association/animaux-association/${associationId}`);
+
+      setTimeout(() => {
+        navigate(`/espace-association/animaux-association/${associationId}`);
+      }, 3000);
     } catch (error) {
-      console.error("Error occurred during form submission:", error); // Log
+      console.error("Erreur lors de l'ajout de l'animal :", error);
       setToastMessage("Erreur lors de l'ajout de l'animal.");
+      setToastType("error");
       setToast(true);
     }
   };
 
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newPhotos = Array.from(files);
+      setPhotos((prevPhotos) => [...prevPhotos, ...newPhotos].slice(0, 3));
+    }
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos((prevPhotos) => prevPhotos.filter((_, i) => i !== index));
+  };
+
   return (
-    <div className="add-animal-container">
-      {toast && <Toast setToast={setToast} message={toastMessage} type="success" />}
-      <h3>Ajouter un animal</h3>
+    
+    <div className="animal-container">
+      
+      {toast && <Toast setToast={setToast} message={toastMessage} type={toastType} />}
 
-      <form onSubmit={handleSubmit} className="add-animal-form">
-        {/* Formulaire de saisie des informations sur l'animal */}
-        <div className="add-animal-form-group">
-          <label>Nom de l'animal</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            placeholder="Nom de l'animal"
-          />
-        </div>
+  {/* Bouton de retour */}
+  <div className="back-button-animal-container">
+  <Link to={`/espace-association/animaux-association/${associationId}`} className="back-button-addAnimal">
+  <i className="fas fa-arrow-left"></i> Retour à la liste
+      </Link>
+      <h1 className="animal-title">Ajouter un animal</h1>
+    </div>
 
-        <div className="add-animal-form-group">
-          <label>Espèce</label>
-          <select value={species} onChange={(e) => setSpecies(e.target.value)} required>
-            <option value="">Sélectionnez l'espèce</option>
-            <option value="chat">Chat</option>
-            <option value="chien">Chien</option>
-          </select>
-        </div>
+      <div className="animal-layout">
+        <form onSubmit={handleSubmit} className="animal-form">
+          <div className="animal-form-group">
+            <label>Nom de l'animal</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder="Nom de l'animal"
+            />
+          </div>
 
-        <div className="add-animal-form-group">
-          <label>Race</label>
-          <input
-            type="text"
-            value={breed}
-            onChange={(e) => setBreed(e.target.value)}
-            required
-            placeholder="Race de l'animal"
-          />
-        </div>
+          <div className="animal-form-group">
+            <label>Espèce</label>
+            <select
+              value={species}
+              onChange={(e) => setSpecies(e.target.value)}
+              required
+            >
+              <option value="">Sélectionnez l'espèce</option>
+              <option value="Chat">Chat</option>
+              <option value="Chien">Chien</option>
+            </select>
+          </div>
 
-        <div className="add-animal-form-group">
-          <label>Genre</label>
-          <select value={gender} onChange={(e) => setGender(e.target.value)} required>
-            <option value="">Sélectionnez le genre</option>
-            <option value="M">Mâle</option>
-            <option value="F">Femelle</option>
-          </select>
-        </div>
+          <div className="animal-form-group">
+            <label>Race</label>
+            <input
+              type="text"
+              value={breed}
+              onChange={(e) => setBreed(e.target.value)}
+              required
+              placeholder="Race de l'animal"
+            />
+          </div>
 
-        <div className="add-animal-form-group">
-          <label>Âge</label>
-          <select value={age} onChange={(e) => setAge(Number(e.target.value))} required>
-            <option value="">Sélectionnez l'âge</option>
-            {[...Array(20).keys()].map((i) => (
-              <option key={i} value={i + 1}>
-                {i + 1} an(s)
-              </option>
-            ))}
-          </select>
-        </div>
+          <div className="animal-form-group">
+            <label>Genre</label>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              required
+            >
+              <option value="">Sélectionnez le genre</option>
+              <option value="M">Mâle</option>
+              <option value="F">Femelle</option>
+            </select>
+          </div>
 
-        <div className="add-animal-form-group">
-          <label>Taille</label>
-          <select value={size} onChange={(e) => setSize(e.target.value)} required>
-            <option value="">Sélectionnez la taille</option>
-            <option value="petit">Petit</option>
-            <option value="moyen">Moyen</option>
-            <option value="grand">Grand</option>
-          </select>
-        </div>
+          <div className="animal-form-group">
+            <label>Âge</label>
+            <input
+              type="number"
+              value={age || ""}
+              onChange={(e) => {
+                const newAge = Number(e.target.value);
+                if (newAge > 0) {
+                  setAge(newAge);
+                } else {
+                  setAge(undefined);
+                }
+              }}
+              required
+              placeholder="Âge en années"
+            />
+          </div>
 
-        <div className="add-animal-form-group">
-          <label>Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description de l'animal"
-          />
-        </div>
+          <div className="animal-form-group">
+            <label>Taille</label>
+            <select
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+              required
+            >
+              <option value="">Sélectionnez la taille</option>
+              <option value="Petit">Petit</option>
+              <option value="Moyen">Moyen</option>
+              <option value="Grand">Grand</option>
+            </select>
+          </div>
 
-        {/* Sections d'upload des photos */}
-        <div className="add-animal-form-group">
-          <label>Photo de profil</label>
-          <ImageUpload initialImageUrl={null} onImageChange={(image) => setProfilePhoto(image)} />
-        </div>
+          <div className="animal-form-group">
+            <label>Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description de l'animal"
+            />
+          </div>
 
-        <div className="add-animal-form-group">
-          <label>Photo 1</label>
-          <ImageUpload initialImageUrl={null} onImageChange={(image) => setPhoto1(image)} />
-        </div>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        <div className="add-animal-form-group">
-          <label>Photo 2</label>
-          <ImageUpload initialImageUrl={null} onImageChange={(image) => setPhoto2(image)} />
-        </div>
+          <button type="submit" className="animal-button">
+            Ajouter l'animal
+          </button>
+        </form>
 
-        <div className="add-animal-form-group">
-          <label>Photo 3</label>
-          <ImageUpload initialImageUrl={null} onImageChange={(image) => setPhoto3(image)} />
-        </div>
-
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-        <button type="submit" className="add-animal-button">
-          Ajouter l'animal
-        </button>
-      </form>
-
-      {/* Section d'aperçu des images */}
-      <div className="image-previews">
-        {[profilePhoto, photo1, photo2, photo3].map((image, index) => {
-          return image ? (
-            <div key={index} className="image-preview">
-              <img src={URL.createObjectURL(image)} alt={`Preview ${index + 1}`} />
+        <div className="image-section">
+          <div className="image-profile">
+            <label>Photo de profil (obligatoire)</label>
+            <div className="profile-photo-wrapper">
+              <ImageUpload
+                initialImageUrl={profilePhoto ? URL.createObjectURL(profilePhoto) : defaultImage}
+                onImageChange={(image) => setProfilePhoto(image)}
+              />
+              {profilePhoto && (
+                <button
+                  type="button"
+                  className="remove-photo-btn"
+                  onClick={() => setProfilePhoto(null)}
+                >
+                  ×
+                </button>
+              )}
             </div>
-          ) : null;
-        })}
+          </div>
+
+          <div className="image-grid">
+            <label>Autres photos (optionnelles)</label>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handlePhotoChange}
+              className="optional-photo-input"
+            />
+            <div className="photo-preview-grid">
+              {photos.map((photo, index) => (
+                <div key={index} className="photo-thumbnail">
+                  <img src={URL.createObjectURL(photo)} alt={`Photo ${index + 1}`} />
+                  <button
+                    type="button"
+                    className="remove-photo-btn"
+                    onClick={() => removePhoto(index)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

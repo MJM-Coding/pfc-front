@@ -83,7 +83,14 @@ function AssociationProfile() {
         setAssociationData(associationData);
         setFormData(associationData);
 
-        setImageUrl(profile_photo || defaultImage);
+        const baseUrl = import.meta.env.VITE_STATIC_URL || "";
+        setImageUrl(
+          profile_photo
+            ? profile_photo.startsWith("http")
+              ? profile_photo
+              : `${baseUrl}/${profile_photo}`
+            : defaultImage
+        );
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       }
@@ -325,57 +332,58 @@ function AssociationProfile() {
               />
             </div>
 
-  {/* Ville */}
-  <div className="infoFieldContainer row">
-                <label className="infoLabel" htmlFor="city">
-                  Ville
-                </label>
-                <input
-                  className="infoInput"
-                  type="text"
-                  id="city"
-                  value={formData?.city || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, city: e.target.value })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
+            {/* Ville */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="city">
+                Ville
+              </label>
+              <input
+                className="infoInput"
+                type="text"
+                id="city"
+                value={formData?.city || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                disabled={!isEditable}
+              />
+            </div>
 
-              {/* Code postal */}
-              <div className="infoFieldContainer row">
-                <label className="infoLabel" htmlFor="postal_code">
-                  Code postal
-                </label>
-                <input
-                  className="infoInput"
-                  type="text"
-                  id="postal_code"
-                  value={formData?.postal_code || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, postal_code: e.target.value })
-                  }
-                  disabled={!isEditable}
-                />
-                {postalCodeError && <Message message={postalCodeError} type="error" />}
-              </div>
+            {/* Code postal */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="postal_code">
+                Code postal
+              </label>
+              <input
+                className="infoInput"
+                type="text"
+                id="postal_code"
+                value={formData?.postal_code || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, postal_code: e.target.value })
+                }
+                disabled={!isEditable}
+              />
+              {postalCodeError && (
+                <Message message={postalCodeError} type="error" />
+              )}
+            </div>
 
-              {/* Description */}
-              <div className="infoFieldContainer row">
-                <label className="infoLabel" htmlFor="description">
-                  Description
-                </label>
-                <textarea
-                  className="infoInput"
-                  id="description"
-                  value={formData?.description || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
-        
+            {/* Description */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="description">
+                Description
+              </label>
+              <textarea
+                className="infoInput"
+                id="description"
+                value={formData?.description || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                disabled={!isEditable}
+              />
+            </div>
 
             <div className="formBtns">
               <button

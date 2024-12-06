@@ -15,7 +15,7 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   position: relative; /* Permet de positionner les éléments enfants relativement */
   padding-top: 20px; /* Espace en haut pour le bouton et le titre */
   height: auto;
-  min-height: 83.2vh;
+  min-height: 85.3vh;
 }
 .animal_info-details {
   background-color: $background-color;
@@ -84,23 +84,6 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
 
 
 
-.back-button-container {
-  margin-bottom: 20px; /* Espacement entre le bouton et le contenu */
-  text-align: left; /* Aligne le bouton à gauche */
-}
-
-.back-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 15px;
-  background-color: #276e47; /* Couleur du bouton */
-  color: #ffffff; /* Couleur du texte */
-  text-decoration: none; /* Supprime le soulignement */
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
 // =============================
 // Style bouton de retour à la liste

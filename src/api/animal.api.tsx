@@ -41,7 +41,7 @@ export const GetAnimalById = async (id: number): Promise<IAnimal> => {
  * @returns Une promesse qui résout avec l'objet IAnimal créé.
  */
 export const PostAnimal = async (
-  animalData: Partial<IAnimal>,
+  animalData: Partial<IAnimal> | FormData,
   token: string
 ): Promise<IAnimal> => {
   try {
@@ -59,6 +59,34 @@ export const PostAnimal = async (
   }
 };
 
+//! Pour supprimer une photo d'un animal
+export const DeleteAnimalPhoto = async (
+  animalId: number, // ID de l'animal
+  photoType: string, // Type de photo à supprimer (ex. : "profile_photo", "photo1")
+  token: string // Token d'authentification
+): Promise<void> => {
+  try {
+    const response = await api.patch(
+      `/animal/${animalId}/delete-photo/${photoType}`, // URL avec l'ID de l'animal et le type de photo
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.status || response.status !== 200) {
+      throw new Error("Erreur lors de la suppression de la photo.");
+    }
+  } catch (error) {
+    handleApiError(error, `Impossible de supprimer la photo ${photoType} pour l'animal avec l'ID ${animalId}`);
+    throw error;
+  }
+};
+
+
+
 /**
  *! Modifie un animal existant.
  ** Cette fonction nécessite également une authentification.
@@ -67,9 +95,9 @@ export const PostAnimal = async (
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec l'objet IAnimal modifié.
  */
-export const PathAnimal = async (
+export const PatchAnimal = async (
   id: string,
-  animalData: Partial<IAnimal>,
+  animalData: Partial<IAnimal> | FormData,
   token: string
 ): Promise<IAnimal> => {
   try {
@@ -77,9 +105,11 @@ export const PathAnimal = async (
       `/animal/${id}`,
       animalData,
       {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data", // Indique que FormData est envoyé
+        },
+      });
     return response.data;
   } catch (error) {
     handleApiError(error, `la modification de l'animal avec l'ID ${id}`);

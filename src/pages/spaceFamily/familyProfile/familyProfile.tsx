@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
 import "../../../styles/profilePage.scss"; // Importation du fichier SCSS pour les styles
-import { GetFamilyById, PatchFamily, DeleteProfilePhoto } from "../../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
+import {
+  GetFamilyById,
+  PatchFamily,
+  DeleteProfilePhoto,
+} from "../../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
 import AuthContext from "../../../contexts/authContext"; // Importation du contexte d'authentification
 import type { IFamily, IFamilyForm } from "../../../@types/family"; // Importation des types pour les données de famille
 import ImageUpload from "../../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
@@ -12,14 +16,13 @@ import "../../../components/validateForm/validateForm.scss";
 function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
   const familyId = user?.id_family; // Récupération de l'ID de la famille de l'utilisateur
-  
+
   const [familyData, setFamilyData] = useState<IFamily | null>(null); // Etat pour les données de la famille
   const [formData, setFormData] = useState<IFamilyForm | null>(null); // Etat pour les données du formulaire
   const [imageUrl, setImageUrl] = useState<string | null>(null); // Etat pour l'URL de l'image de profil
   const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isEditable, setIsEditable] = useState<boolean>(false); // Etat pour gérer l'édition
-  
 
   // State pour les messages d'erreur et de succès
   const [phoneError, setPhoneError] = useState<string>("");
@@ -31,7 +34,7 @@ function FamilyProfile() {
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
   const defaultImage = "/images/profileFamily.jpeg"; // Image par défaut si aucune image n'est définie
- 
+
   //! Charger les données de la famille
   useEffect(() => {
     if (!familyId || !token) {
@@ -72,12 +75,18 @@ function FamilyProfile() {
           user: { email, firstname, lastname },
         };
 
-
         setFamilyData(familyData);
         setFormData(familyData);
 
         // Utiliser l'image par défaut si aucune image n'est disponible
-        setImageUrl(profile_photo || defaultImage);
+        const baseUrl = import.meta.env.VITE_STATIC_URL || "";
+        setImageUrl(
+          profile_photo
+            ? profile_photo.startsWith("http")
+              ? profile_photo
+              : `${baseUrl}/${profile_photo}`
+            : defaultImage
+        );
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       }
@@ -123,26 +132,29 @@ function FamilyProfile() {
     }
   };
 
-    //! Fonction pour supprimer la photo
-    const deleteProfilePhoto = async () => {
-      try {
-        await DeleteProfilePhoto(familyId as number, token as string);
-    
-        // Mettre à jour l'état local après la suppression
-        setImageUrl(defaultImage);
-        setToastMessage("Photo supprimée avec succès !");
-        setToastType("success");
-      } catch (error: any) {
-        const errorMessage =
-          error?.response?.data?.message || error.message || "Erreur inconnue.";
-        console.error("Erreur lors de la suppression de la photo :", errorMessage);
-        setToastMessage(`Erreur : ${errorMessage}`);
-        setToastType("error");
-      } finally {
-        setShowToast(true);
-      }
-    };
- 
+  //! Fonction pour supprimer la photo
+  const deleteProfilePhoto = async () => {
+    try {
+      await DeleteProfilePhoto(familyId as number, token as string);
+
+      // Mettre à jour l'état local après la suppression
+      setImageUrl(defaultImage);
+      setToastMessage("Photo supprimée avec succès !");
+      setToastType("success");
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || error.message || "Erreur inconnue.";
+      console.error(
+        "Erreur lors de la suppression de la photo :",
+        errorMessage
+      );
+      setToastMessage(`Erreur : ${errorMessage}`);
+      setToastType("error");
+    } finally {
+      setShowToast(true);
+    }
+  };
+
   //! Gérer la soumission des champs sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -159,7 +171,6 @@ function FamilyProfile() {
       ["postal_code", "phone"]
     );
 
-
     if (Object.keys(errors).length > 0) {
       if (errors.postal_code) setPostalCodeError(errors.postal_code);
       if (errors.phone) setPhoneError(errors.phone);
@@ -167,7 +178,6 @@ function FamilyProfile() {
     }
 
     const formDataToSend = new FormData();
-
 
     // Ajouter les champs simples
     formDataToSend.append("address", formData?.address || "");
@@ -185,10 +195,9 @@ function FamilyProfile() {
     formDataToSend.append("phone", formData?.phone || "");
     formDataToSend.append("postal_code", formData?.postal_code || "");
 
-     // Ajouter les champs user dans le FormData
+    // Ajouter les champs user dans le FormData
     formDataToSend.append("firstname", formData?.user?.firstname || "");
     formDataToSend.append("lastname", formData?.user?.lastname || "");
-
 
     try {
       // Appel API pour mettre à jour la famille
@@ -219,9 +228,7 @@ function FamilyProfile() {
     }
   };
 
-
-  
-//! Basculer le mode édition
+  //! Basculer le mode édition
   const toggleEdit = () => {
     setIsEditable(!isEditable);
   };
@@ -251,13 +258,13 @@ function FamilyProfile() {
             {/* Bouton pour supprimer la photo */}
             {imageUrl !== defaultImage && (
               <div className="button-container">
-              <button
-                type="button"
-                className="deletePhotoBtn"
-                onClick={deleteProfilePhoto}
-              >
-                Supprimer la photo
-              </button>
+                <button
+                  type="button"
+                  className="deletePhotoBtn"
+                  onClick={deleteProfilePhoto}
+                >
+                  Supprimer la photo
+                </button>
               </div>
             )}
 

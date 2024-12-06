@@ -2,9 +2,9 @@
 import React, { useContext } from "react";
 import { useParams, Link } from "react-router-dom"; // Pour la navigation
 import type { IAnimal } from "../../@types/animal"; // Import du type pour Animal
-import "./animalsList.scss";
 import AuthContext from "../../contexts/authContext"; // Contexte pour l'authentification
 import DeleteAnimal from "./deleteAnimal"; // Composant pour gérer la suppression
+import "./animalsList.scss";
 
 interface AnimalListProps {
   animals: IAnimal[]; // Liste des animaux à afficher
@@ -64,7 +64,7 @@ const AnimalList: React.FC<AnimalListProps> = ({ animals, isLoading, error, onDe
                 {/* Actions : Modifier et Supprimer */}
                 <div className="custom-animal-actions">
                   {/* Bouton Modifier : redirige vers la page de modification */}
-                  <Link to={`/modify-animal/${animal.id}`} className="custom-edit-button">
+                  <Link to={`/espace-association/animaux-association/${associationId}/modifier-animal/${animal.id}`} className="custom-edit-button">
                     <i className="fas fa-edit"></i>
                   </Link>
 

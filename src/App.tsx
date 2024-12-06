@@ -14,6 +14,7 @@ import ProfilePageAsso from "./pages/spaceAsso/associationProfile/associationPro
 import AssociationAccount from "./pages/spaceAsso/associationAccount/associationAccount"; // page du compte de l'association
 import AssociationAnimalsPage from "./pages/associationAnimalsPage/associationAnimalsPage"; // page de la liste des animaux de l'association
 import AddAnimal from "./components/animalsCrud/addAnimal"; // composant pour ajouter un animal
+import ModifyAnimal from "./components/animalsCrud/modifyAnimal"; // composant pour modifier un animal
 
 import Signup_faPage from "./pages/signupPage/signup_faPage"; // page de l'inscription d'une famille
 import ProfilePageFamily from "./pages/spaceFamily/familyProfile/familyProfile"; // page du profil de la famille
@@ -31,14 +32,15 @@ const App: React.FC = () => {
         <Route path="/animal-info/:animalId" element={<AnimalInfoPage />} />
 
         <Route path="/inscription-association" element={<Signup_assoPage />} />
-        <Route path="/espace-association/profil-association/:associationId" element={<ProfilePageAsso />} />
-        <Route path="/espace-association/mon-compte/:associationId" element={<AssociationAccount />} />
-        <Route path="/espace-association/animaux-association/:associationId" element={<AssociationAnimalsPage />} />
-        <Route path="/espace-association/animaux-association/ajout-animal/:associationId" element={<AddAnimal />} />
+        <Route path="/espace-association/profil-association/:associationId" element={<ProfilePageAsso />} /> // page du profil de l'association
+        <Route path="/espace-association/mon-compte/:associationId" element={<AssociationAccount />} /> // page du compte de l'association
+        <Route path="/espace-association/animaux-association/:associationId" element={<AssociationAnimalsPage />} /> // page de la liste des animaux de l'association
+        <Route path="/espace-association/animaux-association/ajout-animal/:associationId" element={<AddAnimal />} /> // page d'ajout d'un animal
+        <Route path="/espace-association/animaux-association/:associationId/modifier-animal/:animalId" element={<ModifyAnimal />} /> // page de modification d'un animal
 
         <Route path="/inscription-famille" element={<Signup_faPage />} />
-        <Route path="/espace-famille/profil-famille/:familyId" element={<ProfilePageFamily />} />
-        <Route path="/espace-famille/mon-compte/:familyId" element={<FamilyAccount />} />
+        <Route path="/espace-famille/profil-famille/:familyId" element={<ProfilePageFamily />} /> // page du profil de la famille
+        <Route path="/espace-famille/mon-compte/:familyId" element={<FamilyAccount />} /> // page du compte de la famille
 
         {/* Vous pouvez ajouter d'autres routes ici */}
       </Routes>
