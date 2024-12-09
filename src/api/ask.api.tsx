@@ -104,6 +104,24 @@ export const GetFamilyAsks = async (id_family: string, token: string): Promise<I
 };
 
 
+/**
+ *! Supprime une demande spécifique.
+ ** Authentification + réservée aux familles.
+ * @param id L'identifiant unique de la demande à supprimer.
+ * @param token Le token d'authentification de l'utilisateur.
+ * @returns Une promesse qui résout avec un message de succès.
+ */
+ export const DeleteAsk = async (id: string, token: string): Promise<{ message: string }> => {
+  try {
+    const response: AxiosResponse<{ message: string }> = await api.delete(`/ask/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, `la suppression de la demande avec l'ID ${id}`);
+    throw error;
+  }
+};
 
 
 

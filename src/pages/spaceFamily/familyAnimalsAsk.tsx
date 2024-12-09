@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom"; // Importer Link pour la navigation
 import AuthContext from "../../contexts/authContext";
-import { GetFamilyAsks } from "../../api/ask.api";
+import { GetFamilyAsks, DeleteAsk } from "../../api/ask.api"; // Importation de l'API DeleteAsk
 import Toast from "../../components/toast/toast";
 import { IAsk } from "../../@types/ask";
 import "../../styles/familyAnimalsAsk.scss"; // Importation du fichier SCSS pour les styles
@@ -11,8 +11,8 @@ const FamilyAnimalAsk: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true); // Indique si les données se chargent
   const [error, setError] = useState<string | null>(null); // Message d'erreur
   const [showToast, setShowToast] = useState<boolean>(false); // Contrôle l'affichage du Toast
-  const [toastMessage, _setToastMessage] = useState<string | null>(null); // Message du Toast
-  const [toastType, _setToastType] = useState<"success" | "error">("success"); // Type de Toast
+  const [toastMessage, setToastMessage] = useState<string | null>(null); // Message du Toast
+  const [toastType, setToastType] = useState<"success" | "error">("success"); // Type de Toast
   const authContext = useContext(AuthContext);
 
   // Charger les demandes d'accueil
@@ -43,10 +43,35 @@ const FamilyAnimalAsk: React.FC = () => {
     fetchFamilyAsks();
   }, [authContext]);
 
+  // Fonction pour supprimer une demande
+  const handleDelete = async (id: string) => {
+    try {
+      const token = authContext?.token;
+
+      if (!token) {
+        setError("Utilisateur non connecté.");
+        return;
+      }
+
+      await DeleteAsk(id, token);
+      setToastMessage("Demande supprimée avec succès.");
+      setToastType("success");
+      setShowToast(true);
+
+      // Met à jour la liste des demandes
+      setAsks((prevAsks) => prevAsks.filter((ask) => ask.id.toString() !== id));
+    } catch (err) {
+      console.error("Erreur lors de la suppression de la demande :", err);
+      setToastMessage("Erreur lors de la suppression de la demande.");
+      setToastType("error");
+      setShowToast(true);
+    }
+  };
+
   // Charger les données de l'animal
   const openModal = (photo: string) => {
     // Logique pour ouvrir la photo en plein écran ou dans une modale (optionnel)
-    window.open(photo, '_blank');
+    window.open(photo, "_blank");
   };
 
   if (loading) return <p>Chargement des demandes...</p>;
@@ -77,12 +102,20 @@ const FamilyAnimalAsk: React.FC = () => {
               </div>
               <p>Animal : {ask.animal?.name || "Inconnu"}</p>
               <p>Statut : {ask.status}</p>
-              <p>Age : {ask.animal.age}</p>
+              <p>Âge : {ask.animal.age}</p>
 
               {/* Ajouter le lien vers la page de profil de l'animal avec l'ID de l'animal */}
               <Link to={`/animal-info/${ask.animal?.id}`} className="animal-link">
                 Voir le profil de l'animal
               </Link>
+
+              {/* Bouton pour supprimer la demande */}
+              <button
+                className="delete-button"
+                onClick={() => handleDelete(ask.id.toString())}
+              >
+                Supprimer la demande
+              </button>
             </li>
           ))}
         </ul>
