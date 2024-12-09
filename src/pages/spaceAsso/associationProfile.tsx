@@ -1,22 +1,22 @@
 // src/components/AssociationProfile/AssociationProfile.tsx
 
 import React, { useEffect, useState, useContext } from "react";
-import "../../../styles/profilePage.scss";
+import "../../styles/profilePage.scss";
 import {
   GetAssociationById,
   PatchAssociation,
   DeleteProfilePhoto,
-} from "../../../api/association.api";
-import AuthContext from "../../../contexts/authContext";
+} from "../../api/association.api";
+import AuthContext from "../../contexts/authContext";
 import type {
   IAssociation,
   IAssociationForm,
-} from "../../../@types/association";
-import ImageUpload from "../../../components/imageUpload/imageUpload";
-import Message from "../../../components/errorSuccessMessage/errorSuccessMessage";
-import Toast from "../../../components/toast/toast";
-import { validateForm } from "../../../components/validateForm/validateForm";
-import "../../../components/validateForm/validateForm.scss";
+} from "../../@types/association";
+import ImageUpload from "../../components/imageUpload/imageUpload";
+import Message from "../../components/errorSuccessMessage/errorSuccessMessage";
+import Toast from "../../components/toast/toast";
+import { validateForm } from "../../components/validateForm/validateForm";
+import "../../components/validateForm/validateForm.scss";
 
 function AssociationProfile() {
   const { user, token } = useContext(AuthContext) || {};

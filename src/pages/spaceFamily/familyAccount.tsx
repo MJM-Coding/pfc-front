@@ -2,16 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import {
   IPasswordEditForm,
   IEmailEditForm,
-} from "../../../@types/emailPassword";
+} from "../../@types/emailPassword";
 import {
   GetFamilyById,
   PatchFamily,
   DeleteFamily,
-} from "../../../api/family.api";
-import AuthContext from "../../../contexts/authContext";
-import { validateEmail } from "../../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
-import "../../../styles/accountPage.scss";
-import Toast from "../../../components/toast/toast";
+} from "../../api/family.api";
+import AuthContext from "../../contexts/authContext";
+import { validateEmail } from "../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
+import "../../styles/accountPage.scss";
+import Toast from "../../components/toast/toast";
 
 
 const familyAccount = () => {

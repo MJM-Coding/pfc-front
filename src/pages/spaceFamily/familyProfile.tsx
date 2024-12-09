@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
-import "../../../styles/profilePage.scss"; // Importation du fichier SCSS pour les styles
+import "../../styles/profilePage.scss"; // Importation du fichier SCSS pour les styles
 import {
   GetFamilyById,
   PatchFamily,
   DeleteProfilePhoto,
-} from "../../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
-import AuthContext from "../../../contexts/authContext"; // Importation du contexte d'authentification
-import type { IFamily, IFamilyForm } from "../../../@types/family"; // Importation des types pour les données de famille
-import ImageUpload from "../../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
-import Toast from "../../../components/toast/toast"; // Importation du composant Toast pour les notifications
-import Message from "../../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de succès
-import { validateForm } from "../../../components/validateForm/validateForm";
-import "../../../components/validateForm/validateForm.scss";
+} from "../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
+import AuthContext from "../../contexts/authContext"; // Importation du contexte d'authentification
+import type { IFamily, IFamilyForm } from "../../@types/family"; // Importation des types pour les données de famille
+import ImageUpload from "../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
+import Toast from "../../components/toast/toast"; // Importation du composant Toast pour les notifications
+import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de succès
+import { validateForm } from "../../components/validateForm/validateForm";
+import "../../components/validateForm/validateForm.scss";
 
 function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte

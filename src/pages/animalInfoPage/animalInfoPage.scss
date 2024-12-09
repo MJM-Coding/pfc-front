@@ -8,14 +8,16 @@ $text-color: #333; // Couleur de texte principal
 $border-color: #ddd; // Bordure grise
 $photo-border-radius: 10px; // Bordure arrondie pour les images
 
+
+
 // =============================
 // Style du conteneur principal
 // =============================
 .animalDetail-container {
   position: relative; /* Permet de positionner les éléments enfants relativement */
-  padding-top: 20px; /* Espace en haut pour le bouton et le titre */
   height: auto;
-  min-height: 85.3vh;
+  min-height: 83.2vh;
+  justify-content: space-between;
 }
 .animal_info-details {
   background-color: $background-color;
@@ -23,11 +25,13 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   border-radius: 8px;
   max-width: 1500px;
   margin: 0 auto;
+  justify-content: center;
+  ;
   
 
   .animal_info-name {
     position: absolute; /* Permet de placer le titre absolument */
-    top: 40px; /* Place le titre en haut avec un léger espacement */
+    top: 20px; /* Place le titre en haut avec un léger espacement */
     left: 50%; /* Centre le titre horizontalement */
     transform: translateX(-50%); /* Ajuste pour un centrage parfait */
     font-size: 2rem; /* Taille du texte */
@@ -39,6 +43,52 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   
   
 }
+
+// =============================
+// Bouton demande accueil
+// =============================
+
+.center-container {
+  display: flex; /* Active Flexbox */
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  background-color: $background-color; /* Optionnel, définit une couleur de fond */
+}
+
+.adopt-button {
+  display: flex; /* Alignement interne si besoin d'icônes */
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4caf50, #087f23); /* Dégradé de vert */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  margin: 15px 0px;
+
+  &:hover {
+    background: linear-gradient(135deg, #087f23, #4caf50); /* Inversion des couleurs */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px); /* Légère élévation */
+  }
+
+  &:active {
+    transform: translateY(1px); /* Légère descente */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  &:disabled {
+    background: #cccccc; /* Couleur gris clair pour les états désactivés */
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
 
 // =============================
 // Style des informations de l'animal
@@ -120,6 +170,10 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   transform: translateY(0); /* Réinitialise l'effet de soulèvement */
 }
 
+.adopt-button {
+ text-align: center;
+}
+
 // =============================
 // Style des images
 // =============================
@@ -162,13 +216,13 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
     border-radius: 15px;
     padding: 0 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 50px;
+    margin-top: 10px;
   }
 
   .animal_info-right {
     .animal_info-map {
       width: 100%; // Assure que la carte occupe tout l’espace
-      height: 100%; // Ajuste la hauteur de la carte
+      height: 90%; // Ajuste la hauteur de la carte
       min-height: 220px;
     }
   }

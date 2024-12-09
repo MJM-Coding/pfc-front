@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import { IAsk } from "../@types/ask"; 
+import { IAsk } from "../@types/ask";
 
 /**
  *! Récupère la liste de toutes les demandes.
@@ -47,7 +47,7 @@ export const GetAskById = async (id: string, token: string): Promise<IAsk> => {
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec l'objet IAsk modifié.
  */
-export const UpdateAsk = async (
+export const PatchAsk = async (
   id: string,
   askData: Partial<IAsk>,
   token: string
@@ -88,5 +88,26 @@ export const CreateAsk = async (
     throw error;
   }
 };
+
+
+//! Récupérer les demandes d'accueil pour une famille
+export const GetFamilyAsks = async (id_family: string, token: string): Promise<IAsk[]> => {
+  try {
+    const response = await api.get(`/ask/family/${id_family}/asks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "la récupération des demandes pour cette famille");
+    throw error;
+  }
+};
+
+
+
+
+
+
+
 
 export type { IAsk };

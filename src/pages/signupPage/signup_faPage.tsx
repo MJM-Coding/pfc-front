@@ -132,7 +132,7 @@ const Signup_faPage = () => {
       await CreateUser(dataToSend);
 
       setToastMessage(
-        "Inscription réussie ! Vous pouvez maintenant vous connecter."
+        "Félicitations, votre inscription est presque terminée ! Vérifiez votre boîte mail pour confirmer votre adresse et activer votre compte."
       );
       setToastType("success");
       setShowToast(true); // Ajout de cette ligne pour afficher le toast
@@ -140,7 +140,7 @@ const Signup_faPage = () => {
        // Retarder la redirection de 5 secondes (5000ms)
 setTimeout(() => {
   window.location.href = "/";
-}, 5000); // 5000ms = 5 secondes
+}, 6000); // 5000ms = 5 secondes
 
 
       // Réinitialisation du formulaire après soumission réussie
