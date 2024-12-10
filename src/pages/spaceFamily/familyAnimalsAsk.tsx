@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "../../contexts/authContext";
 import { GetFamilyAsks, DeleteAsk } from "../../api/ask.api";
-import Toast from "../../components/toast/toast";
 import type { IAsk } from "../../@types/ask";
+import AuthContext from "../../contexts/authContext";
+import Toast from "../../components/toast/toast";
 import "../../styles/familyAnimalsAsk.scss";
 import Swal from "sweetalert2";
 
@@ -42,21 +42,20 @@ const FamilyAnimalAsk: React.FC = () => {
     fetchFamilyAsks();
   }, [authContext]);
 
-  //! Fonction pour supprimer une demande
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
-      title: "Confirmer l'annulation",
-      text: "Êtes-vous sûr de vouloir annuler cette demande ? Cette action est irréversible.",
+      title: "Confirmer la suppression",
+      text: "Êtes-vous sûr de vouloir supprimer cette demande ? Cette action est irréversible.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
-      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
-      confirmButtonText: "Oui, annuler",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Oui, supprimer",
       cancelButtonText: "Non, revenir",
     });
 
     if (!result.isConfirmed) {
-      return; // L'utilisateur a annulé l'action
+      return;
     }
 
     try {
@@ -68,7 +67,7 @@ const FamilyAnimalAsk: React.FC = () => {
       }
 
       await DeleteAsk(id, token);
-      setToastMessage("Demande annulée avec succès.");
+      setToastMessage("Demande supprimée avec succès.");
       setToastType("success");
       setShowToast(true);
 
@@ -81,11 +80,6 @@ const FamilyAnimalAsk: React.FC = () => {
     }
   };
 
-  const openModal = (photo: string) => {
-    window.open(photo, "_blank");
-  };
-
-  //! Fonction pour dynamiser le css des statuts
   const getStatusClass = (status: string) => {
     switch (status.toLowerCase()) {
       case "en attente":
@@ -95,11 +89,10 @@ const FamilyAnimalAsk: React.FC = () => {
       case "rejetée":
         return "rejected";
       default:
-        return ""; // Classe par défaut si aucun statut ne correspond
+        return "";
     }
   };
 
-  //! Fonction pour formater la date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
@@ -112,77 +105,74 @@ const FamilyAnimalAsk: React.FC = () => {
     return date.toLocaleDateString("fr-FR", options);
   };
 
-  if (loading) return <p>Chargement des demandes...</p>;
-  if (error) return <p className="error-message">{error}</p>;
+  const pendingAsks = asks.filter((ask) => ask.status.toLowerCase() === "en attente");
+  const validatedAsks = asks.filter((ask) => ask.status.toLowerCase() === "validée");
+  const rejectedAsks = asks.filter((ask) => ask.status.toLowerCase() === "rejetée");
+
+  const renderAskList = (askList: IAsk[]) => (
+    <ul className="ask-list">
+      {askList.map((ask) => (
+        <li key={ask.id} className={`ask-item ${getStatusClass(ask.status)}`}>
+          <Link to={`/animal-info/${ask.animal?.id}`} className="ask-item-link">
+            <div className="animal_info-photos">
+              {ask.animal?.profile_photo && (
+                <img
+                  src={
+                    ask.animal.profile_photo.startsWith("http")
+                      ? ask.animal.profile_photo
+                      : `${import.meta.env.VITE_STATIC_URL}${ask.animal.profile_photo}`
+                  }
+                  alt={ask.animal.name}
+                  className="animal_info-photo"
+                />
+              )}
+            </div>
+            <div className="text-content">
+              <p>
+                <strong>{ask.animal?.name}</strong>
+              </p>
+              <p>
+                <strong>{ask.status}</strong>
+              </p>
+              <p>Demande effectuée le {formatDate(ask.created_at)}</p>
+            </div>
+          </Link>
+          {ask.status.toLowerCase() !== "validée" && (
+            <button
+              className="delete-button"
+              onClick={() => handleDelete(ask.id.toString())}
+              title="Annuler la demande"
+            >
+              <i className="fa-solid fa-trash"></i>
+            </button>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
     <div className="family-asks-container">
       <h2 data-title="Mes Demandes d'Accueil">Mes Demandes d'Accueil</h2>
-      {asks.length === 0 ? (
-        <p>Vous n'avez aucune demande d'accueil.</p>
-      ) : (
-        <ul className="ask-list">
-          {asks.map((ask) => (
-            <li
-              key={ask.id}
-              className={`ask-item ${getStatusClass(ask.status)}`}
-            >
-              <Link
-                to={`/animal-info/${ask.animal?.id}`}
-                className="ask-item-link"
-              >
-                <div className="animal_info-photos">
-                  {ask.animal?.profile_photo && (
-                    <img
-                      src={
-                        ask.animal.profile_photo.startsWith("http")
-                          ? ask.animal.profile_photo
-                          : `${import.meta.env.VITE_STATIC_URL}${
-                              ask.animal.profile_photo
-                            }`
-                      }
-                      alt={ask.animal.name}
-                      className="animal_info-photo"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openModal(ask.animal.profile_photo);
-                      }}
-                    />
-                  )}
-                </div>
-                <div className="text-content">
-                  <p>
-                    <strong>{ask.animal?.name}</strong>
-                  </p>
-                  <p>
-                    <strong> {ask.status}</strong>
-                  </p>
-                  <p>Demande effectuée le {formatDate(ask.created_at)}</p>
-                </div>
-              </Link>
-              {/* Condition pour ne pas afficher le bouton si la demande est validée */}
-              {ask.status.toLowerCase() !== "validée" && (
-                <button
-                  className="delete-button"
-                  onClick={() => handleDelete(ask.id.toString())}
-                  title="Annuler la demande" // Ajout d'un titre pour l'accessibilité
-                >
-                  <i className="fa-solid fa-trash"></i>{" "}
-                  {/* Icône de suppression */}
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
+      {loading && <p>Chargement des demandes...</p>}
+      {error && <p className="error-message">{error}</p>}
+      {!loading && !error && (
+        <div className="ask-grid">
+          <div className="ask-column">
+            <h3>Demandes en attente</h3>
+            {pendingAsks.length > 0 ? renderAskList(pendingAsks) : <p>Aucune demande en attente.</p>}
+          </div>
+          <div className="ask-column">
+            <h3>Demandes validées</h3>
+            {validatedAsks.length > 0 ? renderAskList(validatedAsks) : <p>Aucune demande validée.</p>}
+          </div>
+          <div className="ask-column">
+            <h3>Demandes rejetées</h3>
+            {rejectedAsks.length > 0 ? renderAskList(rejectedAsks) : <p>Aucune demande rejetée.</p>}
+          </div>
+        </div>
       )}
-
-      {showToast && toastMessage && (
-        <Toast
-          message={toastMessage}
-          type={toastType}
-          setToast={setShowToast}
-        />
-      )}
+      {showToast && toastMessage && <Toast message={toastMessage} type={toastType} setToast={setShowToast} />}
     </div>
   );
 };

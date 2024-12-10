@@ -18,6 +18,8 @@ const Header: React.FC = () => {
   const safeLogin = login || (() => {});
   const isAuthenticated = !!user && !!token;
 
+  
+
   console.log("Utilisateur authentifié ?", isAuthenticated);
   console.log("User:", user);
   console.log("Token:", token);
@@ -66,7 +68,6 @@ const Header: React.FC = () => {
       return [
         { path: `/espace-famille/profil-famille/${familyId || userId}`, label: "Mon profil" },
         { path: `/espace-famille/demandes-famille/${familyId || userId}`, label: "Mes demandes d'accueil" },
-        { path: "/espace-famille/animaux-famille", label: "Mes animaux" },
         { path: `/espace-famille/mon-compte/${familyId || userId}`, label: "Mon compte" },
       ];
     }

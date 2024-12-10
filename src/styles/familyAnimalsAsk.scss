@@ -1,9 +1,9 @@
 $color-accent: #ff6b6b;
 $color-primary: #0044cc;
-$color-background: #f4f4f4;
-$bg-bg-pending:rgb(248, 234, 197);
-$bg-bg-rejected:rgb(243, 205, 205);
-$bg-bg-validated:rgb(207, 241, 207);
+$color-background: #F4F4F4;
+$bg-bg-pending: rgb(248, 234, 197);
+$bg-bg-rejected: rgb(243, 205, 205);
+$bg-bg-validated: rgb(207, 241, 207);
 $spacing: 16px;
 $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
@@ -35,103 +35,123 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
   }
 
-  .ask-list {
-    list-style: none;
-    padding: 0;
+  .ask-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); // Grille avec trois colonnes
+    gap: 50px;
     width: 100%;
-    max-width: 1200px; // Augmentation de la largeur maximale
+    max-width: 100%;
+    margin: 0 auto;
 
-    .ask-item {
-      display: flex;
-      align-items: center; // Centre verticalement tous les enfants de .ask-item
-      justify-content: space-between;
-      padding: 15px;
-      border-radius: 12px;
-      background-color: #fff;
+    .ask-column {
+      background-color: rgb(255, 255, 255);
+      padding: $spacing;
+      border-radius: 8px;
       box-shadow: $box-shadow;
-      transition: all 0.3s ease;
 
-      // Bordures dynamiques en fonction du statut
-      &.pending {
-        background: $bg-bg-pending;
-        border: 1px solid rgb(201, 199, 199);
-        margin-bottom: 15px;
+      h3 {
+        margin-bottom: $spacing;
+        color: rgb(114, 113, 113);
+        text-align: center;
+        text-transform: none;
       }
 
-      &.validated {
-        background: $bg-bg-validated;
-        border: 1px solid rgb(201, 199, 199);
-        margin-bottom: 15px;
-      }
+      .ask-list {
+        list-style: none;
+        padding: 0;
 
-      &.rejected {
-        background: $bg-bg-rejected;
-        border: 1px solid rgb(201, 199, 199);
-        margin-bottom: 15px;
-      }
+        .ask-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px;
+          border-radius: 8px;
+          background-color: #fff;
+          box-shadow: $box-shadow;
+          transition: all 0.3s ease;
+          margin-bottom: $spacing;
 
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-      }
+          &.pending {
+            background: $bg-bg-pending;
+            border: 1px solid rgb(201, 199, 199);
+          }
 
-      .ask-item-link {
-        display: flex;
-        flex-direction: row; // Les éléments restent alignés horizontalement
-        align-items: center; // Centre verticalement les éléments (image et texte)
-        gap: 20px; // Espacement entre l'image et le texte
-        width: 100%; // Occupe toute la largeur disponible
-        text-decoration: none;
-        color: inherit;
-      }
-    
-      .animal_info-photos {
-        display: flex; // Transforme le conteneur en flexbox
-        align-items: center; // Centre l'image verticalement dans son conteneur
-        justify-content: center; // Centre l'image horizontalement (facultatif)
-        flex-shrink: 0; // Empêche le conteneur de se redimensionner
-        width: 100px;
-        height: 100px;
-        border-radius: 8px;
-        overflow: hidden;
-    
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover; // Remplit le carré sans déformer l'image
+          &.validated {
+            background: $bg-bg-validated;
+            border: 1px solid rgb(201, 199, 199);
+          }
+
+          &.rejected {
+            background: $bg-bg-rejected;
+            border: 1px solid rgb(201, 199, 199);
+          }
+
+          &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+          }
+
+          .ask-item-link {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+          }
+
+          .animal_info-photos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .text-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+            flex-grow: 1;
+
+            p {
+              margin: 0;
+              color: #333;
+              font-size: 14px;
+              line-height: 1.4;
+
+              strong {
+                text-transform: capitalize; // Capitalise chaque mot
+              }
+
+              &:not(:last-child) {
+                margin-bottom: 5px;
+              }
+            }
+          }
+
+          .delete-button {
+            font-size: 16px;
+            color: rgb(78, 76, 76);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            i {
+              font-size: inherit;
+            }
+          }
         }
-      }
-    
-      .text-content {
-        display: flex;
-        flex-direction: column; // Empile les textes verticalement
-        justify-content: center; // Centre verticalement le texte dans l'espace disponible
-        text-align: center; // Centre chaque ligne de texte horizontalement
-        flex-grow: 1; // Permet au texte d'occuper tout l'espace restant
-      }
-    
-      
-
-      p {
-        margin: 0;
-        color: #333;
-        font-size: 16px; // Augmenter la taille de la police pour correspondre à la largeur
-
-        &:not(:last-child) {
-          margin-bottom: 5px;
-        }
-      }
-
-     
-      .delete-button {
-        color: rgb(78, 76, 76);
-    
-        cursor: pointer;
-        font-size: 20px;
-      
-        transition: background-color 0.3s ease;
-
-      
       }
     }
   }

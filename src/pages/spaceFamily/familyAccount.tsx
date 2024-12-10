@@ -12,6 +12,8 @@ import AuthContext from "../../contexts/authContext";
 import { validateEmail } from "../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
 import "../../styles/accountPage.scss";
 import Toast from "../../components/toast/toast";
+import Swal from "sweetalert2";
+
 
 
 const familyAccount = () => {
@@ -160,51 +162,55 @@ const familyAccount = () => {
   }
 
   //! Suppression du compte avec confirmation
-  const handleDeleteAccount = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
-    if (!isConfirmed) {
-      // Demande de confirmation avant suppression
-      setIsConfirmed(true);
+//! Suppression du compte avec confirmation via SweetAlert2
+const handleDeleteAccount = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  //! Utilisation de SweetAlert2 pour la confirmation
+  const result = await Swal.fire({
+    title: "Confirmer la suppression",
+    text: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+    cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+    confirmButtonText: "Oui, supprimer",
+    cancelButtonText: "Non, revenir",
+  });
+
+  //! Si l'utilisateur annule la suppression
+  if (!result.isConfirmed) {
+    return;
+  }
+
+  //! Si l'utilisateur confirme, on procède à la suppression
+  try {
+    if (!familyId || !token) {
+      setError("Erreur : Identifiant ou token manquant");
       return;
     }
-  
-    try {
-      if (!familyId || !token) {
-        throw new Error("Identifiant ou token manquant");
-      }
-  
-      // Appel API pour supprimer le compte
-      await DeleteFamily(familyId, token);
-  
-      // Afficher un message de succès si tout fonctionne
-      setToastMessage("Compte supprimé avec succès !");
-      setToastType("success");
-      setShowToast(true);
-  
-      // Déconnecter l'utilisateur après la suppression
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("authUser");
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 2000);
-    } catch (error: any) {
-      if (error.response?.status === 409) {
-        // Gérer le code 409 (conflit) avec un message clair
-        setToastMessage(
-          "Impossible de supprimer votre compte : vous hébergez encore des animaux."
-        );
-        setToastType("error");
-      } else {
-        // Autres erreurs
-        setToastMessage(
-          "Erreur lors de la suppression du compte. Veuillez réessayer."
-        );
-        setToastType("error");
-      }
-      setShowToast(true);
-    }
-  };
+
+    // Appel API pour supprimer la famille
+    await DeleteFamily(familyId, token);
+    setToastMessage("Compte supprimé avec succès");
+    setToastType("success");
+    setShowToast(true);
+
+    // Déconnexion de l'utilisateur après suppression du compte
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("authUser");
+
+    // Redirection après un délai
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 2000);
+  } catch (err) {
+    setToastMessage("Erreur lors de la suppression du compte.");
+    setToastType("error");
+    setShowToast(true);
+  }
+};
+
   
   
 
