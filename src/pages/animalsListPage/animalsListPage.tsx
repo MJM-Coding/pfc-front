@@ -54,6 +54,7 @@ const AnimalsPage: React.FC = () => {
             association: association || null,
           };
         });
+        console.log("Animaux enrichis :", enrichedAnimals);
 
         setAnimals(enrichedAnimals); // Stocke les animaux enrichis
         setFilteredAnimals(enrichedAnimals); // Initialise les animaux filtrés
@@ -99,52 +100,64 @@ const AnimalsPage: React.FC = () => {
     loadAnimalsAndLocations();
   }, []);
 
-  //! Application des filtres sur la liste des animaux
-  const applyFilters = () => {
-    let filtered = [...animals];
+ 
+ //! Application des filtres sur la liste des animaux
+const applyFilters = () => {
+  let filtered = [...animals];
 
-    if (filters.species) {
-      filtered = filtered.filter((animal) =>
-        animal.species.toLowerCase().includes(filters.species.toLowerCase())
+  // Exclure les animaux avec une demande ayant le statut "validée"
+  filtered = filtered.filter(
+    (animal) => !animal.asks || animal.asks.every((ask) => ask.status !== "validée")
+  );
+
+  // Filtrer par espèce
+  if (filters.species) {
+    filtered = filtered.filter((animal) =>
+      animal.species.toLowerCase().includes(filters.species.toLowerCase())
+    );
+  }
+// Filtrer par taille
+  if (filters.size) {
+    filtered = filtered.filter((animal) =>
+      animal.size.toLowerCase().includes(filters.size.toLowerCase())
+    );
+  }
+// Filtrer par ages
+  if (filters.ageRange !== "all") {
+    if (filters.ageRange === "under-2") {
+      filtered = filtered.filter((animal) => animal.age < 2);
+    } else if (filters.ageRange === "2-7") {
+      filtered = filtered.filter(
+        (animal) => animal.age >= 2 && animal.age <= 7
       );
+    } else if (filters.ageRange === "over-7") {
+      filtered = filtered.filter((animal) => animal.age > 7);
     }
+  }
 
-    if (filters.size) {
-      filtered = filtered.filter((animal) =>
-        animal.size.toLowerCase().includes(filters.size.toLowerCase())
-      );
-    }
+  // Filtrer par genre (M ou F)
+  if (filters.gender) {
+    filtered = filtered.filter((animal) => animal.gender === filters.gender);
+  }
 
-    if (filters.ageRange !== "all") {
-      if (filters.ageRange === "under-2") {
-        filtered = filtered.filter((animal) => animal.age < 2);
-      } else if (filters.ageRange === "2-7") {
-        filtered = filtered.filter(
-          (animal) => animal.age >= 2 && animal.age <= 7
-        );
-      } else if (filters.ageRange === "over-7") {
-        filtered = filtered.filter((animal) => animal.age > 7);
-      }
-    }
+  // Filtrer par localisation
+  if (filters.location) {
+    filtered = filtered.filter((animal) => {
+      if (!animal.association) return false;
+      const location = `${animal.association.city}, ${animal.association.postal_code}`.toLowerCase();
+      return location.includes(filters.location.toLowerCase());
+    });
+  }
 
-    // Filtrer par genre (M ou F)
-    if (filters.gender) {
-      filtered = filtered.filter((animal) => animal.gender === filters.gender);
-    }
+  setFilteredAnimals(filtered); // Met à jour la liste filtrée
+};
 
-    // Filtrer par localisation
-    if (filters.location) {
-      filtered = filtered.filter((animal) => {
-        if (!animal.association) return false;
-        const location =
-          `${animal.association.city}, ${animal.association.postal_code}`.toLowerCase();
-        return location.includes(filters.location.toLowerCase());
-      });
-    }
+// Appel de la fonction `applyFilters` après chaque mise à jour des filtres
+useEffect(() => {
+  applyFilters();
+}, [filters, animals]);
 
-    setFilteredAnimals(filtered); // Met à jour la liste filtrée
-  };
-
+  
   //! Gère les changements dans les filtres
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;

@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import AuthContext from "../../contexts/authContext";
 import { GetFamilyAsks, DeleteAsk } from "../../api/ask.api";
 import Toast from "../../components/toast/toast";
-import { IAsk } from "../../@types/ask";
+import type { IAsk } from "../../@types/ask";
 import "../../styles/familyAnimalsAsk.scss";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 
 const FamilyAnimalAsk: React.FC = () => {
   const [asks, setAsks] = useState<IAsk[]>([]);
@@ -42,7 +42,6 @@ const FamilyAnimalAsk: React.FC = () => {
     fetchFamilyAsks();
   }, [authContext]);
 
-
   //! Fonction pour supprimer une demande
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
@@ -55,24 +54,24 @@ const FamilyAnimalAsk: React.FC = () => {
       confirmButtonText: "Oui, annuler",
       cancelButtonText: "Non, revenir",
     });
-  
+
     if (!result.isConfirmed) {
       return; // L'utilisateur a annulé l'action
     }
-  
+
     try {
       const token = authContext?.token;
-  
+
       if (!token) {
         setError("Utilisateur non connecté.");
         return;
       }
-  
+
       await DeleteAsk(id, token);
       setToastMessage("Demande annulée avec succès.");
       setToastType("success");
       setShowToast(true);
-  
+
       setAsks((prevAsks) => prevAsks.filter((ask) => ask.id.toString() !== id));
     } catch (err) {
       console.error("Erreur lors de l'annulation de la demande :", err);
@@ -81,7 +80,6 @@ const FamilyAnimalAsk: React.FC = () => {
       setShowToast(true);
     }
   };
-  
 
   const openModal = (photo: string) => {
     window.open(photo, "_blank");
@@ -153,17 +151,26 @@ const FamilyAnimalAsk: React.FC = () => {
                   )}
                 </div>
                 <div className="text-content">
-                <p><strong>{ask.animal?.name}</strong></p>
-                  <p><strong> {ask.status}</strong></p>
+                  <p>
+                    <strong>{ask.animal?.name}</strong>
+                  </p>
+                  <p>
+                    <strong> {ask.status}</strong>
+                  </p>
                   <p>Demande effectuée le {formatDate(ask.created_at)}</p>
                 </div>
               </Link>
-              <button
-                className="delete-button"
-                onClick={() => handleDelete(ask.id.toString())}
-              >
-                Annuler la demande
-              </button>
+              {/* Condition pour ne pas afficher le bouton si la demande est validée */}
+              {ask.status.toLowerCase() !== "validée" && (
+                <button
+                  className="delete-button"
+                  onClick={() => handleDelete(ask.id.toString())}
+                  title="Annuler la demande" // Ajout d'un titre pour l'accessibilité
+                >
+                  <i className="fa-solid fa-trash"></i>{" "}
+                  {/* Icône de suppression */}
+                </button>
+              )}
             </li>
           ))}
         </ul>

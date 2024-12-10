@@ -54,14 +54,20 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       // Bordures dynamiques en fonction du statut
       &.pending {
         background: $bg-bg-pending;
+        border: 1px solid rgb(201, 199, 199);
+        margin-bottom: 15px;
       }
 
       &.validated {
         background: $bg-bg-validated;
+        border: 1px solid rgb(201, 199, 199);
+        margin-bottom: 15px;
       }
 
       &.rejected {
         background: $bg-bg-rejected;
+        border: 1px solid rgb(201, 199, 199);
+        margin-bottom: 15px;
       }
 
       &:hover {
@@ -118,20 +124,14 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
      
       .delete-button {
-        min-width: 150px;
-        background-color: red;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 8px 16px;
+        color: rgb(78, 76, 76);
+    
         cursor: pointer;
-        font-size: 11px;
-        font-weight: bold;
+        font-size: 20px;
+      
         transition: background-color 0.3s ease;
 
-        &:hover {
-          background-color: darken($color-accent, 10%);
-        }
+      
       }
     }
   }
