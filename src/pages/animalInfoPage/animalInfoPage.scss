@@ -16,7 +16,7 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
 .animalDetail-container {
   position: relative; /* Permet de positionner les éléments enfants relativement */
   height: auto;
-  min-height: 83.2vh;
+  min-height: 85.2vh;
   justify-content: space-between;
 }
 .animal_info-details {
@@ -53,6 +53,7 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   justify-content: center; /* Centre horizontalement */
   align-items: center; /* Centre verticalement */
   background-color: $background-color; /* Optionnel, définit une couleur de fond */
+margin: 5px;
 }
 
 .adopt-button {
@@ -182,6 +183,7 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   justify-content: center;
   gap: 10px; // Espacement entre les images
   flex-wrap: wrap;
+  
 
   .animal_info-photo {
     width: 300px; // Taille fixe pour les images

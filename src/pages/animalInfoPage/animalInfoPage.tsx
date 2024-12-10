@@ -32,17 +32,15 @@ const AnimalInfoPage: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
-  
   //! Chargement des données de l'animal et de son association
   useEffect(() => {
+    /**
+     * Charge les données de l'animal et de son association correspondante.
+     * Géocode l'adresse de l'association pour afficher une carte.
+     * Met à jour l'état avec les données de l'animal et de son association.
+     * En cas d'erreur, affiche une erreur de chargement.
+     */
 
-  /**
-   * Charge les données de l'animal et de son association correspondante.
-   * Géocode l'adresse de l'association pour afficher une carte.
-   * Met à jour l'état avec les données de l'animal et de son association.
-   * En cas d'erreur, affiche une erreur de chargement.
-   */
-  
     const loadAnimal = async () => {
       try {
         if (!animalId) {
@@ -91,8 +89,6 @@ const AnimalInfoPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  
-
   //! Fonction pour fermer la modale
   const closeModal = () => {
     setIsModalOpen(false);
@@ -102,15 +98,17 @@ const AnimalInfoPage: React.FC = () => {
   //! Gestion de la demande d'adoption
   const handleAdoptClick = async () => {
     console.log("Début de la fonction handleAdoptClick");
-  
+
     // Vérification de l'utilisateur et de son rôle
     if (!authContext?.user || authContext.user.role !== "family") {
       setShowToast(true);
-      setToastMessage("Veuillez vous connecter en tant que famille pour faire une demande.");
+      setToastMessage(
+        "Veuillez vous connecter ou vous inscrire en tant que famille d'accueil pour faire une demande."
+      );
       setToastType("error");
       return;
     }
-  
+
     const userToken = authContext.token;
     if (!userToken) {
       setShowToast(true);
@@ -118,50 +116,64 @@ const AnimalInfoPage: React.FC = () => {
       setToastType("error");
       return;
     }
-  
+
     console.log("Token utilisateur :", userToken);
     console.log("Données utilisateur :", authContext.user);
-  
+
     try {
       setIsRequesting(true);
       setRequestError(null);
-  
+
       // Préparer les données à envoyer
       const requestData = {
         id_animal: Number(animalId),
         id_family: authContext.user.family?.id,
       };
-  
+
       console.log("Données envoyées à CreateAsk :", requestData);
-  
+
       // Appeler la fonction API pour créer la demande
       const response = await CreateAsk(requestData, userToken);
-  
+
       console.log("Réponse de l'API :", response);
-  
+
       // Afficher un toast de succès si la demande est envoyée avec succès
       setShowToast(true);
       setToastMessage("Votre demande d'adoption a été envoyée avec succès !");
       setToastType("success");
-  
     } catch (error: any) {
       // Capture du message d'erreur de l'API
-      const errorMessage = error?.response?.data?.message || "Une erreur s'est produite. Veuillez réessayer.";
-  
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Une erreur s'est produite. Veuillez réessayer.";
+
       // Affiche le message d'erreur uniquement dans le toast
       setShowToast(true);
       setToastMessage(errorMessage);
       setToastType("error");
-  
+
       // Optionnel : si tu veux logguer l'erreur en plus (uniquement si nécessaire)
       // console.error("Erreur lors de l'envoi de la demande :", error);
     } finally {
       setIsRequesting(false);
     }
   };
-  
-  
-  
+
+  //! Fonction pour formater la date et l'heure
+  const formatDateTime = (dateInput: string | Date): string => {
+    const date =
+      typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+
+    return date.toLocaleDateString("fr-FR", options).replace(",", " à");
+  };
 
   //! Affichage des détails de l'animal
   const renderAnimalDetails = (animal: IAnimal) => (
@@ -169,7 +181,6 @@ const AnimalInfoPage: React.FC = () => {
       <h2 className="animal_info-name">{animal.name}</h2>
 
       {requestError && <p className="error-message">{requestError}</p>}
-
 
       {/* Photos de l'animal */}
       <div className="animal_info-photos">
@@ -230,32 +241,34 @@ const AnimalInfoPage: React.FC = () => {
         )}
       </div>
 
- {/*      bouton de demande d'accueil */}
- <div className="center-container">
-      {authContext?.user?.role === "family" && (
-        <button
-          className="adopt-button"
-          onClick={handleAdoptClick}
-          disabled={isRequesting}
-        >
-          {isRequesting ? "Envoi en cours..." : "Faire une demande d'accueil"}
-        </button>
-      )}
-</div>
+      {/*      bouton de demande d'accueil */}
+      <div className="center-container">
+        {(!authContext?.user || authContext?.user?.role === "family") && (
+          <button
+            className="adopt-button"
+            onClick={handleAdoptClick}
+            disabled={isRequesting}
+          >
+            {isRequesting ? "Envoi en cours..." : "Faire une demande d'accueil"}
+          </button>
+        )}
+      </div>
       {/* Sections en colonnes pour les infos de l'animal et de l'association */}
       <div className="animal_info-sections">
-        {/* Section Animal */}
+        {/* Espèce */}
         <div className="animal_info-left">
           <p className="animal_info-species">
             <i className="info-icon fas fa-paw"></i>
             <span>Espèce :</span>
             <span className="value">{animal.species}</span>
           </p>
+          {/* Race */}
           <p className="animal_info-breed">
             <i className="info-icon fas fa-dog"></i>
             <span>Race :</span>
             <span className="value">{animal.breed}</span>
           </p>
+          {/* Genre */}
           <p className="animal_info-gender">
             <i className="info-icon fas fa-venus-mars"></i>
             <span>Genre :</span>
@@ -263,15 +276,23 @@ const AnimalInfoPage: React.FC = () => {
               {animal.gender === "M" ? "Mâle" : "Femelle"}
             </span>
           </p>
+          {/* Age */}
           <p className="animal_info-age">
             <i className="info-icon fas fa-birthday-cake"></i>
             <span>Âge :</span>
             <span className="value">{animal.age} ans</span>
           </p>
+          {/* Taille */}
           <p className="animal_info-size">
             <i className="info-icon fas fa-ruler"></i>
             <span>Taille :</span>
             <span className="value">{animal.size}</span>
+          </p>
+          {/* Date de création */}
+          <p className="animal_info-date">
+            <i className="info-icon fas fa-calendar-alt"></i>
+            <span>Date de mise en ligne :</span>
+            <span className="value">{formatDateTime(animal.created_at)}</span>
           </p>
           <p className="animal_info-description">{animal.description}</p>
         </div>
@@ -313,17 +334,12 @@ const AnimalInfoPage: React.FC = () => {
   );
 
   return (
-    
     <div className="animalDetail-container">
-    <div className="back-adopt-buttons">
-      <Link to="/animaux" className="back-button">
-        <i className="fas fa-arrow-left"></i> Retour à la liste
-      </Link>
-
-    </div>
- 
-  
-
+      <div className="back-adopt-buttons">
+        <Link to="/animaux" className="back-button">
+          <i className="fas fa-arrow-left"></i> Retour à la liste
+        </Link>
+      </div>
 
       {animal ? renderAnimalDetails(animal) : <p>Chargement de l'animal...</p>}
 

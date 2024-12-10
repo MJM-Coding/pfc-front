@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  IPasswordEditForm,
-  IEmailEditForm,
-} from "../../@types/emailPassword";
+import { IPasswordEditForm, IEmailEditForm } from "../../@types/emailPassword";
 import {
   GetAssociationById,
   PatchAssociation,
@@ -12,6 +9,7 @@ import AuthContext from "../../contexts/authContext";
 import { validateEmail } from "../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
 import "../../styles/accountPage.scss";
 import Toast from "../../components/toast/toast";
+import Swal from "sweetalert2";
 
 //* Composant de gestion du compte de l'association
 const associationAccount = () => {
@@ -41,7 +39,6 @@ const associationAccount = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
-  const [isConfirmed, setIsConfirmed] = useState(false);
 
   //! Utilisation du hook useEffect pour récupérer les données de l'association lors du premier rendu
   useEffect(() => {
@@ -72,32 +69,34 @@ const associationAccount = () => {
   //! Mise à jour de l'email
   const handleSubmitEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const emailValidationError = validateEmail(emailFormData.newEmail);
     if (emailValidationError) {
       alert(emailValidationError);
       return;
     }
-  
+
     if (emailFormData.newEmail !== emailFormData.confirmNewEmail) {
       alert("Les nouveaux emails ne correspondent pas");
       return;
     }
-  
+
     const formDataToSend = new FormData();
     formDataToSend.append("email", emailFormData.newEmail);
-  
+
     try {
       if (!associationId || !token) {
         throw new Error("Identifiant ou token manquant");
       }
-  
+
       await PatchAssociation(associationId, formDataToSend, token);
-  
-      setToastMessage("Email mis à jour avec succès ! Veuillez vous reconnecter.");
+
+      setToastMessage(
+        "Email mis à jour avec succès ! Veuillez vous reconnecter."
+      );
       setToastType("success");
       setShowToast(true);
-  
+
       // Déconnexion après mise à jour de l'email
       localStorage.removeItem("authToken");
       localStorage.removeItem("authUser");
@@ -110,34 +109,34 @@ const associationAccount = () => {
       setShowToast(true);
     }
   };
-  
+
   //! Mise à jour du mot de passe
   const handleSubmitPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
       alert("Les nouveaux mots de passe ne correspondent pas");
       return;
     }
-  
+
     const formDataToSend = new FormData();
     formDataToSend.append("currentPassword", passwordFormData.currentPassword);
     formDataToSend.append("newPassword", passwordFormData.newPassword);
     formDataToSend.append("confirmPassword", passwordFormData.confirmPassword);
-  
+
     try {
       if (!associationId || !token) {
         throw new Error("Identifiant ou token manquant");
       }
-  
+
       await PatchAssociation(associationId, formDataToSend, token);
-  
+
       setToastMessage(
         "Mot de passe mis à jour avec succès ! Veuillez vous reconnecter."
       );
       setToastType("success");
       setShowToast(true);
-  
+
       // Déconnexion après mise à jour du mot de passe
       localStorage.removeItem("authToken");
       localStorage.removeItem("authUser");
@@ -150,7 +149,6 @@ const associationAccount = () => {
       setShowToast(true);
     }
   };
-  
 
   if (!associationId) {
     return <p>Erreur : Aucun ID d'association disponible.</p>;
@@ -160,46 +158,55 @@ const associationAccount = () => {
   const handleDeleteAccount = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isConfirmed) {
-      // Si l'utilisateur n'a pas encore confirmé, on demande la confirmation
-      setIsConfirmed(true);
-      return; // On s'arrête ici pour ne pas supprimer immédiatement
+    //! Utilisation de SweetAlert2 pour la confirmation
+    const result = await Swal.fire({
+      title: "Confirmer la suppression",
+      text: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Non, revenir",
+    });
+
+    //! Si l'utilisateur annule la suppression
+    if (!result.isConfirmed) {
+      return;
     }
 
-    // Si l'utilisateur a confirmé, on procède à la suppression
+    //! Si l'utilisateur confirme, on procède à la suppression
     try {
-      if (typeof associationId === "number") {
-        if (token) {
-          // Appel API pour supprimer l'association
-          await DeleteAssociation(associationId, token);
-          setToastMessage("Compte supprimé avec succès");
-          setToastType("success");
-          setShowToast(true);
-
-          // Déconnexion de l'utilisateur apres suppression du compte
-          localStorage.removeItem("authToken"); // Suppression du token d'utilisateur du localStorage
-          localStorage.removeItem("authUser"); // Suppression de l'ancien email du localStorage
-          console.log("authToken et authUser supprimés");
-
-          // Ajouter un délai avant la redirection
-          setTimeout(() => {
-            // Redirection vers la page de connexion après 2 secondes
-            window.location.href = "/";
-          }, 2000); // Délai de 2000ms (2 secondes)
-        } else {
-          setError("Erreur : Token manquant");
-        }
-      } else {
-        setError("Erreur : ID d'association invalide");
+      if (!associationId || typeof associationId !== "number") {
+        setError("Erreur : ID d'association invalide ou manquant");
+        return;
       }
+
+      if (!token) {
+        setError("Erreur : Token manquant");
+        return;
+      }
+
+      // Appel API pour supprimer l'association
+      await DeleteAssociation(associationId, token);
+      setToastMessage("Compte supprimé avec succès");
+      setToastType("success");
+      setShowToast(true);
+
+      // Déconnexion de l'utilisateur après suppression du compte
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
+
+      // Redirection après un délai
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
     } catch (err) {
-      setToastMessage(`Erreur lors de la suppression du compte`);
+      setToastMessage("Erreur lors de la suppression du compte.");
       setToastType("error");
       setShowToast(true);
     }
   };
-
-
 
   return (
     <div className="containerAccount">
@@ -313,31 +320,13 @@ const associationAccount = () => {
             </button>
           </div>
 
-          {/* Encadré suppression de compte */}
+          {/* bouton de suppression de compte */}
           <div className="delete-container">
             <h3>Supprimer le compte</h3>
             <p>Attention : Cette action est irréversible.</p>
-
-            {!isConfirmed ? (
-              // Si la confirmation n'est pas encore faite, afficher le bouton de suppression
-              <button onClick={handleDeleteAccount} className="delete-btn">
-                Supprimer mon compte
-              </button>
-            ) : (
-              // Si l'utilisateur a cliqué pour confirmer la suppression, afficher la confirmation
-              <div>
-                <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
-                <button onClick={handleDeleteAccount} className="delete-btn">
-                  Confirmer la suppression
-                </button>
-                <button
-                  onClick={() => setIsConfirmed(false)}
-                  className="cancel-btn"
-                >
-                  Annuler
-                </button>
-              </div>
-            )}
+            <button onClick={handleDeleteAccount} className="delete-btn">
+              Supprimer mon compte
+            </button>
           </div>
 
           {/* Toast pour afficher les messages de succès ou d'erreur */}

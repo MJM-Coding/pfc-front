@@ -84,14 +84,23 @@ const ModifyAnimal: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    // Vérification des champs obligatoires
     if (!name || !species || !breed || !gender || (age ?? 0) <= 0 || !size) {
       setToastMessage("Veuillez remplir tous les champs requis !");
       setToastType("error");
       setToast(true);
       return;
     }
-
+  
+    // Vérification de la photo de profil
+    if (!profilePhoto && !profilePhotoUrl) {
+      setToastMessage("Veuillez charger une photo de profil pour l'animal !");
+      setToastType("error");
+      setToast(true);
+      return;
+    }
+  
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -101,26 +110,26 @@ const ModifyAnimal: React.FC = () => {
       formData.append("age", age?.toString() ?? "");
       formData.append("size", size);
       formData.append("description", description);
-
-      // Ajouter la photo de profil
+  
+      // Ajouter la photo de profil si une nouvelle est sélectionnée
       if (profilePhoto) {
         formData.append("profile_photo", profilePhoto);
       }
-
+  
       // Ajouter les nouvelles photos optionnelles
       newPhotos.forEach((photo) => {
         formData.append("photos", photo);
       });
-
+  
       console.log("Données envoyées :", [...formData.entries()]);
-
+  
       // Envoyer les données au backend
       await PatchAnimal(animalId ?? "", formData, token!);
-
+  
       setToastMessage("Animal modifié avec succès !");
       setToastType("success");
       setToast(true);
-
+  
       // Récupérer les données mises à jour depuis le backend
       const updatedData = await GetAnimalById(Number(animalId));
       const updatedPhotos = [
@@ -128,10 +137,10 @@ const ModifyAnimal: React.FC = () => {
         updatedData.photo2,
         updatedData.photo3,
       ].filter(Boolean);
-
+  
       setExistingPhotos(updatedPhotos);
       setNewPhotos([]); // Réinitialiser les nouvelles photos après la soumission
-
+  
       setTimeout(() => {
         navigate(`/espace-association/animaux-association/${associationId}`);
       }, 3000);
@@ -142,6 +151,7 @@ const ModifyAnimal: React.FC = () => {
       setToast(true);
     }
   };
+  
 
   const deletePhoto = async (index: number) => {
     try {

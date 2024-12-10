@@ -12,6 +12,7 @@ import Toast from "../../components/toast/toast"; // Importation du composant To
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de succès
 import { validateForm } from "../../components/validateForm/validateForm";
 import "../../components/validateForm/validateForm.scss";
+import Swal from "sweetalert2";
 
 function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
@@ -134,9 +135,24 @@ function FamilyProfile() {
 
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {
+    const result = await Swal.fire({
+      title: "Confirmer la suppression",
+      text: "Êtes-vous sûr de vouloir supprimer la photo de profil ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Non, revenir",
+    });
+  
+    if (!result.isConfirmed) {
+      return; // L'utilisateur a annulé l'action
+    }
+  
     try {
       await DeleteProfilePhoto(familyId as number, token as string);
-
+  
       // Mettre à jour l'état local après la suppression
       setImageUrl(defaultImage);
       setToastMessage("Photo supprimée avec succès !");
@@ -154,6 +170,7 @@ function FamilyProfile() {
       setShowToast(true);
     }
   };
+  
 
   //! Gérer la soumission des champs sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

@@ -3,6 +3,7 @@ import React, { useState, useContext } from "react";
 import { DeleteAnimal as DeleteAnimalAPI } from "../../api/animal.api"; // Import de votre fonction API
 import Toast from "../toast/toast"; // Import de votre composant Toast
 import AuthContext from "../../contexts/authContext"; // Contexte pour l'authentification
+import Swal from "sweetalert2"; // Import de SweetAlert2
 
 interface DeleteAnimalProps {
   animalId: string; // ID de l'animal à supprimer
@@ -31,9 +32,20 @@ const DeleteAnimal: React.FC<DeleteAnimalProps> = ({ animalId, onDeleteSuccess }
       return;
     }
 
-    //! Confirmation de la suppression
-    const confirmDelete = window.confirm("Êtes-vous sûr de vouloir supprimer cet animal ?");
-    if (!confirmDelete) {
+    //! Utilisation de SweetAlert2 pour la confirmation
+    const result = await Swal.fire({
+      title: "Confirmer la suppression",
+      text: "Êtes-vous sûr de vouloir supprimer cet animal ? Cette action est irréversible.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Non, revenir",
+    });
+
+    //! Si l'utilisateur annule la suppression
+    if (!result.isConfirmed) {
       return;
     }
 

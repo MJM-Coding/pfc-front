@@ -42,7 +42,7 @@ const App: React.FC = () => {
         <Route path="/inscription-famille" element={<Signup_faPage />} />
         <Route path="/espace-famille/profil-famille/:familyId" element={<ProfilePageFamily />} /> // page du profil de la famille
         <Route path="/espace-famille/mon-compte/:familyId" element={<FamilyAccount />} /> // page du compte de la famille
-        <Route path="/espace-famille/animaux-famille/:familyId" element={<FamilyAnimalsAsk />} />
+        <Route path="/espace-famille/demandes-famille/:familyId" element={<FamilyAnimalsAsk />} />
 
         {/* Vous pouvez ajouter d'autres routes ici */}
       </Routes>

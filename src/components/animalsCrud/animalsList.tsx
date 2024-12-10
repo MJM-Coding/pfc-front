@@ -6,6 +6,7 @@ import AuthContext from "../../contexts/authContext"; // Contexte pour l'authent
 import DeleteAnimal from "./deleteAnimal"; // Composant pour gérer la suppression
 import "./animalsList.scss";
 
+
 interface AnimalListProps {
   animals: IAnimal[]; // Liste des animaux à afficher
   isLoading: boolean; // Indicateur de chargement

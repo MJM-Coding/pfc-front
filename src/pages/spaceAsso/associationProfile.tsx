@@ -17,6 +17,7 @@ import Message from "../../components/errorSuccessMessage/errorSuccessMessage";
 import Toast from "../../components/toast/toast";
 import { validateForm } from "../../components/validateForm/validateForm";
 import "../../components/validateForm/validateForm.scss";
+import Swal from "sweetalert2";
 
 function AssociationProfile() {
   const { user, token } = useContext(AuthContext) || {};
@@ -137,21 +138,39 @@ function AssociationProfile() {
 
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {
+    const result = await Swal.fire({
+      title: "Confirmer la suppression",
+      text: "Êtes-vous sûr de vouloir supprimer cette photo de profil ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Non, revenir",
+    });
+  
+    if (!result.isConfirmed) {
+      return; // L'utilisateur a annulé l'action
+    }
+  
     try {
       await DeleteProfilePhoto(associationId as number, token as string);
-      // Mettre à jour l'état local aprés la suppression
+  
+      // Mettre à jour l'état local après la suppression
       setImageUrl(defaultImage);
       setToastMessage("Photo supprimée avec succès !");
       setToastType("success");
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message || error.message || "Erreur inconnue.";
+      console.error("Erreur lors de la suppression de la photo :", errorMessage);
       setToastMessage(`Erreur : ${errorMessage}`);
       setToastType("error");
     } finally {
       setShowToast(true);
     }
   };
+  
 
   //! Gérer la soumission du formulaire sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

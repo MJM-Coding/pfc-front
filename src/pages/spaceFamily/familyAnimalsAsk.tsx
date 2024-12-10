@@ -1,21 +1,21 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom"; // Importer Link pour la navigation
+import { Link } from "react-router-dom";
 import AuthContext from "../../contexts/authContext";
-import { GetFamilyAsks, DeleteAsk } from "../../api/ask.api"; // Importation de l'API DeleteAsk
+import { GetFamilyAsks, DeleteAsk } from "../../api/ask.api";
 import Toast from "../../components/toast/toast";
 import { IAsk } from "../../@types/ask";
-import "../../styles/familyAnimalsAsk.scss"; // Importation du fichier SCSS pour les styles
+import "../../styles/familyAnimalsAsk.scss";
+import Swal from "sweetalert2"; 
 
 const FamilyAnimalAsk: React.FC = () => {
-  const [asks, setAsks] = useState<IAsk[]>([]); // Liste des demandes
-  const [loading, setLoading] = useState<boolean>(true); // Indique si les données se chargent
-  const [error, setError] = useState<string | null>(null); // Message d'erreur
-  const [showToast, setShowToast] = useState<boolean>(false); // Contrôle l'affichage du Toast
-  const [toastMessage, setToastMessage] = useState<string | null>(null); // Message du Toast
-  const [toastType, setToastType] = useState<"success" | "error">("success"); // Type de Toast
+  const [asks, setAsks] = useState<IAsk[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastType, setToastType] = useState<"success" | "error">("success");
   const authContext = useContext(AuthContext);
 
-  // Charger les demandes d'accueil
   useEffect(() => {
     const fetchFamilyAsks = async () => {
       setLoading(true);
@@ -29,7 +29,6 @@ const FamilyAnimalAsk: React.FC = () => {
           return;
         }
 
-        // Appel à GetFamilyAsks pour récupérer les demandes spécifiques à cette famille
         const familyAsks = await GetFamilyAsks(idFamily.toString(), token);
         setAsks(familyAsks);
       } catch (err) {
@@ -43,35 +42,76 @@ const FamilyAnimalAsk: React.FC = () => {
     fetchFamilyAsks();
   }, [authContext]);
 
-  // Fonction pour supprimer une demande
+
+  //! Fonction pour supprimer une demande
   const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Confirmer l'annulation",
+      text: "Êtes-vous sûr de vouloir annuler cette demande ? Cette action est irréversible.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+      confirmButtonText: "Oui, annuler",
+      cancelButtonText: "Non, revenir",
+    });
+  
+    if (!result.isConfirmed) {
+      return; // L'utilisateur a annulé l'action
+    }
+  
     try {
       const token = authContext?.token;
-
+  
       if (!token) {
         setError("Utilisateur non connecté.");
         return;
       }
-
+  
       await DeleteAsk(id, token);
-      setToastMessage("Demande supprimée avec succès.");
+      setToastMessage("Demande annulée avec succès.");
       setToastType("success");
       setShowToast(true);
-
-      // Met à jour la liste des demandes
+  
       setAsks((prevAsks) => prevAsks.filter((ask) => ask.id.toString() !== id));
     } catch (err) {
-      console.error("Erreur lors de la suppression de la demande :", err);
-      setToastMessage("Erreur lors de la suppression de la demande.");
+      console.error("Erreur lors de l'annulation de la demande :", err);
+      setToastMessage("Erreur lors de l'annulation de la demande.");
       setToastType("error");
       setShowToast(true);
     }
   };
+  
 
-  // Charger les données de l'animal
   const openModal = (photo: string) => {
-    // Logique pour ouvrir la photo en plein écran ou dans une modale (optionnel)
     window.open(photo, "_blank");
+  };
+
+  //! Fonction pour dynamiser le css des statuts
+  const getStatusClass = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "en attente":
+        return "pending";
+      case "validée":
+        return "validated";
+      case "rejetée":
+        return "rejected";
+      default:
+        return ""; // Classe par défaut si aucun statut ne correspond
+    }
+  };
+
+  //! Fonction pour formater la date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return date.toLocaleDateString("fr-FR", options);
   };
 
   if (loading) return <p>Chargement des demandes...</p>;
@@ -79,49 +119,56 @@ const FamilyAnimalAsk: React.FC = () => {
 
   return (
     <div className="family-asks-container">
-      <h2>Mes Demandes d'Accueil</h2>
+      <h2 data-title="Mes Demandes d'Accueil">Mes Demandes d'Accueil</h2>
       {asks.length === 0 ? (
-        <p>Aucune demande d'accueil effectuée.</p>
+        <p>Vous n'avez aucune demande d'accueil.</p>
       ) : (
         <ul className="ask-list">
           {asks.map((ask) => (
-            <li key={ask.id} className="ask-item">
-              <div className="animal_info-photos">
-                {ask.animal?.profile_photo && (
-                  <img
-                    src={
-                      ask.animal.profile_photo.startsWith("http")
-                        ? ask.animal.profile_photo
-                        : `${import.meta.env.VITE_STATIC_URL}${ask.animal.profile_photo}`
-                    }
-                    alt={ask.animal.name}
-                    className="animal_info-photo"
-                    onClick={() => openModal(ask.animal.profile_photo)} // Ouvrir la modale au clic
-                  />
-                )}
-              </div>
-              <p>Animal : {ask.animal?.name || "Inconnu"}</p>
-              <p>Statut : {ask.status}</p>
-              <p>Âge : {ask.animal.age}</p>
-
-              {/* Ajouter le lien vers la page de profil de l'animal avec l'ID de l'animal */}
-              <Link to={`/animal-info/${ask.animal?.id}`} className="animal-link">
-                Voir le profil de l'animal
+            <li
+              key={ask.id}
+              className={`ask-item ${getStatusClass(ask.status)}`}
+            >
+              <Link
+                to={`/animal-info/${ask.animal?.id}`}
+                className="ask-item-link"
+              >
+                <div className="animal_info-photos">
+                  {ask.animal?.profile_photo && (
+                    <img
+                      src={
+                        ask.animal.profile_photo.startsWith("http")
+                          ? ask.animal.profile_photo
+                          : `${import.meta.env.VITE_STATIC_URL}${
+                              ask.animal.profile_photo
+                            }`
+                      }
+                      alt={ask.animal.name}
+                      className="animal_info-photo"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openModal(ask.animal.profile_photo);
+                      }}
+                    />
+                  )}
+                </div>
+                <div className="text-content">
+                <p><strong>{ask.animal?.name}</strong></p>
+                  <p><strong> {ask.status}</strong></p>
+                  <p>Demande effectuée le {formatDate(ask.created_at)}</p>
+                </div>
               </Link>
-
-              {/* Bouton pour supprimer la demande */}
               <button
                 className="delete-button"
                 onClick={() => handleDelete(ask.id.toString())}
               >
-                Supprimer la demande
+                Annuler la demande
               </button>
             </li>
           ))}
         </ul>
       )}
 
-      {/* Toast pour afficher les messages */}
       {showToast && toastMessage && (
         <Toast
           message={toastMessage}

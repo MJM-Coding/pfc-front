@@ -33,7 +33,8 @@ const AddAnimal: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    // Validation de l'âge
     const ageError = age !== undefined ? validateAge(age) : null;
     if (ageError) {
       setToastMessage(ageError);
@@ -41,7 +42,8 @@ const AddAnimal: React.FC = () => {
       setToast(true);
       return;
     }
-
+  
+    // Vérification des champs obligatoires
     if (!name || !species || (age ?? 0) <= 0 || !breed || !gender || !size) {
       setErrorMessage("Tous les champs doivent être remplis correctement.");
       setToastMessage("Veuillez remplir tous les champs !");
@@ -49,7 +51,16 @@ const AddAnimal: React.FC = () => {
       setToast(true);
       return;
     }
-
+  
+    // Vérification de la photo de profil
+    if (!profilePhoto) {
+      setErrorMessage("Veuillez charger une photo de profil pour l'animal.");
+      setToastMessage("Photo de profil obligatoire !");
+      setToastType("error");
+      setToast(true);
+      return;
+    }
+  
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -60,21 +71,21 @@ const AddAnimal: React.FC = () => {
       formData.append("size", size);
       formData.append("description", description);
       formData.append("id_association", associationId!);
-
+  
       if (profilePhoto) {
         formData.append("image", profilePhoto); // La première photo est la photo de profil
       }
-
+  
       photos.forEach((photo) => {
         formData.append("image", photo); // Les autres photos
       });
-
+  
       await PostAnimal(formData, token!);
-
+  
       setToastMessage("Animal ajouté avec succès !");
       setToastType("success");
       setToast(true);
-
+  
       setTimeout(() => {
         navigate(`/espace-association/animaux-association/${associationId}`);
       }, 3000);
@@ -85,6 +96,7 @@ const AddAnimal: React.FC = () => {
       setToast(true);
     }
   };
+  
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
