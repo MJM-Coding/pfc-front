@@ -9,6 +9,7 @@ import type { IAnimal } from "../../@types/animal";
 import type { IAssociation } from "../../@types/association";
 import Map from "../../components/map/map";
 import Toast from "../../components/toast/toast";
+import "../../styles/commun/commun.scss"
 
 interface Coordinates {
   latitude: number;
@@ -243,16 +244,26 @@ const AnimalInfoPage: React.FC = () => {
 
       {/*      bouton de demande d'accueil */}
       <div className="center-container">
-        {(!authContext?.user || authContext?.user?.role === "family") && (
-          <button
-            className="adopt-button"
-            onClick={handleAdoptClick}
-            disabled={isRequesting}
-          >
-            {isRequesting ? "Envoi en cours..." : "Faire une demande d'accueil"}
-          </button>
-        )}
-      </div>
+  {(!authContext?.user || authContext?.user?.role === "family") && (
+    <button
+      className="adopt-button"
+      onClick={handleAdoptClick}
+      disabled={isRequesting}
+    >
+      {isRequesting ? "Envoi en cours..." : "Faire une demande d'accueil"}
+    </button>
+  )}
+  {/* Bouton pour voir les animaux de l'association */}
+  {association && (
+    <Link
+      to={`/associations/${association.id}/animaux`}
+      className="view-association-animals-button"
+    >
+      Voir les animaux de cette association
+    </Link>
+  )}
+</div>
+
       {/* Sections en colonnes pour les infos de l'animal et de l'association */}
       <div className="animal_info-sections">
         {/* Espèce */}
@@ -318,13 +329,14 @@ const AnimalInfoPage: React.FC = () => {
               <div className="animal_info-map">
                 {coordinates ? (
                   <Map
-                    latitude={coordinates.latitude}
-                    longitude={coordinates.longitude}
-                    address={`${association.address}, ${association.postal_code} ${association.city}`}
+                  latitude={coordinates.latitude}
+                  longitude={coordinates.longitude}
+                  address={`${association.address}, ${association.postal_code} ${association.city}`}
                   />
                 ) : (
                   <p>Chargement de la carte...</p>
                 )}
+                
               </div>
             </>
           )}

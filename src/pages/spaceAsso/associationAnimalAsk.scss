@@ -10,23 +10,39 @@ $modal-content-border-radius: 8px;
 $button-hover-success: #33a061;
 $button-hover-error: #c0392b;
 $button-hover-primary: #216494;
+$primary-color: #0044cc;
+$accent-color: #ff6b6b;
+
+
 
 // associationAnimalAsk.scss
 
 .association-asks-container {
     padding: 20px;
     background-color: $background-color;
-    font-family: Arial, sans-serif;
     color: #333;
   
     // Titre principal
-    h2 {
+    h1 {
       text-align: center;
-      color: #2c3e50;
-      margin-bottom: 20px;
+      font-size: 24px;
+      color: $primary-color;
+      position: relative;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+  
+      &::after {
+        content: attr(data-title);
+        position: absolute;
+        font-size: 14px;
+        color: $accent-color;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
     }
+    
+    
   
     // Section des demandes
     .ask-section {

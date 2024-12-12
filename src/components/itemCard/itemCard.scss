@@ -11,32 +11,38 @@ $hover-card: #27586E;
 /* ============================= */
 
 .item-card {
-    background-color: $card-background;
-    border: 1px solid $card-border;
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Uniformisation des images */
-  .item-card img {
-    width: 100%;
-    max-width: 300px; /* Limite maximale pour la largeur */
-    height: 200px; /* Hauteur fixe pour uniformiser */
-    object-fit: cover; /* Découpe et centre l'image pour remplir l'espace */
-    border-radius: 8px;
-  }
-  
+  background-color: $card-background;
+  border: 1px solid $card-border;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Répartit uniformément le contenu */
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 340px; /* Fixe une hauteur totale */
+  flex-grow: 1; /* Permet à toutes les cartes de s'étendre également */
+  overflow: hidden; /* Cache le contenu dépassant */
+}
+
+
+.item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Uniformisation des images */
+.item-card img {
+  width: 100%;
+  max-width: 300px; /* Limite maximale pour la largeur */
+  height: 200px; /* Hauteur fixe pour uniformiser */
+  object-fit: cover; /* Découpe et centre l'image pour remplir l'espace */
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
 .item-card h2 {
   font-size: 1.2rem;
   color: $text-card;
@@ -47,3 +53,4 @@ $hover-card: #27586E;
   font-size: 0.9rem;
   color: $text-card;
 }
+

@@ -16,7 +16,7 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
 .animalDetail-container {
   position: relative; /* Permet de positionner les éléments enfants relativement */
   height: auto;
-  min-height: 85.2vh;
+  min-height: 91.3vh;
   justify-content: space-between;
 }
 .animal_info-details {
@@ -52,41 +52,71 @@ $photo-border-radius: 10px; // Bordure arrondie pour les images
   display: flex; /* Active Flexbox */
   justify-content: center; /* Centre horizontalement */
   align-items: center; /* Centre verticalement */
-  background-color: $background-color; /* Optionnel, définit une couleur de fond */
-margin: 5px;
+
 }
 
-.adopt-button {
-  display: flex; /* Alignement interne si besoin d'icônes */
+// =============================
+// Style commun pour les boutons
+// =============================
+.button-common {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
   font-size: 16px;
   font-weight: bold;
   color: #ffffff;
-  background: linear-gradient(135deg, #4caf50, #087f23); /* Dégradé de vert */
   border: none;
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  margin: 15px 0px;
+  margin: 15px 0;
+}
+
+// =============================
+// Bouton adoption
+// =============================
+.adopt-button {
+  @extend .button-common;
+  background: linear-gradient(135deg, #4caf50, #087f23);
+  padding: 10px 24px;
+  margin-right: 10px;
 
   &:hover {
-    background: linear-gradient(135deg, #087f23, #4caf50); /* Inversion des couleurs */
+    background: linear-gradient(135deg, #087f23, #4caf50);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px); /* Légère élévation */
+    transform: translateY(-2px);
   }
 
   &:active {
-    transform: translateY(1px); /* Légère descente */
+    transform: translateY(1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   &:disabled {
-    background: #cccccc; /* Couleur gris clair pour les états désactivés */
+    background: #cccccc;
     cursor: not-allowed;
     box-shadow: none;
+  }
+}
+
+// =============================
+// Bouton voir les animaux de l'association
+// =============================
+.view-association-animals-button {
+  @extend .button-common;
+  background: linear-gradient(135deg, #f16161, #c50e0e);
+  padding: 7px;
+
+  &:hover {
+    background: linear-gradient(135deg, #c50e0e, #f16161);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -351,3 +381,4 @@ margin: 5px;
   max-height: none;
   cursor: pointer;
 }
+

@@ -13,7 +13,7 @@ const Filters: React.FC<FiltersProps> = ({ filters, options, onChange, onReset }
   return (
     <div className="filters">
       <button className="reset-btn" onClick={onReset}>
-        <i className="fa-solid fa-eraser"></i> Réinitialiser
+        <i className="fa-solid fa-eraser"></i> 
       </button>
       {Object.keys(options).map((filterKey) => (
         <select

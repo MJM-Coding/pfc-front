@@ -12,10 +12,11 @@ import AnimalInfoPage from "./pages/animalInfoPage/animalInfoPage"; // page de d
 import Signup_assoPage from "./pages/signupPage/signup_assoPage"; // page de l'inscription d'une association
 import ProfilePageAsso from "./pages/spaceAsso/associationProfile"; // page du profil de l'association
 import AssociationAccount from "./pages/spaceAsso/associationAccount"; // page du compte de l'association
-import AssociationAnimalsPage from "./pages/associationAnimalsPage/associationAnimalsPage"; // page de la liste des animaux de l'association
+import AssociationAnimalsPage from "./pages/spaceAsso/associationAnimalsPage"; // page de la liste des animaux de l'association
 import AddAnimal from "./components/animalsCrud/addAnimal"; // composant pour ajouter un animal
 import ModifyAnimal from "./components/animalsCrud/modifyAnimal"; // composant pour modifier un animal
 import AssociationAnimalAsk from "./pages/spaceAsso/associationAnimalAsk"; // page pour lister les demande d'une association
+import PublicAssociationAnimalsPage from "./pages/publicAssociationAnimalsPage/publicAssociationAnimalsPage";
 
 import Signup_faPage from "./pages/signupPage/signup_faPage"; // page de l'inscription d'une famille
 import ProfilePageFamily from "./pages/spaceFamily/familyProfile"; // page du profil de la famille
@@ -42,6 +43,7 @@ const App: React.FC = () => {
         <Route path="/espace-association/animaux-association/ajout-animal/:associationId" element={<AddAnimal />} /> // page d'ajout d'un animal
         <Route path="/espace-association/animaux-association/:associationId/modifier-animal/:animalId" element={<ModifyAnimal />} /> // page de modification d'un animal
         <Route path="/espace-association/demandes-association/:associationId" element={<AssociationAnimalAsk/>} /> // page des demandes d'accueil d'une association
+        <Route path="/associations/:associationId/animaux" element={<PublicAssociationAnimalsPage />}/>// page public de la liste des animaux par asso
 
         <Route path="/inscription-famille" element={<Signup_faPage />} />
         <Route path="/espace-famille/profil-famille/:familyId" element={<ProfilePageFamily />} /> // page du profil de la famille

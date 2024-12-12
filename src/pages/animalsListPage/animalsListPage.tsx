@@ -12,19 +12,22 @@ const AnimalsListPage: React.FC = () => {
   const [animals, setAnimals] = useState<IAnimal[]>([]);
   const [filteredAnimals, setFilteredAnimals] = useState<IAnimal[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({
-    espece: "",
-    taille: "",
-    localisation: "",
-    age: "", 
-    sexe: "", 
+    Espèce: "",
+    Taille: "",
+    Localisation: "",
+    Age: "", 
+    Sexe: "", 
+    "Date de publication": "",
   });
 
   const [filterOptions, setFilterOptions] = useState<Record<string, string[]>>({
-    espece: [],
-    taille: [],
+    Espèce: [],
+    Taille: [],
     localisation: [],
-    age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"], 
-    sexe: ["Mâle", "Femelle"], 
+    Age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"], 
+    Sexe: ["Mâle", "Femelle"], 
+    "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
+
   });
 
   //! Chargement des données
@@ -43,15 +46,16 @@ const AnimalsListPage: React.FC = () => {
         setAnimals(enrichedAnimals);
         setFilteredAnimals(enrichedAnimals);
         setFilterOptions({
-          espece: Array.from(new Set(enrichedAnimals.map((a) => a.species))).filter(Boolean),
-          taille: ["Petit", "Moyen", "Grand"],
-          localisation: Array.from(
+          Espèce: Array.from(new Set(enrichedAnimals.map((a) => a.species))).filter(Boolean),
+          Taille: ["Petit", "Moyen", "Grand"],
+          Localisation: Array.from(
             new Set(
               associationsData.map((a) => `${a.city}, ${a.postal_code}`)
             )
           ).filter(Boolean),
-          age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"],
-          sexe: ["Mâle", "Femelle"],
+          Age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"],
+          Sexe: ["Mâle", "Femelle"],
+          "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
         });
       } catch (err) {
         console.error("Erreur lors du chargement des données", err);
@@ -71,11 +75,12 @@ const AnimalsListPage: React.FC = () => {
   //! Réinitialisation des filtres
   const resetFilters = () => {
     setFilters({
-      espece: "",
-      taille: "",
-      localisation: "",
-      age: "",
-      sexe: "",
+      Espèce: "",
+      Taille: "",
+      Localisation: "",
+      Age: "",
+      Sexe: "",
+      "Date de publication": "",
     });
     setFilteredAnimals(animals);
   };
@@ -89,31 +94,55 @@ const AnimalsListPage: React.FC = () => {
       (animal) => !animal.asks || animal.asks.every((ask) => ask.status !== "validée")
     );
   
-    if (filters.espece) {
-      filtered = filtered.filter((a) => a.species === filters.espece);
+    if (filters.Espèce) {
+      filtered = filtered.filter((a) => a.species === filters.Espèce);
     }
-    if (filters.taille) {
-      filtered = filtered.filter((a) => a.size === filters.taille);
+    if (filters.Taille) {
+      filtered = filtered.filter((a) => a.size === filters.Taille);
     }
-    if (filters.localisation) {
+    if (filters.Localisation) {
       filtered = filtered.filter(
         (a) =>
           a.association &&
-          `${a.association.city}, ${a.association.postal_code}` === filters.localisation
+          `${a.association.city}, ${a.association.postal_code}` === filters.Localisation
       );
     }
-    if (filters.age) {
-      if (filters.age === "Moins de 2 ans") {
+    if (filters.Age) {
+      if (filters.Age === "Moins de 2 ans") {
         filtered = filtered.filter((a) => a.age < 2);
-      } else if (filters.age === "Entre 2 et 7 ans") {
+      } else if (filters.Age === "Entre 2 et 7 ans") {
         filtered = filtered.filter((a) => a.age >= 2 && a.age <= 7);
       } else if (filters.age === "Plus de 7 ans") {
         filtered = filtered.filter((a) => a.age > 7);
       }
     }
-    if (filters.sexe) {
-      filtered = filtered.filter((a) => (filters.sexe === "Mâle" ? a.gender === "M" : a.gender === "F"));
+    if (filters.Sexe) {
+      filtered = filtered.filter((a) => (filters.Sexe === "Mâle" ? a.gender === "M" : a.gender === "F"));
     }
+
+    // Nouveau filtre : Date de parution
+ if (filters["Date de publication"]) {
+  const now = new Date();
+
+  filtered = filtered.filter((a) => {
+    const createdAt = new Date(a.created_at); // Vérifiez que la clé correspond
+    const diffInMonths =
+      (now.getFullYear() - createdAt.getFullYear()) * 12 +
+      now.getMonth() -
+      createdAt.getMonth();
+
+    if (filters["Date de publication"] === "Moins de 1 mois") {
+      return diffInMonths < 1;
+    }
+    if (filters["Date de publication"] === "Entre 1 et 3 mois") {
+      return diffInMonths >= 1 && diffInMonths <= 3;
+    }
+    if (filters["Date de publication"] === "Plus de 3 mois") {
+      return diffInMonths > 3;
+    }
+    return true;
+  });
+}
   
     setFilteredAnimals(filtered);
   }, [filters, animals]);
@@ -149,13 +178,13 @@ const AnimalsListPage: React.FC = () => {
       }
       link={`/animal-info/${animal.id}`}
     >
+      {/* Race */}
+      <p className="item-card-breed">{animal.breed || "Race inconnue"}</p>
       {/* Localisation (sans code postal) */}
       <p className="item-card-location">
         <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
       </p>
 
-      {/* Race */}
-      <p className="item-card-breed">{animal.breed || "Race inconnue"}</p>
     </ItemCard>
   )}
 />
