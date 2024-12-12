@@ -11,6 +11,7 @@ import {
 import AuthContext from "../../contexts/authContext";
 import { validateEmail } from "../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
 import "../../styles/accountPage.scss";
+import "../../styles/commun/commun.scss"
 import Toast from "../../components/toast/toast";
 import Swal from "sweetalert2";
 

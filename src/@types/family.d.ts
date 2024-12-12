@@ -41,7 +41,6 @@ export interface IFamily {
   garden: null | boolean | undefined;
   description: string | undefined;
   profile_photo?:  string | null;
-  imageUrl?: string | File | null;
   id_user: number;
   created_at?: string;
   updated_at?: string;

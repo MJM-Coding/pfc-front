@@ -1,0 +1,49 @@
+/* ============================= */
+/* Variables de couleur          */
+/* ============================= */
+$card-background: #e9e6e6;
+$text-card: #0e0d0d;
+$card-border: #cfcbc6;
+$hover-card: #27586E;
+
+/* ============================= */
+/* Style des cartes individuelles */
+/* ============================= */
+
+.item-card {
+    background-color: $card-background;
+    border: 1px solid $card-border;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Uniformisation des images */
+  .item-card img {
+    width: 100%;
+    max-width: 300px; /* Limite maximale pour la largeur */
+    height: 200px; /* Hauteur fixe pour uniformiser */
+    object-fit: cover; /* Découpe et centre l'image pour remplir l'espace */
+    border-radius: 8px;
+  }
+  
+.item-card h2 {
+  font-size: 1.2rem;
+  color: $text-card;
+  margin: 10px 0;
+}
+
+.item-card p {
+  font-size: 0.9rem;
+  color: $text-card;
+}

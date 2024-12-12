@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import "./dropdownMenu.scss"
 
 interface DropdownMenuProps {
   label: React.ReactNode; // Le texte ou l'icône du bouton du dropdown

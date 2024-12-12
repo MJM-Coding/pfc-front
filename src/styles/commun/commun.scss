@@ -1,6 +1,41 @@
+$footer-bg-color: #262e33; /* Couleur de fond du pied de page */
+
 /* Applique la police Montserrat globalement */
 #root {
   font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Hauteur minimum de la page */
+}
+
+.main-content {
+  flex: 1; /* Prend tout l'espace disponible entre le header et le footer */
+}
+
+/* ============================= */
+/* Style principal du footer     */
+/* ============================= */
+
+footer.footer {
+  background-color: $footer-bg-color;
+  text-align: center;
+  padding: 20px;
+  
+}
+
+/* ============================= */
+/* Contenu du footer             */
+/* ============================= */
+.footer-content {
+  max-width: 1200px; /* Limite la largeur du contenu */
+  margin: 0 auto; /* Centre horizontalement le contenu */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap; /* Empêche les éléments de passer à la ligne */
+  gap: 20px; /* Ajoute un espacement entre les éléments */
+}

@@ -1,4 +1,4 @@
-//! Composant Message : Ce composant affiche un message d'erreur ou de_succès
+//! Composant Message : Ce composant affiche un message d'erreur ou de succès après validation
 
 import React from "react";
 import "./errorSuccessMessage.scss"; // Assurez-vous d'ajouter un fichier CSS adapté

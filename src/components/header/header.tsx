@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./header.scss";
+import "../../styles/commun/commun.scss"
 import logo from "../../assets/images/logosimple.png";
 import ModalLogin from "../longinSigninModale/loginSigninModale";
 import AuthContext from "../../contexts/authContext";
@@ -60,7 +61,7 @@ const Header: React.FC = () => {
       return [
         { path: `/espace-association/profil-association/${associationId || userId}`, label: "Mon Profil" },
         { path: `/espace-association/animaux-association/${associationId || userId}`, label: "Gérer mes animaux" },
-        { path: "/espace-association/demandes", label: "Demandes d'accueil" },
+        { path: `/espace-association/demandes-association/${associationId || userId}`, label: "Demandes d'accueil" },
         { path: `/espace-association/mon-compte/${associationId || userId}`, label: "Mon compte" },
       ];
     } else if (role === "family") {

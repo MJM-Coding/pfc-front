@@ -15,6 +15,7 @@ import AssociationAccount from "./pages/spaceAsso/associationAccount"; // page d
 import AssociationAnimalsPage from "./pages/associationAnimalsPage/associationAnimalsPage"; // page de la liste des animaux de l'association
 import AddAnimal from "./components/animalsCrud/addAnimal"; // composant pour ajouter un animal
 import ModifyAnimal from "./components/animalsCrud/modifyAnimal"; // composant pour modifier un animal
+import AssociationAnimalAsk from "./pages/spaceAsso/associationAnimalAsk"; // page pour lister les demande d'une association
 
 import Signup_faPage from "./pages/signupPage/signup_faPage"; // page de l'inscription d'une famille
 import ProfilePageFamily from "./pages/spaceFamily/familyProfile"; // page du profil de la famille
@@ -26,7 +27,9 @@ import Footer from "./components/footer/footer";
 const App: React.FC = () => {
   return (
     <>
+     <div className="app-container">
       <Header />
+      <main className="main-content">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/animaux" element={<AnimalsListPage />} />
@@ -38,15 +41,18 @@ const App: React.FC = () => {
         <Route path="/espace-association/animaux-association/:associationId" element={<AssociationAnimalsPage />} /> // page de la liste des animaux de l'association
         <Route path="/espace-association/animaux-association/ajout-animal/:associationId" element={<AddAnimal />} /> // page d'ajout d'un animal
         <Route path="/espace-association/animaux-association/:associationId/modifier-animal/:animalId" element={<ModifyAnimal />} /> // page de modification d'un animal
+        <Route path="/espace-association/demandes-association/:associationId" element={<AssociationAnimalAsk/>} /> // page des demandes d'accueil d'une association
 
         <Route path="/inscription-famille" element={<Signup_faPage />} />
         <Route path="/espace-famille/profil-famille/:familyId" element={<ProfilePageFamily />} /> // page du profil de la famille
         <Route path="/espace-famille/mon-compte/:familyId" element={<FamilyAccount />} /> // page du compte de la famille
-        <Route path="/espace-famille/demandes-famille/:familyId" element={<FamilyAnimalsAsk />} />
+        <Route path="/espace-famille/demandes-famille/:familyId" element={<FamilyAnimalsAsk />} /> // page récapitulatif des demandes accueil famille
 
         {/* Vous pouvez ajouter d'autres routes ici */}
       </Routes>
+      </main>
       <Footer />
+      </div>
     </>
   );
 };

@@ -12,6 +12,7 @@ import Toast from "../../components/toast/toast"; // Importation du composant To
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de succès
 import { validateForm } from "../../components/validateForm/validateForm";
 import "../../components/validateForm/validateForm.scss";
+import "../../styles/commun/commun.scss"
 import Swal from "sweetalert2";
 
 function FamilyProfile() {

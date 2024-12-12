@@ -18,6 +18,7 @@ const markerIcon = new L.Icon({
   popupAnchor: [1, -34],
 });
 
+//! Affichage de la carte
 const Map: React.FC<MapProps> = ({ latitude, longitude, address }) => {
     return (
         <MapContainer

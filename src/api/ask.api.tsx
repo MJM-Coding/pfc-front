@@ -4,7 +4,7 @@ import { IAsk } from "../@types/ask";
 
 /**
  *! Récupère la liste de toutes les demandes.
- * * Authentification + réservée aux administrateurs.
+ * * Authentification + réservée aux administrateurs + association
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec un tableau d'objets IAsk.
  */

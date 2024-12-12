@@ -4,7 +4,8 @@ import { GetFamilyAsks, DeleteAsk } from "../../api/ask.api";
 import type { IAsk } from "../../@types/ask";
 import AuthContext from "../../contexts/authContext";
 import Toast from "../../components/toast/toast";
-import "../../styles/familyAnimalsAsk.scss";
+import "./familyAnimalsAsk.scss";
+import "../../styles/commun/commun.scss";
 import Swal from "sweetalert2";
 
 const FamilyAnimalAsk: React.FC = () => {
@@ -14,6 +15,9 @@ const FamilyAnimalAsk: React.FC = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<"success" | "error">("success");
+  const [selectedAnimal, setSelectedAnimal] = useState<IAsk["animal"] | null>(
+    null
+  );
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
@@ -42,6 +46,7 @@ const FamilyAnimalAsk: React.FC = () => {
     fetchFamilyAsks();
   }, [authContext]);
 
+  //! Fonction pour supprimer une demande d'accueil (non validée)
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "Confirmer la suppression",
@@ -80,6 +85,7 @@ const FamilyAnimalAsk: React.FC = () => {
     }
   };
 
+  //! Classe pour mise en forme CSS
   const getStatusClass = (status: string) => {
     switch (status.toLowerCase()) {
       case "en attente":
@@ -93,34 +99,47 @@ const FamilyAnimalAsk: React.FC = () => {
     }
   };
 
+  //! Fonction pour formater la date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
-      day: "numeric",
-      month: "long",
+      day: "2-digit",
+      month: "2-digit",
       year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+      hour: "2-digit", // Heure sur 2 chiffres
+      minute: "2-digit", // Minute sur 2 chiffres
     };
-    return date.toLocaleDateString("fr-FR", options);
+    return date.toLocaleString("fr-FR", options);
   };
 
-  const pendingAsks = asks.filter((ask) => ask.status.toLowerCase() === "en attente");
-  const validatedAsks = asks.filter((ask) => ask.status.toLowerCase() === "validée");
-  const rejectedAsks = asks.filter((ask) => ask.status.toLowerCase() === "rejetée");
+  const pendingAsks = asks.filter(
+    (ask) => ask.status.toLowerCase() === "en attente"
+  );
+  const validatedAsks = asks.filter(
+    (ask) => ask.status.toLowerCase() === "validée"
+  );
+  const rejectedAsks = asks.filter(
+    (ask) => ask.status.toLowerCase() === "rejetée"
+  );
 
+  // Fonction pour rendre la liste des demandes
   const renderAskList = (askList: IAsk[]) => (
     <ul className="ask-list">
       {askList.map((ask) => (
         <li key={ask.id} className={`ask-item ${getStatusClass(ask.status)}`}>
-          <Link to={`/animal-info/${ask.animal?.id}`} className="ask-item-link">
+          <div
+            className="ask-item-link"
+            onClick={() => handleShowAnimalModal(ask.animal)}
+          >
             <div className="animal_info-photos">
               {ask.animal?.profile_photo && (
                 <img
                   src={
                     ask.animal.profile_photo.startsWith("http")
                       ? ask.animal.profile_photo
-                      : `${import.meta.env.VITE_STATIC_URL}${ask.animal.profile_photo}`
+                      : `${import.meta.env.VITE_STATIC_URL}${
+                          ask.animal.profile_photo
+                        }`
                   }
                   alt={ask.animal.name}
                   className="animal_info-photo"
@@ -128,28 +147,110 @@ const FamilyAnimalAsk: React.FC = () => {
               )}
             </div>
             <div className="text-content">
-              <p>
+              <p className="name">
+                {" "}
                 <strong>{ask.animal?.name}</strong>
               </p>
-              <p>
-                <strong>{ask.status}</strong>
-              </p>
               <p>Demande effectuée le {formatDate(ask.created_at)}</p>
+              {ask.status.toLowerCase() === "validée" && (
+                <p>Demande validée le {formatDate(ask.updated_at)}</p>
+              )}
+              {ask.status.toLowerCase() === "rejetée" && (
+                <p>Demande rejetée le {formatDate(ask.updated_at)}</p>
+              )}
             </div>
-          </Link>
-          {ask.status.toLowerCase() !== "validée" && (
-            <button
-              className="delete-button"
-              onClick={() => handleDelete(ask.id.toString())}
-              title="Annuler la demande"
-            >
-              <i className="fa-solid fa-trash"></i>
-            </button>
-          )}
+          </div>
+          {ask.status.toLowerCase() !== "validée" &&
+            ask.status.toLowerCase() !== "rejetée" && (
+              <button
+                className="delete-button"
+                onClick={() => handleDelete(ask.id.toString())}
+                title="Annuler la demande"
+              >
+                <i className="fa-solid fa-trash"></i>
+              </button>
+            )}
         </li>
       ))}
     </ul>
   );
+
+  // Fonction pour afficher la modale de l'animal
+  const handleShowAnimalModal = (animal: IAsk["animal"]) => {
+    setSelectedAnimal(animal); // Mettre à jour l'état avec l'animal sélectionné
+  };
+
+  // Rendu de la modale de l'animal
+  const renderAnimalModal = () => (
+    <div
+      className="animal-modal"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          setSelectedAnimal(null); // Ferme la modale
+        }
+      }}
+    >
+      <div className="modal-content">
+        <button className="close-modal" onClick={() => setSelectedAnimal(null)}>
+          ×
+        </button>
+        {selectedAnimal && (
+          <div>
+            <h3>
+              {" "}
+              {selectedAnimal.gender === "F" ? (
+                <i className="fa-solid fa-venus" title="Femelle"></i> // Icône pour Femelle
+              ) : (
+                <i className="fa-solid fa-mars" title="Mâle"></i> // Icône pour Mâle
+              )}{" "}
+              {selectedAnimal.name}
+            </h3>
+
+            <p>
+              <img
+                src={
+                  selectedAnimal.profile_photo.startsWith("http")
+                    ? selectedAnimal.profile_photo
+                    : `${import.meta.env.VITE_STATIC_URL}${
+                        selectedAnimal.profile_photo
+                      }`
+                }
+                alt={selectedAnimal.name}
+                className="animal-photo"
+              />
+            </p>
+            <p>
+              <strong>Râce :</strong> {selectedAnimal.breed}{" "}
+            </p>
+
+            <p>
+              {" "}
+              <strong>Age :</strong> {selectedAnimal.age} ans{" "}
+            </p>
+            <p>
+              {" "}
+              <strong>Taille :</strong> {selectedAnimal.size}{" "}
+            </p>
+            <p>
+              {" "}
+              <strong>Description :</strong> {selectedAnimal.description}{" "}
+            </p>
+
+            {/* Bouton vers la fiche complète */}
+            <div style={{ textAlign: "center", marginTop: "20px" }}>
+              <Link
+                to={`/animal-info/${selectedAnimal.id}`}
+                className="more-info-button"
+              >
+                Voir la fiche complète
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+  console.log(selectedAnimal);
 
   return (
     <div className="family-asks-container">
@@ -160,19 +261,38 @@ const FamilyAnimalAsk: React.FC = () => {
         <div className="ask-grid">
           <div className="ask-column">
             <h3>Demandes en attente</h3>
-            {pendingAsks.length > 0 ? renderAskList(pendingAsks) : <p>Aucune demande en attente.</p>}
+            {pendingAsks.length > 0 ? (
+              renderAskList(pendingAsks)
+            ) : (
+              <p>Aucune demande en attente.</p>
+            )}
           </div>
           <div className="ask-column">
             <h3>Demandes validées</h3>
-            {validatedAsks.length > 0 ? renderAskList(validatedAsks) : <p>Aucune demande validée.</p>}
+            {validatedAsks.length > 0 ? (
+              renderAskList(validatedAsks)
+            ) : (
+              <p>Aucune demande validée.</p>
+            )}
           </div>
           <div className="ask-column">
             <h3>Demandes rejetées</h3>
-            {rejectedAsks.length > 0 ? renderAskList(rejectedAsks) : <p>Aucune demande rejetée.</p>}
+            {rejectedAsks.length > 0 ? (
+              renderAskList(rejectedAsks)
+            ) : (
+              <p>Aucune demande rejetée.</p>
+            )}
           </div>
         </div>
       )}
-      {showToast && toastMessage && <Toast message={toastMessage} type={toastType} setToast={setShowToast} />}
+      {selectedAnimal && renderAnimalModal()}
+      {showToast && toastMessage && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          setToast={setShowToast}
+        />
+      )}
     </div>
   );
 };
