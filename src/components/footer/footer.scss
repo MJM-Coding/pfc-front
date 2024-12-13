@@ -7,6 +7,9 @@ $social-icon-color: white; /* Couleur des icônes sociales */
 $social-icon-hover-color: #1da1f2; /* Couleur des icônes au survol */
 $copyright-font-size: 0.9rem; /* Taille de la police pour le copyright */
 
+/* Breakpoints */
+$breakpoint-tablet: 1024px; // Taille pour les tablettes
+$breakpoint-mobile: 768px; // Taille pour les mobiles
 /* ============================= */
 /* Style principal du footer     */
 /* ============================= */
@@ -65,4 +68,13 @@ $copyright-font-size: 0.9rem; /* Taille de la police pour le copyright */
 .nav-link {
   font-size: 1rem;
   margin-right: 10px;
+}
+//! Media queries pour ajuster le design à différentes tailles d'écran  
+@media screen and (max-width :breakpoint-tablet) {
+  // Ajustements à venir pour les écrans inférieurs à1024px  
+}
+
+@media screen and (max-width :$breakpoint-mobile) {
+
+  
 }

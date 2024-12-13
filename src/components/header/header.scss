@@ -1,320 +1,186 @@
-/* Variables */
-$header-bg-color: #262e33; // Couleur de fond de l'en-tête
-$header-text-color: white; // Couleur du texte de l'en-tête
-$button-bg-color: #4e8696; // Couleur de fond des boutons
-$button-hover-color: #88ADB7; // Couleur de fond des boutons au survol
-$link-actif: #88ADB7; // Couleur des liens actifs
-
-// Styles pour le conteneur de l'en-tête
-.header {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between; // Aligne les éléments horizontalement
-  min-height: 95px; // Hauteur minimale cohérente
-  padding: 0 20px; // Ajoute un espace interne
-  box-sizing: border-box; // Inclut le padding dans les dimensions
-  background-color: $header-bg-color; // Couleur de fond de l'en-tête
-  color: $header-text-color; // Couleur du texte de l'en-tête
-}
-
-// Conteneur pour le titre de l'en-tête
-.header-title {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100%;
-  padding: 0 15px;
-  width: 100%;
-}
-
-// Style pour le logo dans l'en-tête
-.logo {
-  width: 30%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  .logo-img {
-    margin-right: 1rem; // Espace entre l'image et le texte
-    height: 60px; // Hauteur de l'image
-    width: auto; // Ajuste automatiquement la largeur
-  }
-
-  h1 {
-    width: 300px; // Largeur maximale du texte
-    text-align: center; // Centre le texte
-    font-size: 1.5rem;
-    line-height: 1;
-  }
-}
-
-
-.header .user-firstname {
-  background-color: transparent; /* Assurez-vous que le fond est transparent */
-}
-
-.header .user-firstname:focus,
-.header .user-firstname:active {
-  background-color: transparent; /* Désactivez le fond bleu de focus ou active */
-}
-
-// Alignement central des liens dans l'en-tête
-.header-links {
-  display: flex;
-  justify-content: center;
-  width: 90%;
-  margin-left: auto;
-  margin-right: 100px;
-}
-
-// Conteneur de la liste de navigation
-.nav-list {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-}
-
-// Espacement entre les items de navigation
-.nav-item {
-  margin-left: 30px;
-}
-
-// Style des liens de navigation
-.nav-link {
-  font-size: 1.2rem;
-  text-decoration: none;
-  color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  display: inline-block;
-  cursor: pointer;
-}
-
-// Style des liens actifs avec effet visuel
-.nav-link.active-link {
-   background-color:$link-actif; 
-   color :rgb(3,3,3);
-   box-shadow :0,4px,8px,rgba(0,0,0,0.1);
-   transform :translateY(-2px);
-}
-
-// Conteneur pour l'authentification aligné à droite
-.auth-container {
-   margin-left:auto ;
-   display:flex ;
-   align-items:center ;
-   justify-content:flex-end ;
-   width :300px ; // Ajustement pour permettre une largeur dynamique 
-}
-
-// Style de l'icône utilisateur
-.fa-user {
-   margin-bottom :0.5rem ;
-   font-size :1.5rem ;
-}
-
-// Style pour les boutons d'authentification 
-.auth-button {
-  width: 300px;
-  background-color: $button-bg-color;
-  color: #fff;
-  text-decoration: none;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 16px; // Assurez-vous que cette ligne est bien appliquée
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-      background-color: $button-hover-color;
-  }
-}
-
-// Conteneur pour afficher les informations de l'utilisateur 
-.user-info {
-   display:flex ;
-   align-items:center ;
-   margin-right :20px ; 
-}
-
-.user-info span {
-   margin-right :10px ; 
-}
-
-// Style pour le bouton déroulant 
-.dropbtn {
-   display:flex ;
-   flex-direction :column ;
-   align-items:center ;
-   padding :10px ; // Espace interne supplémentaire 
-}
-
-// Style pour le prénom de l'utilisateur affiché 
-.user-firstname {
-   font-size :0.9em ; // Taille de police légèrement augmentée 
-   margin-top :5px ; // Espace au-dessus 
-   width :100% ; 
-   color:white ; 
-   text-shadow :1px ,1px ,2px rgba(0 ,0 ,0 ,0.5); // Améliore la lisibilité avec une ombre 
-}
-
-// Conteneur principal du menu déroulant 
-.dropdown {
-    position :relative ; 
-    
-}
-
-// Contenu du menu déroulant, caché par défaut 
-.dropdown-content {
-    display:none ; 
-    position:absolute ; 
-    background-color:#e7e5e5 ; 
-    min-width :300px ; 
-    box-shadow :0px ,8px ,16px ,0px rgba(0 ,0 ,0 ,0.2); // Ombre pour un effet flottant 
-    z-index :20 ; 
-    right :0 ; 
-    top :100% ; 
-    
-}
-
-// Style des liens et des boutons dans le menu déroulant  
-.dropdown-content a,
-.dropdown-content button {
-    z-index :1000 ; 
-    color:black ; 
-    padding :12px 16px; 
-    text-decoration:none ; 
-    display:block ; 
-    text-align:center ; 
-    width :100% ; 
-    background:none ; 
-    border:none ; 
-    cursor:pointer ; 
-    font-size :1em ; 
-    font-family :inherit ;  
-}
-
-// Style au survol des liens ou boutons dans le menu  
-.dropdown-content a:hover,
-.dropdown-content button:hover {
-     background-color:#252E33 ;
-     color: white;
-}
-
-// Affiche le contenu du menu déroulant quand la classe active est appliquée  
-.dropdown.active .dropdown-content {
-     display:block ;
-}
-
-// Style pour les titres principaux  
-.title {
-     font-size :1.8em ;
-     font-weight:bold ;
-     margin :0 ;
-}
-
-
-// Styles pour le bouton burger (menu mobile)  
-.burger-menu {
-     display:none ;
-     background:none ;
-     border:none ;
-     font-size :2rem ;
-     color:$header-text-color ;
-     cursor:pointer ;
-}
-
-//! Media queries pour ajuster le design à différentes tailles d'écran  
-@media screen and (max-width :1024px) {
-     // Ajustements à venir pour les écrans inférieurs à1024px  
-}
-
-@media screen and (max-width :768px) {
-     // Styles pour le conteneur de l'en-tête sur mobile
-     .header {
-      flex-direction: row; // Alignement horizontal
-      flex-wrap: wrap; // Permet le passage à la ligne
-      justify-content: space-between; // Répartition de l'espace
-      align-items: center; // Centrage vertical
-      min-height: 95px; // Hauteur minimale conservée
-      padding: 10px;
+/* ==========================================================
+   VARIABLES
+   ========================================================== */
+   $header-bg-color: #262e33; // Couleur de fond de l'en-tête
+   $header-text-color: white; // Couleur du texte de l'en-tête
+   $button-bg-color: #4e8696; // Couleur de fond des boutons
+   $button-hover-color: #88adb7; // Couleur de fond des boutons au survol
+   $link-actif: #88adb7; // Couleur des liens actifs
+   
+   /* Breakpoints */
+   $breakpoint-tablet: 768px; // Taille pour les tablettes et plus
+   $breakpoint-desktop: 1024px; // Taille pour les PC et plus
+   
+   /* ==========================================================
+         BASE STYLES (MOBILE FIRST)
+    ========================================================== */
+   .header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 0 10px;
+     background-color: $header-bg-color;
+     color: $header-text-color;
+     min-height: 95px;
+     box-sizing: border-box;
+   }
+   
+   .header-left {
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+   
+     .logo-img {
+       height: 40px; // Taille par défaut pour mobile
+       width: auto;
      }
-
-     .header-title {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0;
-  }
-     // Ajustement du logo pour qu'il ne soit pas écrasé
-     .logo {
-         width: 100%;
-         justify-content: center;
-         align-items: center;
- ;
-
-         .logo-img {
-             height: 50px; // Réduction légère de la taille du logo
-         }
-
-         h1 {
-             display: none;
-         }
-        
+   
+     h1 {
+       display: none; // Masqué sur mobile
      }
-
-     //* efface le nom sous icone sur mobile
-     .user-firstname {
-      display: none !important;
-  }
-
-     //* Ajustement des liens de navigation
+   }
+   
+   .header-center {
+     flex-grow: 1;
+   
      .header-links {
-         width: 100%;
-         margin: 10px 0;
-         justify-content: center;
-     }
-
-     //* Ajustement du conteneur d'authentification
-     .auth-container {
-         width: 100%;
-         justify-content: center;
-         margin-top: 10px;
-     }
-
-     //* Ajustement du bouton d'authentification
-     .auth-button {
-        /*  width: auto; */
+       display: flex;
+       justify-content: center;
+       gap: 20px;
+       width: 100%;
+       text-align: center;
+   
+       .nav-link:first-child {
+         display: none; // Cache "Accueil" sur mobile
+       }
+   
+       .nav-link {
+         font-size: 1rem;
+         text-decoration: none;
+         color: $header-text-color;
          padding: 8px 16px;
+         border-radius: 5px;
+         background-color: transparent;
+         transition: background-color 0.3s ease;
+   
+         &:hover {
+           background-color: rgba(255, 255, 255, 0.2);
+         }
+   
+         &.active-link {
+           background-color: $link-actif;
+           color: black;
+         }
+       }
      }
-
-     //* Affichage du bouton burger
-     .burger-menu {
-         display: block;
-         position: absolute;
-         top: 10px;
-         right: 10px;
-     }
-
-     //* Masquer les liens de navigation par défaut
-     .nav-list {
+   }
+   
+   .header-right {
+     .auth-container {
+       display: flex;
+       align-items: center;
+   
+       .auth-button {
+         display: none; // Masqué par défaut sur mobile
+       }
+       .user-firstname {
          display: none;
+       }
+       .fa-user {
+         font-size: 1.4rem;
+       }
+       .auth-button-mobile {
+         display: inline-block;
+         background: none;
+         border: none;
+         color: $header-text-color;
+         font-size: 1.5rem;
+         cursor: pointer;
+   
+         &:hover {
+           color: $button-hover-color;
+         }
+       }
      }
-
-     //* Afficher les liens de navigation lorsqu'ils sont actifs
-     .nav-list.active {
+   }
+   
+   /* ==========================================================
+         TABLETTE ET PLUS
+      ========================================================== */
+   @media screen and (min-width: $breakpoint-tablet) {
+     .header-left {
+       .logo-img {
+         height: 45px; // Taille augmentée sur tablette
+       }
+   
+       h1 {
+         display: block; // Affiche le H1
+         font-size: 1.2rem;
+         margin: 0;
+         line-height: 1.2;
+       }
+     }
+   
+     .header-center {
+       .header-links {
+         .nav-link:first-child {
+           display: flex; // Affiche "Accueil" sur tablette
+         }
+   
+         .nav-link {
+           font-size: 1rem;
+         }
+       }
+     }
+   
+     .header-right {
+       .auth-container {
+         .auth-button {
+           display: inline-block; // Affiche le bouton classique sur tablette
+           background-color: $button-bg-color;
+           color: $header-text-color;
+           border: none;
+           border-radius: 5px;
+           padding: 8px 16px;
+           font-size: 1rem;
+           cursor: pointer;
+           transition: background-color 0.3s ease;
+   
+           &:hover {
+             background-color: $button-hover-color;
+           }
+         }
+   
+         .auth-button-mobile {
+           display: none; // Masque l'icône mobile
+         }
+       }
+     }
+   }
+   
+   /* ==========================================================
+         DESKTOP ET PLUS
+      ========================================================== */
+   @media screen and (min-width: $breakpoint-desktop) {
+     .header-right {
+       .auth-container {
          display: flex;
-         flex-direction: column;
+         flex-direction: column; // Passe en colonne pour PC
          align-items: center;
+         margin-right: 15px;
+   
+         i {
+           font-size: 1.5rem; // Taille de l'icône
+           margin-bottom: 5px; // Espacement entre l'icône et le nom
+         }
+   
+         .user-firstname {
+           display: block; // Affiche le nom
+           font-size: 0.9rem;
+           color: $header-text-color;
+           text-align: center; // Centrer le texte sous l'icône
+         }
+       }
      }
-
-     //* Ajustement des items de navigation
-     .nav-item {
-         margin: 5px 0;
-     }
-}
+   }
+   

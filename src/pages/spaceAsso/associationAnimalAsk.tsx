@@ -265,7 +265,7 @@ const AssociationAnimalAsk: React.FC = () => {
           </button>
           {selectedAnimal && (
             <div>
-              <h3 className="titleAnimal"> {selectedAnimal.name}</h3>
+              <h3 className="title-Animal"> {selectedAnimal.name}</h3>
              
               <p className="animalInfo">
                 

@@ -146,7 +146,7 @@ const PublicAssociationAnimalsPage: React.FC = () => {
     <div className="association-animals-container">
       
       <h2>
-        Animaux disponibles {association ? `de l'association "${association.representative}"` : ""}
+        Animaux disponibles {association ? `de l'association "${association.representative}" à ${association.city}` : ""}
       </h2>
       <div className="content-wrapper">
         {/* Filtres à gauche */}
@@ -180,8 +180,8 @@ const PublicAssociationAnimalsPage: React.FC = () => {
               }
               link={`/animal-info/${animal.id}`}
             >
-              {/* Race */}
-              <p className="item-card-breed">{animal.breed || "Race inconnue"}</p>
+              {/* Race + age*/}
+              <p className="item-card-breed">{animal.breed || ""}, {animal.age || ""} ans</p>
             </ItemCard>
           )}
         />

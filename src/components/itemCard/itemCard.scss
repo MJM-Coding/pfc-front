@@ -11,7 +11,7 @@ $hover-card: #27586E;
 /* ============================= */
 
 .item-card {
-  background-color: $card-background;
+  background-color: $card-background !important;
   border: 1px solid $card-border;
   border-radius: 10px;
   padding: 15px;

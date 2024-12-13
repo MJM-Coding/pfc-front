@@ -1,9 +1,11 @@
+
 .association-animals-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 20px;
-  background-color: #f4f4f4;
+  background-color: #b8c1c4;
+  min-height: 81vh;
 
   h2 {
     text-align: center;
@@ -21,7 +23,13 @@
     box-sizing: border-box;
   }
 
- 
+ p {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    
+  }
 
   .animals-list {
     flex: 1; /* Prend tout l'espace restant */

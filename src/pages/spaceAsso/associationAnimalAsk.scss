@@ -173,9 +173,9 @@ $accent-color: #ff6b6b;
     }
     
 // Nom de l'animal dans la modale
-    .titleAnimal {
+    .title-Animal {
         
-        color: white;
+        color: #72c7df !important;
         text-align: center;
     }
     // <p> info dans la modale animal 
@@ -200,6 +200,7 @@ $accent-color: #ff6b6b;
         position: fixed;
         top: 0;
         left: 0;
+      
         width: 100%;
         height: 100%;
         background-color: $modal-background-color;
@@ -211,7 +212,7 @@ $accent-color: #ff6b6b;
           background-color:#262E33;
           padding: 20px;
           border-radius: $modal-content-border-radius;
-          width: 400px;
+          width: 500px;
           position: relative;
       
     
