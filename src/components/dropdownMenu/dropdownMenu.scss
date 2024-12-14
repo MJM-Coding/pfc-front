@@ -1,101 +1,101 @@
 /* ============================= */
+/* Breakpoints                   */
+/* ============================= */
+$dropdownMenu-breakpoint-tablet: 768px;
+$dropdownMenu-breakpoint-desktop: 1024px;
+
+/* ============================= */
 /* Variables de couleurs         */
 /* ============================= */
-:root {
-  --dropdown-bg-color: #262E33; /* Couleur de fond du menu */
-  --dropdown-hover-bg-color: #88ADB7; /* Couleur de fond au survol */
-  --dropdown-text-color: #ffffff; /* Couleur du texte */
-  --dropdown-hover-text-color: #000000; /* Couleur du texte au survol */
-  --dropdown-box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Ombre du menu */
-  --dropdown-z-index: 9999; /* Assure que le menu est au-dessus */
-}
+$dropdownMenu-bg-color: #262E33;
+$dropdownMenu-hover-bg-color: #88ADB7;
+$dropdownMenu-text-color: #ffffff;
+$dropdownMenu-hover-text-color: #000000;
+$dropdownMenu-box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+$dropdownMenu-z-index: 9999;
 
 /* ============================= */
-/* Breakpoints pour la mise en page */
-/* ============================= */
-@media screen and (max-width: 768px) {
-  /* Mobile (petits écrans) */
-  .dropdown-content {
-      width: 100vw; /* Le menu prend toute la largeur de l'écran */
-      left: 0; /* Aligne le menu à gauche */
-      position: fixed; /* Fixe le menu pour qu'il suive l'écran */
-      top: 60px; /* Ajuste l'apparition sous le bouton dropdown */
-      text-align: center; /* Centre le texte */
-      z-index: var(--dropdown-z-index); /* Assure que le menu est au-dessus */
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-  /* Tablette (écrans moyens) */
-  .dropdown-content {
-      width: 100%; /* Toujours pleine largeur pour les tablettes */
-      left: 0;
-      right: 0;
-      position: absolute;
-      top: 100%; /* Apparaît sous le bouton dropdown */
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  /* Desktop (grands écrans) */
-  .dropdown-content {
-      width: 300px; /* Menu de largeur fixe */
-      right: 0;
-      left: auto; /* Positionné à droite */
-      position: absolute;
-      top: 100%; /* Apparaît sous le bouton dropdown */
-  }
-}
-
-/* ============================= */
-/* Contenu principal du menu     */
+/* Mobile-first styles           */
 /* ============================= */
 .dropdown-content {
   display: none; /* Caché par défaut */
-  background-color: var(--dropdown-bg-color); /* Couleur de fond */
-  box-shadow: var(--dropdown-box-shadow); /* Ombre */
-  padding: 8px 0; /* Espacement interne vertical */
-  border-radius: 4px; /* Coins arrondis pour un meilleur design */
+  background-color: $dropdownMenu-bg-color;
+  box-shadow: $dropdownMenu-box-shadow;
+  padding: 8px 0;
+  border-radius: 0;
+  z-index: $dropdownMenu-z-index;
+
+  a,
+  button {
+    color: $dropdownMenu-text-color;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  a:hover,
+  button:hover {
+    background-color: $dropdownMenu-hover-bg-color;
+    color: $dropdownMenu-hover-text-color;
+  }
 }
 
-/* Style des liens et des boutons dans le menu */
-.dropdown-content a,
-.dropdown-content button {
-  color: var(--dropdown-text-color); /* Couleur du texte */
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: center; /* Texte centré */
-  width: 100%; /* Prend toute la largeur */
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Effet de survol */
-.dropdown-content a:hover,
-.dropdown-content button:hover {
-  background-color: var(--dropdown-hover-bg-color); /* Couleur au survol */
-  color: var(--dropdown-hover-text-color); /* Couleur du texte au survol */
-}
-
-/* Affiche le menu déroulant lorsqu'il est actif */
+/* ============================= */
+/* Active Dropdown               */
+/* ============================= */
 .dropdown.active .dropdown-content {
-  display: block; /* Affiche le menu */
-  animation: fadeIn 0.3s ease-in-out; /* Animation d'apparition */
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Animation d'apparition */
+/* ============================= */
+/* Animation d'apparition        */
+/* ============================= */
 @keyframes fadeIn {
   from {
-      opacity: 0;
-      transform: translateY(-10px);
+    opacity: 0;
+    transform: translateY(-10px);
   }
   to {
-      opacity: 1;
-      transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================= */
+/* Tablette               */
+/* ============================= */
+@media screen and (max-width: $dropdownMenu-breakpoint-tablet) {
+  /* Mobile (petits écrans) */
+  .dropdown-content {
+    width: 100vw;
+    left: 0;
+    position: fixed;
+    top: 75px;
+    text-align: center;
+  }
+}
+
+
+/* ============================= */
+/* Desktop               */
+/* ============================= */
+@media screen and (min-width: $dropdownMenu-breakpoint-desktop) {
+  /* Desktop (grands écrans) */
+  .dropdown-content {
+    border-radius: 8px;
+    width: 300px;
+    right: 0;
+    left: auto;
+    position: absolute;
+    top: 100%;
   }
 }

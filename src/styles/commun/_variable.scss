@@ -3,7 +3,7 @@ $breakpoint-tablet: 768px; // Taille pour les tablettes et plus
 $breakpoint-desktop: 1024px; // Taille pour les PC et plus
 
 /* ==========================================================
-   VARIABLES de couleur Header
+   VARIABLES du Header
    ========================================================== */
 $header-bg-color: #262e33; // Couleur de fond de l'en-tête
 $header-text-color: white; // Couleur du texte de l'en-tête
@@ -13,7 +13,16 @@ $header-link-actif: #88adb7; // Couleur des liens actifs
 
 
 /* ============================= */
-/* Variables de couleur HomePage */
+/* Variables du  Footer   */
+/* ============================= */
+$footer-bg-color: #262E33;
+$footer-text-color: white;
+$footer-social-icon-facebook: #1877f2; /* Couleur Facebook */
+$footer-social-icon-instagram: #e1306c; /* Couleur Instagram */
+
+
+/* ============================= */
+/* Variables de la HomePage */
 /* ============================= */
 $HomePage-background-mobile: url('../../assets/images/homepageMobile.png');
 $HomePage-background-desktop: url('../../assets/images/homepage.png');
@@ -24,10 +33,3 @@ $HomePage-title-bg: rgba(2, 1, 16, 0.38); // Couleur semi-transparente titre Pet
 
 
 
-/* ============================= */
-/* Variables de couleur Footer   */
-/* ============================= */
-$footer-bg-color: #262E33;
-$footer-text-color: white;
-$footer-social-icon-facebook: #1877f2; /* Couleur Facebook */
-$footer-social-icon-instagram: #e1306c; /* Couleur Instagram */
