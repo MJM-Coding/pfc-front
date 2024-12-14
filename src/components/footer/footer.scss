@@ -1,26 +1,15 @@
-/* ============================= */
-/* Variables de couleur          */
-/* ============================= */
-$footer-bg-color: #262e33; /* Couleur de fond du pied de page */
-$text-color: white; /* Couleur du texte */
-$social-icon-color: white; /* Couleur des icônes sociales */
-$social-icon-hover-color: #1da1f2; /* Couleur des icônes au survol */
-$copyright-font-size: 0.9rem; /* Taille de la police pour le copyright */
+@use '../../styles/commun/commun.scss';
+@use '../../styles/commun/variable.scss';
 
-/* Breakpoints */
-$breakpoint-tablet: 1024px; // Taille pour les tablettes
-$breakpoint-mobile: 768px; // Taille pour les mobiles
+
 /* ============================= */
 /* Style principal du footer     */
 /* ============================= */
 .footer {
-  background-color: $footer-bg-color;
-  color: $text-color;
-  padding: 10px;
-  text-align: center;
-  position: relative;
-  bottom: 0;
-  width: 100%; /* Utilisation de 100% pour éviter les débordements */
+  background-color: variable.$footer-bg-color;
+  color: variable.$footer-text-color;
+  padding: 10px 15px;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -29,52 +18,115 @@ $breakpoint-mobile: 768px; // Taille pour les mobiles
 /* ============================= */
 .footer-content {
   display: flex;
+  flex-direction: row; /* Alignement horizontal par défaut */
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 10px;
+  flex-wrap: wrap; /* Permet l’ajustement si le contenu dépasse */
 }
 
 /* ============================= */
-/* Icônes de réseaux sociaux     */
+/* Réseaux sociaux               */
 /* ============================= */
 .social-media {
   display: flex;
-  justify-content: center;
-  gap: 55px;
-  
+  gap: 20px;
+
+  .social-icon {
+    font-size: 1.2rem; /* Taille par défaut pour mobile */
+    transition: color 0.3s ease;
+
+    &.facebook {
+      color: variable.$footer-social-icon-facebook;
+    }
+
+    &.instagram {
+      color: variable.$footer-social-icon-instagram;
+    }
+  }
 }
 
-.social-icon {
-  font-size: 1.5rem;
-  color: $social-icon-color;
-  transition: color 0.3s ease;
+/* ============================= */
+/* Liens de navigation           */
+/* ============================= */
+.footer-links {
+  display: flex;
+  gap: 10px;
+  margin-left: 80px;
 
-  &:hover {
-    color: $social-icon-hover-color; /* Couleur au survol */
+  .nav-link {
+    font-size: 0.9rem; /* Taille pour mobile */
+    text-decoration: none;
+    color: variable.$footer-text-color;
+    padding: 5px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+
+    &.active {
+      font-weight: bold;
+    }
   }
 }
 
 /* ============================= */
 /* Texte du copyright            */
 /* ============================= */
-.copyright p {
-  font-size: $copyright-font-size;
+.copyright {
+  font-size: 0.8rem;
   margin: 0;
+  text-align: center;
+  flex: 1;
 }
 
 /* ============================= */
-/* Liens de navigation           */
+/* Media queries                 */
 /* ============================= */
-.nav-link {
-  font-size: 1rem;
-  margin-right: 10px;
-}
-//! Media queries pour ajuster le design à différentes tailles d'écran  
-@media screen and (max-width :breakpoint-tablet) {
-  // Ajustements à venir pour les écrans inférieurs à1024px  
+@media screen and (max-width: variable.$breakpoint-tablet) {
+  .footer-content {
+    flex-direction: row; /* Tous les éléments sur une ligne */
+    justify-content: center; /* Centrer les éléments */
+    gap: 15px; /* Ajoute un espacement confortable */
+  }
+
+  .social-media {
+    order: 1; /* Garder les icônes au début */
+  }
+
+  .footer-links {
+    order: 2; /* Les liens au milieu */
+  }
+
+  .copyright {
+    display: none; /* Masque le copyright sur mobile */
+  }
 }
 
-@media screen and (max-width :$breakpoint-mobile) {
+@media screen and (min-width: variable.$breakpoint-desktop) {
+  .footer-content {
+    flex-direction: row; /* Passe tout en ligne */
+    justify-content: space-between;
+    align-items: center;
+  }
 
-  
+  .social-media {
+    gap: 20px; /* Augmente l’espace entre les icônes */
+    order: 1; /* Les icônes à gauche */
+    .social-icon {
+      font-size: 1.5rem; /* Augmente la taille des icônes */
+    }
+  }
+
+  .footer-links {
+    order: 3; /* Passe les liens à la fin */
+  }
+
+  .copyright {
+    order: 2; /* Place le copyright au centre */
+    flex: 1;
+    text-align: center;
+    display: block; /* Affiche le copyright sur PC */
+  }
+
+  .footer-links .nav-link {
+    font-size: 1rem; /* Ajuste la taille des liens sur PC */
+  }
 }

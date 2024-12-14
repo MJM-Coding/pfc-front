@@ -1,0 +1,33 @@
+/* Breakpoints */
+$breakpoint-tablet: 768px; // Taille pour les tablettes et plus
+$breakpoint-desktop: 1024px; // Taille pour les PC et plus
+
+/* ==========================================================
+   VARIABLES de couleur Header
+   ========================================================== */
+$header-bg-color: #262e33; // Couleur de fond de l'en-tête
+$header-text-color: white; // Couleur du texte de l'en-tête
+$header-button-bg-color: #4e8696; // Couleur de fond des boutons
+$header-button-hover-color: #88adb7; // Couleur de fond des boutons au survol
+$header-link-actif: #88adb7; // Couleur des liens actifs
+
+
+/* ============================= */
+/* Variables de couleur HomePage */
+/* ============================= */
+$HomePage-background-mobile: url('../../assets/images/homepageMobile.png');
+$HomePage-background-desktop: url('../../assets/images/homepage.png');
+$HomePage-text-color: white; // Couleur du texte Pet foster connect
+$HomePage-content-bg-color: rgba(255, 255, 255, 0.37); // couleur semi-transparente  <p>
+$HomePage-bold-text-color: black; // couleur du texte dans les <p>
+$HomePage-title-bg: rgba(2, 1, 16, 0.38); // Couleur semi-transparente titre Pet foster
+
+
+
+/* ============================= */
+/* Variables de couleur Footer   */
+/* ============================= */
+$footer-bg-color: #262E33;
+$footer-text-color: white;
+$footer-social-icon-facebook: #1877f2; /* Couleur Facebook */
+$footer-social-icon-instagram: #e1306c; /* Couleur Instagram */
