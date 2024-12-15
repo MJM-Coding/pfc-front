@@ -6,13 +6,13 @@
   margin-top: 20px;
 
   .profileImgPreview {
-    width: 200px; /* Taille de l'image */
-    height: 200px; /* Taille de l'image */
-    border-radius: 50%; /* Rend l'image ronde */
-    object-fit: cover; /* Adapte l'image à la zone tout en gardant ses proportions */
-    border: 2px solid #ccc; /* Bordure grise */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Effet d'ombre légère */
-    margin-bottom: 10px; /* Espacement avec le bouton */
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
   }
 
   .profileImgBtns {
@@ -22,24 +22,24 @@
 
     .profileImgBtn {
       display: inline-block;
-      background-color: #007bff; /* Couleur bleue */
+      background-color: #007bff;
       color: white;
       padding: 8px 16px;
       font-size: 14px;
       font-weight: bold;
       text-align: center;
       border: none;
-      border-radius: 20px; /* Bouton arrondi */
+      border-radius: 20px;
       cursor: pointer;
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #0056b3; /* Bleu foncé au survol */
+        background-color: #0056b3;
       }
     }
 
     #image-upload {
-      display: none; /* Masquer l'input file */
+      display: none;
     }
   }
 }

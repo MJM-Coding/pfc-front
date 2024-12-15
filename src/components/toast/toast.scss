@@ -1,20 +1,37 @@
+@use '../../styles/commun/commun.scss';
+@use '../../styles/commun/variable.scss';
+
+
+/* ==========================================================
+         VARIABLES
+========================================================== */
+$toast-success: #079442;
+$toast-error: #e21b1b;
+$toast-info: #00bcd4;
+$toast-warning: #ff7a22;
+
+
+/* ==========================================================
+         BASE STYLES (MOBILE FIRST)
+========================================================== */
 .toastContainer {
-  position: fixed; /* position fixe par rapport à la fenêtre */
-  top: 12%; /* Positionner le toast à 12% du haut */
-  left: 50%; /* Centrer horizontalement */
-  transform: translateX(-50%); /* Décaler de 50% de sa propre largeur pour centrer */
-  width: auto; /* Largeur automatique pour s'adapter au contenu */
+  position: fixed;
+  top: 12%;
+  right: 20px;
+  width: auto;
   z-index: 200;
   display: flex;
-  justify-content: center; /* Centrer le contenu à l'intérieur de .toastContainer */
-  align-items: center; /* Centrer verticalement */
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: flex-end;
+  width: 80%;
 }
 
 .toast {
-  background-color: var(--primary-color); /* Couleur de fond du toast */
+  background-color: $toast-info;
   color: white;
   padding: 10px 20px;
-  margin: 5px;
   border-radius: 5px;
   font-weight: 500;
   display: flex;
@@ -23,12 +40,13 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   transition: opacity 0.5s ease-out;
   text-align: center;
+  font-size: 0.8rem;
 }
 
 .toast button {
-  position: absolute; /* Position absolue pour bouton de fermeture */
-  top: 10px; /* 10px du haut */
-  right: 10px; /* 10px de la droite */
+  position: absolute;
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
   color: white;
@@ -36,28 +54,47 @@
   cursor: pointer;
 }
 
+/* ==========================================================
+         TOAST TYPES
+========================================================== */
 .toast.success {
-  background-color: #079442; /* Vert pour succès */
+  background-color: $toast-success;
 }
 
 .toast.error {
-  background-color: #e21b1b; /* Rouge pour erreur */
+  background-color: $toast-error;
 }
 
 .toast.info {
-  background-color: #00bcd4; /* Bleu pour information */
+  background-color: $toast-info;
 }
 
 .toast.warning {
-  background-color: #ff7a22; /* Orange pour avertissement */
+  background-color: $toast-warning;
 }
 
-/* Adaptation mobile */
-@media (max-width: 480px) {
+/* ==========================================================
+         BREAKPOINTS
+========================================================== */
+@media (min-width: variable.$breakpoint-tablet) {
   .toastContainer {
-    left: unset; /* Annule le left pour mobile */
-    right: 20px; /* Fixe à droite */
-    transform: unset; /* Retire le centrage avec transform */
-    width: auto; /* Largeur automatique */
+    top: 12%;
+    left: 50%;
+    right: unset;
+    transform: translateX(-50%);
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    
+  }
+
+  .toast {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: variable.$breakpoint-desktop) {
+  .toastContainer {
+    top: 8%;
   }
 }

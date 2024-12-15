@@ -1,16 +1,8 @@
-/* ==========================================================
-   VARIABLES
-   ========================================================== */
-   $header-bg-color: #262e33; // Couleur de fond de l'en-tête
-   $header-text-color: white; // Couleur du texte de l'en-tête
-   $button-bg-color: #4e8696; // Couleur de fond des boutons
-   $button-hover-color: #88adb7; // Couleur de fond des boutons au survol
-   $link-actif: #88adb7; // Couleur des liens actifs
-   
-   /* Breakpoints */
-   $breakpoint-tablet: 768px; // Taille pour les tablettes et plus
-   $breakpoint-desktop: 1024px; // Taille pour les PC et plus
-   
+@use '../../styles/commun/commun.scss';
+@use '../../styles/commun/variable.scss'; // breakpoint et couleurs
+
+
+
    /* ==========================================================
          BASE STYLES (MOBILE FIRST)
     ========================================================== */
@@ -19,8 +11,8 @@
      align-items: center;
      justify-content: space-between;
      padding: 0 10px;
-     background-color: $header-bg-color;
-     color: $header-text-color;
+     background-color: variable.$header-bg-color;
+     color: variable.$header-text-color;
      min-height: 75px;
      box-sizing: border-box;
    }
@@ -57,7 +49,7 @@
        .nav-link {
          font-size: 1rem;
          text-decoration: none;
-         color: $header-text-color;
+         color: variable.$header-text-color;
          padding: 8px 16px;
          border-radius: 5px;
          background-color: transparent;
@@ -68,7 +60,7 @@
          }
    
          &.active-link {
-           background-color: $link-actif;
+           background-color: variable.$header-link-actif;
            color: black;
          }
        }
@@ -93,12 +85,12 @@
          display: inline-block;
          background: none;
          border: none;
-         color: $header-text-color;
+         color: variable.$header-text-color;
          font-size: 1.5rem;
          cursor: pointer;
    
          &:hover {
-           color: $button-hover-color;
+           color: variable.$header-button-hover-color;
          }
        }
      }
@@ -107,7 +99,7 @@
    /* ==========================================================
          TABLETTE ET PLUS
       ========================================================== */
-   @media screen and (min-width: $breakpoint-tablet) {
+   @media screen and (min-width: variable.$breakpoint-tablet) {
     .header {
       min-height: 85px;
     }
@@ -140,8 +132,8 @@
        .auth-container {
          .auth-button {
            display: inline-block; // Affiche le bouton classique sur tablette
-           background-color: $button-bg-color;
-           color: $header-text-color;
+           background-color: variable.$header-button-bg-color;
+           color: variable.$header-text-color;
            border: none;
            border-radius: 5px;
            padding: 8px 16px;
@@ -150,7 +142,7 @@
            transition: background-color 0.3s ease;
    
            &:hover {
-             background-color: $button-hover-color;
+             background-color: variable.$header-button-hover-color;
            }
          }
    
@@ -164,7 +156,7 @@
    /* ==========================================================
          DESKTOP ET PLUS
       ========================================================== */
-   @media screen and (min-width: $breakpoint-desktop) {
+   @media screen and (min-width: variable.$breakpoint-desktop) {
      .header-right {
        .auth-container {
          display: flex;
@@ -180,7 +172,7 @@
          .user-firstname {
            display: block; // Affiche le nom
            font-size: 0.9rem;
-           color: $header-text-color;
+           color: variable.$header-text-color;
            text-align: center; // Centrer le texte sous l'icône
          }
        }

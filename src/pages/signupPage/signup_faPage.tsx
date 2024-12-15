@@ -12,7 +12,7 @@ import {
   validateEmail,
   validatePassword,
 } from "../../components/validateForm/validateForm"; // Import des fonctions de validation des champs
-import "../../components/validateForm/validateForm.scss";
+
 
 const Signup_faPage = () => {
   const [formData, setFormData] = useState<IUserRegistrationFamily>({

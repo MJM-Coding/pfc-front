@@ -1,9 +1,4 @@
-@use '../../styles/commun/commun.scss';
-
-/* Breakpoints */
-$breakpoint-tablet: 768px; // Taille pour les tablettes et plus
-$breakpoint-desktop: 1024px; // Taille pour les PC et plus
-
+@use '../../styles/commun/variable.scss'; //breakpoints
 
 /* ============================= */
 /* Variables loginSignupModale (modale de connexion/inscription)                 */
@@ -148,7 +143,7 @@ button:disabled {
 /* ============================= */
 /* Media Queries - Tablette      */
 /* ============================= */
-@media (min-width: $breakpoint-tablet) {
+@media (min-width: variable.$breakpoint-tablet) {
   .modal-content {
     width: 70%; /* Largeur sur tablette */
     max-width: 400px;
@@ -170,7 +165,7 @@ button:disabled {
 /* ============================= */
 /* Media Queries - Desktop       */
 /* ============================= */
-@media (min-width: $breakpoint-desktop) {
+@media (min-width: variable.$breakpoint-desktop) {
   .modal-content {
     width: 50%; /* Largeur sur desktop */
     max-width: 400px;

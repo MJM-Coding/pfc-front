@@ -1,8 +1,4 @@
-/* ============================= */
-/* Breakpoints                   */
-/* ============================= */
-$dropdownMenu-breakpoint-tablet: 768px;
-$dropdownMenu-breakpoint-desktop: 1024px;
+@use '../../styles/commun/variable.scss'; // pour les breakpoints
 
 /* ============================= */
 /* Variables de couleurs         */
@@ -14,9 +10,9 @@ $dropdownMenu-hover-text-color: #000000;
 $dropdownMenu-box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
 $dropdownMenu-z-index: 9999;
 
-/* ============================= */
-/* Mobile-first styles           */
-/* ============================= */
+  /* ==========================================================
+         BASE STYLES (MOBILE FIRST)
+    ========================================================== */
 .dropdown-content {
   display: none; /* Caché par défaut */
   background-color: $dropdownMenu-bg-color;
@@ -73,7 +69,7 @@ $dropdownMenu-z-index: 9999;
 /* ============================= */
 /* Tablette               */
 /* ============================= */
-@media screen and (max-width: $dropdownMenu-breakpoint-tablet) {
+@media screen and (max-width: variable.$breakpoint-tablet) {
   /* Mobile (petits écrans) */
   .dropdown-content {
     width: 100vw;
@@ -88,7 +84,7 @@ $dropdownMenu-z-index: 9999;
 /* ============================= */
 /* Desktop               */
 /* ============================= */
-@media screen and (min-width: $dropdownMenu-breakpoint-desktop) {
+@media screen and (min-width: variable.$breakpoint-desktop) {
   /* Desktop (grands écrans) */
   .dropdown-content {
     border-radius: 8px;

@@ -1,10 +1,10 @@
 @use '../../styles/commun/commun.scss';
-@use '../../styles/commun/variable.scss';
+@use '../../styles/commun/variable.scss'; //breakpoints et couleurs
 
 
-/* ============================= */
-/* Style principal du footer     */
-/* ============================= */
+  /* ==========================================================
+         BASE STYLES (MOBILE FIRST)
+    ========================================================== */
 .footer {
   background-color: variable.$footer-bg-color;
   color: variable.$footer-text-color;
