@@ -1,3 +1,8 @@
+@use "../styles/commun/commun.scss";
+@use "../styles/commun/variable.scss"; // breakpoints + couleurs
+
+
+
 /* ============================= */
 /* Variables                    */
 /* ============================= */
@@ -9,6 +14,9 @@ $font-family: 'Roboto', sans-serif;
 $border-radius: 5px;
 $spacing: 16px;
 
+/* Breakpoints */
+$breakpoint-tablet: 768px; // Taille pour les tablettes et plus
+$breakpoint-desktop: 1024px; // Taille pour les PC et plus
 
 /* ============================= */
 /* Conteneur principal du profil */
