@@ -78,7 +78,7 @@ $filter-input-focus-bg: #e0f7e9;
 }
 
 #apply-filters-btn:hover {
-  background-color: lighten($filter-hover-button, 10%);
+  background-color: $filter-hover-button;
   transform: translateY(-2px);
 }
 

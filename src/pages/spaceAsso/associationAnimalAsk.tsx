@@ -3,7 +3,7 @@ import { GetAllAsks, PatchAsk, DeleteAsk } from "../../api/ask.api";
 import type { IAsk } from "../../@types/ask";
 import AuthContext from "../../contexts/authContext";
 import Toast from "../../components/toast/toast";
-import "./associationAnimalAsk.scss";
+import "../../styles/spaceAsso/associationAnimalAsk.scss";
 import "../../styles/commun/commun.scss";
 import Swal from 'sweetalert2';
 

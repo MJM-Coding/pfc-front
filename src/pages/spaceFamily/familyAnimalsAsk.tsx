@@ -4,7 +4,7 @@ import { GetFamilyAsks, DeleteAsk } from "../../api/ask.api";
 import type { IAsk } from "../../@types/ask";
 import AuthContext from "../../contexts/authContext";
 import Toast from "../../components/toast/toast";
-import "./familyAnimalsAsk.scss";
+import '../../styles/spaceFamily/familyAnimalsAsk.scss';
 import "../../styles/commun/commun.scss";
 import Swal from "sweetalert2";
 

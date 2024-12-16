@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import "../../styles/signupPage.scss";
+import "../../styles/asso-fa/commun.signupPage.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationFamily } from "../../@types/signupForm";
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Import du composant Message

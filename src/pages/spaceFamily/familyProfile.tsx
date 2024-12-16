@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
-import "../../styles/profilePage.scss"; // Importation du fichier SCSS pour les styles
+import "../../styles/asso-fa/commun.profilePage.scss";
 import {
   GetFamilyById,
   PatchFamily,
@@ -25,7 +25,10 @@ function FamilyProfile() {
   const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isEditable, setIsEditable] = useState<boolean>(false); // Etat pour gérer l'édition
-
+  const [initialFormData, setInitialFormData] = useState<IFamilyForm | null>(
+    null
+  );
+  
   // State pour les messages d'erreur et de succès
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
@@ -79,6 +82,7 @@ function FamilyProfile() {
 
         setFamilyData(familyData);
         setFormData(familyData);
+        setInitialFormData(familyData);
 
         // Utiliser l'image par défaut si aucune image n'est disponible
         const baseUrl = import.meta.env.VITE_STATIC_URL || "";
@@ -93,7 +97,8 @@ function FamilyProfile() {
         console.error("Erreur lors de la récupération des données :", error);
       }
     };
-
+    setFormData(familyData);
+    
     fetchFamilyData();
   }, [familyId, token]);
 
@@ -246,10 +251,19 @@ function FamilyProfile() {
     }
   };
 
-  //! Basculer le mode édition
-  const toggleEdit = () => {
-    setIsEditable(!isEditable);
-  };
+
+//! Basculer le mode édition
+const toggleEdit = () => {
+  if (isEditable) {
+    // Restaurer les données initiales si on annule l'édition
+    setFormData({ ...initialFormData });
+  } else {
+    // Sauvegarder les données actuelles comme données initiales si on active l'édition
+    setInitialFormData({ ...formData });
+  }
+  setIsEditable(!isEditable);
+};
+
 
   if (!user)
     return <div>Veuillez vous connecter pour accéder à cette page.</div>;

@@ -17,7 +17,7 @@ $toast-warning: #ff7a22;
 .toastContainer {
   position: fixed;
   top: 12%;
-  right: 20px;
+  right: 100px;
   width: auto;
   z-index: 200;
   display: flex;
@@ -74,7 +74,7 @@ $toast-warning: #ff7a22;
 }
 
 /* ==========================================================
-         BREAKPOINTS
+         Tablette
 ========================================================== */
 @media (min-width: variable.$breakpoint-tablet) {
   .toastContainer {
@@ -92,6 +92,10 @@ $toast-warning: #ff7a22;
     font-size: 1rem;
   }
 }
+
+/* ==========================================================
+         Desktop
+========================================================== */
 
 @media (min-width: variable.$breakpoint-desktop) {
   .toastContainer {

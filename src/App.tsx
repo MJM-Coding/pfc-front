@@ -4,6 +4,8 @@ import React from "react";
 import 'bulma/css/bulma.min.css';
 import { Route, Routes } from "react-router-dom";
 
+import ConfirmEmailPage from "./components/confirmationEmail/confirmationEmail";
+
 import Header from "./components/header/header";
 import HomePage from "./pages/homePage/homePage"; // page d'accueil
 import AnimalsListPage from "./pages/animalsListPage/animalsListPage"; // page de la liste des animaux
@@ -32,6 +34,8 @@ const App: React.FC = () => {
       <Header />
       <main className="main-content">
       <Routes>
+        <Route path="/confirmation-email/:token" element={<ConfirmEmailPage />} />
+
         <Route path="/" element={<HomePage />} />
         <Route path="/animaux" element={<AnimalsListPage />} />
         <Route path="/animal-info/:animalId" element={<AnimalInfoPage />} />

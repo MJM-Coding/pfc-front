@@ -7,7 +7,7 @@ import {
 } from "../../api/association.api";
 import AuthContext from "../../contexts/authContext";
 import { validateEmail } from "../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
-import "../../styles/accountPage.scss";
+import "../../styles/asso-fa/commun.accountPage.scss";
 import Toast from "../../components/toast/toast";
 import Swal from "sweetalert2";
 

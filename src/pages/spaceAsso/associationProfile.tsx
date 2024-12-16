@@ -1,7 +1,7 @@
 // src/components/AssociationProfile/AssociationProfile.tsx
 
 import React, { useEffect, useState, useContext } from "react";
-import "../../styles/profilePage.scss";
+import "../../styles/asso-fa/commun.profilePage.scss";
 import {
   GetAssociationById,
   PatchAssociation,
@@ -23,6 +23,9 @@ function AssociationProfile() {
   const { user, token } = useContext(AuthContext) || {};
   const associationId = user?.id_association;
 
+  const [initialFormData, setInitialFormData] = useState<IAssociationForm | null>(
+    null
+  );  
   const [associationData, setAssociationData] = useState<IAssociation | null>(
     null
   );
@@ -83,6 +86,7 @@ function AssociationProfile() {
 
         setAssociationData(associationData);
         setFormData(associationData);
+        setInitialFormData(associationData); 
 
         const baseUrl = import.meta.env.VITE_STATIC_URL || "";
         setImageUrl(
@@ -244,6 +248,13 @@ function AssociationProfile() {
 
   //! Basculer le mode édition
   const toggleEdit = () => {
+    if (isEditable) {
+      // Restaurer les données initiales si on annule l'édition
+      setFormData({ ...initialFormData });
+    } else {
+      // Sauvegarder les données actuelles comme données initiales si on active l'édition
+      setInitialFormData({ ...formData });
+    }
     setIsEditable(!isEditable);
   };
 
