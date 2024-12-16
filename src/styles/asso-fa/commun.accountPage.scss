@@ -1,223 +1,172 @@
-// Variables de couleur
-$color-primary: #0044cc;
-$color-primary-hover: #0056b3;
-$color-accent: #ff6b6b;
-$color-success: #28a745;
-$color-success-hover: #218838;
-$color-danger: #dc3545;
-$color-danger-hover: #c82333;
-$color-danger-lightness: #f8dcde;
-$color-danger-darkness: #c82333;
-$color-background: #f4f4f4;
-$color-border: #ddd;
-$color-text-dark: #333;
-$color-text-light: #555;
+@use "../commun/commun.scss";
+@use "../commun/variable.scss"; // breakpoints + couleurs
 
-// Espacement
-$spacing: 16px;
 
-// Styles principaux pour la page d'accueil du compte
+/* ==========================================================
+        BASE STYLES (MOBILE FIRST)
+   ========================================================== */
 .containerAccount {
-  background: $color-background;
+  background: variable.$accountPage-background;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Mobile-first : les cartes empilées */
   align-items: center;
-  padding: calc($spacing * 2);
-  min-height: 83.2vh;
+  padding: 32px;
+  min-height: 84.7vh;
 
-  // Titre principal
   h1 {
     font-size: 24px;
-    color: $color-primary;
+    color: variable.$accountPage-primary-color;
     position: relative;
     text-transform: uppercase;
-    margin-bottom: $spacing;
-  
+
     &::after {
       content: attr(data-title);
       position: absolute;
       font-size: 14px;
-      color: $color-accent;
+      color: variable.$accountPage-accent-color;
       bottom: -5px;
       left: 50%;
       transform: translateX(-50%);
     }
   }
 
-  // Conteneur des formulaires
   .forms-container {
     display: flex;
-    gap: 20px;
-    margin-top: 70px;
+    flex-direction: column; /* Mobile : cartes en colonne */
+    gap: 20px; /* Espacement entre les cartes */
+    margin-top: 40px;
+    width: 100%; /* S’assurer que le conteneur occupe toute la largeur */
 
-    // Formulaire individuel
-    .form-container {
-      background: $color-background;
-      border: 1px solid $color-border;
+    .form-container,
+    .delete-container {
+      background: variable.$accountPage-background-card;
+      border: 1px solid variable.$accountPage-border;
       border-radius: 8px;
       padding: 20px;
-      width: 350px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 100%; /* Pleine largeur sur mobile */
+      max-width: 350px; /* Largeur maximale ajustée */
       display: flex;
       flex-direction: column;
 
-      // Titre du formulaire
       h3 {
         font-size: 1.2rem;
         margin-bottom: 15px;
-        color: $color-text-dark;
+        color: variable.$accountPage-text-dark;
       }
 
-      // Conteneur pour les champs du formulaire
       .infoFieldContainer {
-        display: flex;
-        flex-direction: column;
         margin-bottom: 15px;
-
+        
         label {
+          display: block; /* Garantit que le label est au-dessus de l’input */
           font-size: 0.9rem;
-          margin-bottom: 5px;
-          color: $color-text-light;
+          margin-bottom: 8px; /* Espace suffisant entre le label et l’input */
+          color: variable.$accountPage-text-light;
         }
 
         input {
+          width: 100%; /* Assure une largeur pleine */
           padding: 8px;
-          border: 1px solid $color-border;
+          border: 1px solid variable.$accountPage-border;
           border-radius: 4px;
           font-size: 0.95rem;
-        }
-
-        input:disabled {
-          background: #f0f0f0;
+          line-height: 1.2; /* Améliore la lisibilité */
+          box-sizing: border-box; /* Évite que la largeur soit affectée par les bordures */
         }
       }
 
-      // Bouton de soumission du formulaire
       .submit-btn {
-        background: $color-success;
+        background: variable.$accountPage-success;
         color: white;
-        border: none;
         padding: 10px;
         font-size: 0.9rem;
+        border: none;
         border-radius: 4px;
         cursor: pointer;
-        transition: background 0.3s;
         width: 100%;
         margin-top: auto;
-        align-self: flex-end;
-      }
 
-      .submit-btn:hover {
-        background: $color-success-hover;
+        &:hover {
+          background: variable.$accountPage-success-hover;
+        }
       }
     }
 
-    // Conteneur pour la suppression du compte
     .delete-container {
-      background: $color-danger-lightness;
-      border: 1px solid $color-danger;
-      border-radius: 8px;
-      padding: 20px;
-      width: 300px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      background: variable.$accountPage-bg-delete-container; /* Couleur de fond différente */
+      color: rgb(2, 2, 2); /* Assure que le texte est lisible sur le fond rouge */
+      border: none; /* Supprime la bordure si nécessaire */
 
-      // Titre de la suppression
       h3 {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-        color: $color-danger;
+        color: rgb(0, 0, 0); /* Texte du titre en blanc */
+        text-align: center;
       }
 
       p {
-        font-size: 0.9rem;
-        color: $color-danger-darkness;
-        margin-bottom: 20px;
+      color: #ad130e; /* Couleur légèrement gris clair pour le texte descriptif */
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 20px;
       }
 
-      // Bouton de suppression
       .delete-btn {
-        background: $color-danger;
+        background: variable.$accountPage-danger; /* Couleur rouge foncé pour le bouton */
         color: white;
-        border: none;
+        border: 1px solid variable.$accountPage-danger-darkness;
         padding: 12px;
-        margin-bottom: 10px;
         font-size: 1rem;
         border-radius: 4px;
         cursor: pointer;
         width: 100%;
-        transition: background 0.3s;
         margin-top: auto;
-        align-self: flex-end;
+
+        &:hover {
+          background: variable.$accountPage-danger-hover; /* Change la couleur au survol */
+        }
       }
+    }
+  }
 
-      .delete-btn:hover {
-        background: $color-danger-hover;
+  /* ========================
+          Tablette
+     ======================== */
+
+     @media (min-width: variable.$breakpoint-tablet) and (max-width: 1023px) {
+      
+      /* Mode Portrait : Les cartes sont en colonne */
+      .forms-container {
+        flex-direction: column; /* Empile les cartes en colonne */
+        gap: 20px; /* Ajoute un espace entre les cartes */
+        padding: 0 20px;
+      }
+    
+      .form-container,
+      .delete-container {
+        flex: 1 1 100%; /* Chaque carte occupe toute la largeur */
+        max-width: none; /* Supprime toute limite de largeur */
       }
     }
-  }
-
-  // Bouton d'annulation
-  .cancel-btn {
-    background: $color-success;
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    transition: background 0.3s;
-    margin-top: auto;
-    align-self: flex-end;
-  }
-
-  // Responsiveness : Tablettes et petites tablettes
-  @media (max-width: 1024px) {
-    .forms-container {
-      flex-direction: column;
-      align-items: center;
+    
+    @media (min-width: variable.$breakpoint-desktop) {
+      h1 {
+        margin-bottom: 50px;
+       }
+      /* Mode Paysage : Les cartes sont en ligne */
+      .forms-container {
+        flex-direction: row; /* Aligne les cartes en ligne */
+        flex-wrap: nowrap; /* Empêche le wrapping des cartes */
+        gap: 20px; /* Ajoute un espace entre les cartes */
+        padding: 0 20px;
+        width: 100%; /* Utilise toute la largeur de l'écran */
+        max-width: 100%; /* Limite les marges latérales */
+        margin: 0 auto; /* Centre le conteneur */
+      }
+    
+      .form-container,
+      .delete-container {
+        flex: 1 1 calc(48% - 20px); /* Chaque carte occupe environ la moitié de l'espace disponible */
+        max-width: 500px; /* Permet à la carte de s'étendre librement */
+      }
     }
-  }
-
-  // Responsiveness : Mobiles
-  @media (max-width: 768px) {
-    h1 {
-      font-size: 1.8rem;
-    }
-
-    .forms-container {
-      gap: 15px;
-    }
-
-    .form-container,
-    .delete-container {
-      width: 100%;
-    }
-  }
-
-  // Responsiveness : Mobiles très petits écrans
-  @media (max-width: 480px) {
-    h1 {
-      font-size: 1.6rem;
-    }
-
-    .forms-container {
-      gap: 10px;
-    }
-
-    .form-container,
-    .delete-container {
-      width: 100%;
-    }
-
-    .submit-btn,
-    .delete-btn,
-    .cancel-btn {
-      padding: 12px;
-      font-size: 1rem;
-    }
-  }
-}
+  }    

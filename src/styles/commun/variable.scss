@@ -14,26 +14,35 @@ $header-link-actif: #88adb7; // Couleur des liens actifs
 /* ============================= */
 /* Variables de la HomePage */
 /* ============================= */
-$HomePage-background-mobile: url('../../assets/images/homepageMobile.png');
-$HomePage-background-desktop: url('../../assets/images/homepage.png');
+$HomePage-background-mobile: url("../../assets/images/homepageMobile.png");
+$HomePage-background-desktop: url("../../assets/images/homepage.png");
 $HomePage-text-color: white; // Couleur du texte Pet foster connect
-$HomePage-content-bg-color: rgba(255, 255, 255, 0.37); // couleur semi-transparente  <p>
+$HomePage-content-bg-color: rgba(
+  255,
+  255,
+  255,
+  0.37
+); // couleur semi-transparente  <p>
 $HomePage-bold-text-color: black; // couleur du texte dans les <p>
-$HomePage-title-bg: rgba(2, 1, 16, 0.38); // Couleur semi-transparente titre Pet foster
+$HomePage-title-bg: rgba(
+  2,
+  1,
+  16,
+  0.38
+); // Couleur semi-transparente titre Pet foster
 
 /* ============================= */
 /* Variables du  Footer   */
 /* ============================= */
-$footer-bg-color: #262E33;
+$footer-bg-color: #262e33;
 $footer-text-color: white;
 $footer-social-icon-facebook: #1877f2; /* Couleur Facebook */
 $footer-social-icon-instagram: #e1306c; /* Couleur Instagram */
 
-
 // =============================
 // Page d'inscription famille + asso (signupPage)
 // =============================
-$signupPage-primary-color: #4E8696;
+$signupPage-primary-color: #4e8696;
 $signupPage-secondary-color: #6c757d;
 $signupPage-danger-color: #dc3545;
 $signupPage-background-color: #f8f9fa;
@@ -43,7 +52,29 @@ $signupPage-button-hover-bg-color: #375d68;
 $signupPage-label-color: #495057;
 $signupPage-error-color: $signupPage-danger-color;
 
-
 // =============================
 // Page profil famille + asso (profilePage)
 // =============================
+$profilePage-primary-color: #0044cc;
+$profilePage-secondary-color: #f4f4f4;
+$profilePage-accent-color: #ff6b6b;
+$profilePage-text-color: #413e3e;
+$profilePage-border-radius: 5px;
+
+/* ==========================================================
+        Page compte family + asso (accountPage)
+   ========================================================== */
+$accountPage-primary-color: #0044cc;
+$accountPage-primary-hover: #0056b3;
+$accountPage-bg-delete-container: #f8cece;
+$accountPage-accent-color: #ff6b6b;
+$accountPage-success: #28a745;
+$accountPage-success-hover: #218838;
+$accountPage-danger: #dc3545;
+$accountPage-danger-hover: #c82333;
+$accountPage-danger-darkness: #c82333;
+$accountPage-background: #f4f4f4;
+$accountPage-background-card: #ffffff;
+$accountPage-border: #ddd;
+$accountPage-text-dark: #333;
+$accountPage-text-light: #555;
