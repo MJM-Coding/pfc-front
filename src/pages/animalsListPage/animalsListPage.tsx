@@ -88,7 +88,10 @@ const AnimalsListPage: React.FC = () => {
   // Application des filtres
   useEffect(() => {
     let filtered = [...animals];
-  
+    
+   // Exclure les animaux avec `is_paused: true`
+   filtered = filtered.filter((animal) => !animal.is_paused);
+
     // Exclure les animaux avec une demande ayant le statut "validée"
     filtered = filtered.filter(
       (animal) => !animal.asks || animal.asks.every((ask) => ask.status !== "validée")

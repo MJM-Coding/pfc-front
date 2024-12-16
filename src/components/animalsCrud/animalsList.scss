@@ -1,53 +1,47 @@
+@use '../../styles/commun/variable.scss'; // breakpoints
+
 // ==============================
 // Variables
 // ==============================
+$animalList-primary-color: #28a745; // Couleur principale (vert)
+$animalList-hover-color: #218838; // Couleur au survol pour les boutons principaux
+$animalList-edit-button-bg: #007bff; // Couleur de fond du bouton de modification
+$animalList-edit-button-hover-bg: #0056b3; // Couleur au survol du bouton de modification
+$animalList-delete-button-bg: #ff4d4d; // Couleur de fond du bouton de suppression
+$animalList-delete-button-hover-bg: #e60000; // Couleur au survol du bouton de suppression
+$animalList-background-color: #f9f9f9; // Couleur de fond de l'élément
+$animalList-text-primary-color: #333; // Couleur principale du texte
+$animalList-text-secondary-color: #555; // Couleur secondaire du texte
+$animalList-shadow-color: rgba(0, 0, 0, 0.1); // Ombre légère
 
-$primary-color: #28a745; // Couleur principale (vert)
-$hover-color: #218838; // Couleur au survol pour les boutons principaux
-$edit-button-bg: #007bff; // Couleur de fond du bouton de modification
-$edit-button-hover-bg: #0056b3; // Couleur au survol du bouton de modification
-$delete-button-bg: #ff4d4d; // Couleur de fond du bouton de suppression
-$delete-button-hover-bg: #e60000; // Couleur au survol du bouton de suppression
-$background-color: #f9f9f9; // Couleur de fond de l'élément
-$text-primary-color: #333; // Couleur principale du texte
-$text-secondary-color: #555; // Couleur secondaire du texte
-$shadow-color: rgba(0, 0, 0, 0.1); // Ombre légère
 
-// Breakpoints
-$breakpoint-mobile: 576px;
-$breakpoint-tablet: 768px;
 
-// ==============================
-// Conteneur principal
-// ==============================
-
+/* ==========================================================
+         BASE STYLES (MOBILE FIRST)
+========================================================== */
 .custom-animal-list-container {
-  padding: 20px;
-  min-height: 70vh;
+  padding: 10px;
   width: 100%;
-  background-color: $background-color;
+  background-color: $animalList-background-color;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 // ==============================
 // Liste des animaux
 // ==============================
-
 .custom-animal-list {
-  list-style: none;
+  display: flex;
+  flex-wrap: wrap; // Permet d'aller à la ligne si nécessaire
+  justify-content: center; // Centre les éléments
+  gap: 10px; // Espacement entre les cartes
   padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  list-style: none;
   width: 100%;
-  justify-content: flex-start; // Centre les cartes dans le conteneur
- 
 }
 
-// Élément individuel
 .custom-animal-item {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -55,10 +49,10 @@ $breakpoint-tablet: 768px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 6px $shadow-color;
+  box-shadow: 0 4px 6px $animalList-shadow-color;
   transition: transform 0.3s, box-shadow 0.3s;
-  max-width: 300px;
-  width: 100%;
+  width: calc(50% - 10px); // Deux colonnes sur mobile
+  max-width: 150px; // Limitation de taille sur mobile
 
   &:hover {
     transform: translateY(-5px);
@@ -66,62 +60,56 @@ $breakpoint-tablet: 768px;
   }
 }
 
-// Image de l'animal
 .custom-animal-photo {
   width: 100%;
-  height: 200px;
-  object-fit: cover; // Assure que l'image remplit l'espace tout en gardant ses proportions
-  background-color: #eee; // Couleur de fond en cas de chargement lent
+  height: 100px; // Carré
+  object-fit: cover;
+  background-color: #eee;
 }
 
-// Texte descriptif
 .custom-animal-name {
-  font-size: 1.2rem;
+  font-size: 1rem; // Texte plus petit
   font-weight: bold;
-  color: $text-primary-color;
+  color: $animalList-text-primary-color;
   text-align: center;
-  margin: 15px 0;
+  margin: 5px 0;
 }
-
-// ==============================
-// Actions des animaux
-// ==============================
 
 .custom-animal-actions {
   display: flex;
   justify-content: space-around;
-  padding: 10px;
-  background-color: $background-color;
+  padding: 5px;
+  background-color: $animalList-background-color;
   border-top: 1px solid #ddd;
 
   .custom-edit-button,
   .delete-animal-button {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
 
   .custom-edit-button {
-    background-color: $edit-button-bg;
+    background-color: $animalList-edit-button-bg;
     color: #fff;
 
     &:hover {
-      background-color: $edit-button-hover-bg;
+      background-color: $animalList-edit-button-hover-bg;
     }
   }
 
   .delete-animal-button {
-    background-color: $delete-button-bg;
+    background-color: $animalList-delete-button-bg;
     color: #fff;
 
     &:hover {
-      background-color: $delete-button-hover-bg;
+      background-color: $animalList-delete-button-hover-bg;
     }
   }
 }
@@ -129,45 +117,19 @@ $breakpoint-tablet: 768px;
 // ==============================
 // Bouton "Ajouter un animal"
 // ==============================
-
 .custom-add-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #4caf50, #087f23);
   color: #fff;
-  padding: 14px 24px;
+  padding: 10px 20px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: bold;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  font-size: 1rem;
   margin-bottom: 15px;
-
-  i {
-    margin-right: 10px;
-    font-size: 1.4rem;
-  }
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-100%);
-    transition: transform 0.3s ease;
-    z-index: 0;
-  }
-
-  &:hover:before {
-    transform: translateY(0);
-  }
+  
 
   &:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
@@ -176,24 +138,70 @@ $breakpoint-tablet: 768px;
 
   &:active {
     transform: translateY(1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
-  &:focus {
-    outline: 2px solid #ff9800;
+  .fa-plus-circle {
+    margin-right: 10px;
+  }
+}
+.custom-animal-date {
+  font-size: 0.9rem;
+  color: $animalList-text-secondary-color;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.pause-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #555;
+
+  &.paused {
+    color: rgb(31, 141, 16);
+  }
+
+  &:hover {
+    color: #000;
+  }
+
+  
+  
+}
+
+// ==============================
+// Tablette
+// ==============================
+@media (min-width: variable.$breakpoint-tablet) {
+  .custom-animal-list {
+    justify-content: center; // Alignement à gauche
+  }
+
+  .custom-animal-item {
+    width: calc(33.333% - 10px); // 3 colonnes sur tablette
+    max-width: 200px; // Cartes légèrement plus grandes
+  }
+
+  .custom-animal-photo {
+    height: 150px; // Carré
+  }
+
+  .custom-animal-name {
+    font-size: 1.1rem; // Texte légèrement plus grand
   }
 }
 
+@media (min-width: variable.$breakpoint-desktop) {
+  .custom-animal-item {
+    width: calc(25% - 10px); // 4 colonnes sur desktop
+    max-width: 200px; // Cartes encore plus grandes
+  }
 
-// ==============================
-// Messages
-// ==============================
+  .custom-animal-photo {
+    height: 150px; // Carré
+  }
 
-.custom-loading-message,
-.custom-error-message,
-.custom-no-animals {
-  text-align: center;
-  color: $text-secondary-color;
-  font-size: 1rem;
-  margin: 10px 0;
+  .custom-animal-name {
+    font-size: 1.2rem; // Texte plus grand
+  }
 }

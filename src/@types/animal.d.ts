@@ -18,6 +18,7 @@ import { IAsk } from "./ask";
   photo1:string; // Photo supplémentaire (optionnel)
   photo2:string; // Photo supplémentaire (optionnel)
   photo3:string; // Photo supplémentaire (optionnel)
+  is_paused:boolean; // Indicateur pour savoir si l'animal est mis en pause (optionnel)
 
   id_family? :number|null; // ID de la famille d'accueil (optionnel)
   id_association? :number|null; // ID de l'association (optionnel)

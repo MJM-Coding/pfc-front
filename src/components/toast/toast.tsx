@@ -14,7 +14,7 @@ function Toast({ setToast, message, type, children }: IToastProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setToast(false);
-    }, 5000);
+    }, 2000);
 
     return () => {
       clearTimeout(timer);

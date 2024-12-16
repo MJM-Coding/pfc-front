@@ -1,81 +1,181 @@
-//! Composant qui affiche la liste des animaux de l'association
-import React, { useContext } from "react";
-import { useParams, Link } from "react-router-dom"; // Pour la navigation
-import type { IAnimal } from "../../@types/animal"; // Import du type pour Animal
-import AuthContext from "../../contexts/authContext"; // Contexte pour l'authentification
-import DeleteAnimal from "./deleteAnimal"; // Composant pour gérer la suppression
+import React, { useContext, useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import type { IAnimal } from "../../@types/animal";
+import AuthContext from "../../contexts/authContext";
+import DeleteAnimal from "./deleteAnimal";
 import "./animalsList.scss";
-
+import { PatchAnimal } from "../../api/animal.api";
+import Swal from "sweetalert2";
+import Toast from "../toast/toast";
 
 interface AnimalListProps {
-  animals: IAnimal[]; // Liste des animaux à afficher
-  isLoading: boolean; // Indicateur de chargement
-  error: string | null; // Message d'erreur en cas de problème
-  onDelete: () => void; // Fonction appelée après suppression réussie
+  animals: IAnimal[];
+  isLoading: boolean;
+  error: string | null;
+  onDelete: () => void;
 }
 
-const AnimalList: React.FC<AnimalListProps> = ({ animals, isLoading, error, onDelete }) => {
-  //! Récupération du contexte d'authentification
+const AnimalList: React.FC<AnimalListProps> = ({
+  animals,
+  isLoading,
+  error,
+  onDelete,
+}) => {
   const authContext = useContext(AuthContext);
-
-  //! Vérification si authContext est défini et accès au token
   const token = authContext ? authContext.token : null;
-
   const { associationId } = useParams<{ associationId?: string }>();
+
+  //! États pour le toast
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error" | "info" | "warning">("success");
+ // Afficher le toast après le rechargement si des données sont dans le localStorage
+ useEffect(() => {
+  const message = localStorage.getItem("toastMessage");
+  const type = localStorage.getItem("toastType") as "success" | "error" | "info" | "warning";
+
+  if (message && type) {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+
+    // Nettoyer le localStorage après avoir récupéré les données
+    localStorage.removeItem("toastMessage");
+    localStorage.removeItem("toastType");
+  }
+}, []);
+
+  //! Fonction pour gérer la mise en pause/réactivation
+  const handleTogglePause = async (animalId: number, isPaused: boolean) => {
+    if (!token) {
+      alert("Vous devez être authentifié pour effectuer cette action.");
+      return;
+    }
+  
+    try {
+      // Confirmer l'action avec SweetAlert2
+      const result = await Swal.fire({
+        title: isPaused ? "Mettre en pause cet animal ?" : "Réactiver cet animal ?",
+        html: isPaused
+          ? `<p>Cet animal ne sera plus visible dans la liste de recherche. </p>`
+  
+          : `<p>L'animal sera à nouveau visible dans la liste de recherche.</p>`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: isPaused ? "Oui, mettre en pause" : "Oui, réactiver",
+        cancelButtonText: "Annuler",
+        
+      });
+  
+      if (result.isConfirmed) {
+        // Mise à jour via l'API
+        await PatchAnimal(String(animalId), { is_paused: isPaused }, token);
+  
+        // Stocker le message et le type dans le localStorage
+        localStorage.setItem(
+          "toastMessage",
+          isPaused
+            ? "L'animal a été mis en pause avec succès."
+            : "L'animal a été réactivé avec succès."
+        );
+        localStorage.setItem("toastType", "success");
+  
+        // Rafraîchir la page
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour :", error);
+  
+      // Stocker le message d'erreur dans le localStorage
+      localStorage.setItem("toastMessage", "Une erreur est survenue. Veuillez réessayer.");
+      localStorage.setItem("toastType", "error");
+  
+      // Rafraîchir la page (optionnel)
+      window.location.reload();
+    }
+  };
+  
+
+  //! Trier les animaux par date de création
+  const sortedAnimals = [...animals].sort((a, b) => {
+    const dateA = new Date(a.created_at).getTime();
+    const dateB = new Date(b.created_at).getTime();
+    return dateB - dateA;
+  });
 
   return (
     <div className="custom-animal-list-container">
       <div className="custom-actions">
-
-        {/* Bouton Ajouter un animal */}
-        <Link to={`/espace-association/animaux-association/ajout-animal/${associationId}`} className="custom-add-button">
-  <i className="fas fa-plus-circle"></i> Ajouter un animal
-</Link>
-
-
+        <Link
+          to={`/espace-association/animaux-association/ajout-animal/${associationId}`}
+          className="custom-add-button"
+        >
+          <i className="fas fa-plus-circle"></i> Ajouter un animal
+        </Link>
       </div>
 
-      {/* Affichage du message de chargement pendant la récupération des animaux */}
-      {isLoading && <p className="custom-loading-message">Chargement des animaux...</p>}
-
-      {/* Affichage du message d'erreur s'il y en a une */}
+      {isLoading && (
+        <p className="custom-loading-message">Chargement des animaux...</p>
+      )}
       {error && <p className="custom-error-message">{error}</p>}
 
-      {/* Si pas de chargement et pas d'erreur, on affiche la liste des animaux */}
       {!isLoading && !error && (
         <ul className="custom-animal-list">
-          {animals.length > 0 ? (
-            animals.map((animal) => (
+          {sortedAnimals.length > 0 ? (
+            sortedAnimals.map((animal) => (
               <li key={animal.id} className="custom-animal-item">
-                {/* Affichage de la photo de l'animal */}
                 {animal.profile_photo && (
                   <img
                     src={
                       animal.profile_photo.startsWith("http")
                         ? animal.profile_photo
-                        : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+                        : `${import.meta.env.VITE_STATIC_URL}${
+                            animal.profile_photo
+                          }`
                     }
                     alt={animal.name}
                     className="custom-animal-photo"
                   />
                 )}
                 <h4 className="custom-animal-name">{animal.name}</h4>
-                
-
-                {/* Actions : Modifier et Supprimer */}
+                <p className="custom-animal-date">
+                  Date d'ajout :{" "}
+                  {new Date(animal.created_at).toLocaleDateString("fr-FR")}
+                </p>
                 <div className="custom-animal-actions">
-                  {/* Bouton Modifier : redirige vers la page de modification */}
-                  <Link to={`/espace-association/animaux-association/${associationId}/modifier-animal/${animal.id}`} className="custom-edit-button">
+                  <Link
+                    to={`/espace-association/animaux-association/${associationId}/modifier-animal/${animal.id}`}
+                    className="custom-edit-button"
+                  >
                     <i className="fas fa-edit"></i>
                   </Link>
-
-                  {/* Bouton Supprimer : déclenche la suppression de l'animal */}
                   {token && (
                     <DeleteAnimal
-                      animalId={String(animal.id)} // Passe l'ID de l'animal en tant que string
-                      onDeleteSuccess={onDelete} // Passe la fonction onDeleteSuccess
+                      animalId={String(animal.id)}
+                      onDeleteSuccess={onDelete}
                     />
                   )}
+                  <button
+                    onClick={() =>
+                      handleTogglePause(animal.id, !animal.is_paused)
+                    }
+                    className={`pause-button ${
+                      animal.is_paused ? "paused" : ""
+                    }`}
+                    title={
+                      animal.is_paused
+                        ? "Réactiver l'animal"
+                        : "Mettre en pause l'animal"
+                    }
+                  >
+                    <i
+                      className={`fa-solid ${
+                        animal.is_paused ? "fa-play" : "fa-pause"
+                      }`}
+                    ></i>
+                  </button>
                 </div>
               </li>
             ))
@@ -83,6 +183,15 @@ const AnimalList: React.FC<AnimalListProps> = ({ animals, isLoading, error, onDe
             <p className="custom-no-animals">Aucun animal trouvé.</p>
           )}
         </ul>
+      )}
+
+      {/* Composant Toast */}
+      {showToast && (
+        <Toast
+          setToast={setShowToast}
+          message={toastMessage}
+          type={toastType}
+        />
       )}
     </div>
   );
