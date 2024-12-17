@@ -31,6 +31,9 @@ const ModifyAnimal: React.FC = () => {
   const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
   const [newPhotos, setNewPhotos] = useState<File[]>([]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+
   const [toast, setToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<
@@ -84,6 +87,7 @@ const ModifyAnimal: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
   
     // Vérification des champs obligatoires
     if (!name || !species || !breed || !gender || (age ?? 0) <= 0 || !size) {
@@ -143,6 +147,7 @@ const ModifyAnimal: React.FC = () => {
   
       setTimeout(() => {
         navigate(`/espace-association/animaux-association/${associationId}`);
+        setIsSubmitting(false); 
       }, 3000);
     } catch (error) {
       console.error("Erreur lors de la modification :", error);
@@ -200,20 +205,19 @@ const ModifyAnimal: React.FC = () => {
 
   return (
     <div className="animal-container">
-      {toast && (
-        <Toast setToast={setToast} message={toastMessage} type={toastType} />
-      )}
-      <div className="back-button-animal-container">
-        <Link
-          to={`/espace-association/animaux-association/${associationId}`}
-          className="back-button-addAnimal"
-        >
-          <i className="fas fa-arrow-left"></i> Retour à la liste
-        </Link>
-        <h1 className="animal-title">
-          Modifier le profil de {name ? name : "votre animal"}
-        </h1>
-      </div>
+      {toast && ( <Toast setToast={setToast} message={toastMessage} type={toastType} />      )}
+      
+       {/* Bouton de retour */}
+       <div className="back-button-animal-container">
+       <Link
+         to={`/espace-association/animaux-association/${associationId}`}
+         className="add-animal-back-button"
+       >
+         <i className="fas fa-arrow-left"></i>
+         <span className="back-text">Retour à la liste</span>
+       </Link>
+       <h1 className="animal-title"> Modifier {name ? name : "votre animal"}</h1>
+     </div>
 
       <div className="animal-layout">
         <form onSubmit={handleSubmit} className="animal-form">
@@ -289,9 +293,9 @@ const ModifyAnimal: React.FC = () => {
               placeholder="Description de l'animal"
             />
           </div>
-          <button type="submit" className="animal-button">
-            Sauvegarder les modifications
-          </button>
+          <button type="submit" className={`animal-button ${isSubmitting ? 'disabled' : ''}`} disabled={isSubmitting}>
+  Sauvegarder les modifications
+</button>
         </form>
 
         {/* Section des photos */}

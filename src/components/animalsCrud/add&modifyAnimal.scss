@@ -1,258 +1,132 @@
+@use '../../styles/commun/commun.scss';
+@use '../../styles/commun/variable.scss';
+
 // ==============================
 // Variables
 // ==============================
+$addModifyAnimal-primary-color: #4caf50;
+$addModifyAnimal-error-color: #ff5252;
+$addModifyAnimal-background-color: #f9f9f9;
+$addModifyAnimal-text-color: #4e4d4d;
+$addModifyAnimal-border-color: #ccc;
+$addModifyAnimal-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$addModifyAnimal-font-size-small: 14px;
+$addModifyAnimal-font-size-medium: 16px;
+$addModifyAnimal-shadow-color: rgba(0, 0, 0, 0.1);
 
-$primary-color: #4caf50; // Couleur principale
-$error-color: #ff5252; // Couleur d'erreur
-$background-color: #f9f9f9; // Couleur de fond
-$text-color: #4e4d4d; // Couleur principale du texte
-$border-color: #ccc; // Couleur des bordures
-$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Ombre portée
-$font-size-small: 14px; // Taille de police petite
-$font-size-medium: 16px; // Taille de police moyenne
 
-// Responsive breakpoints
-$tablet-breakpoint: 768px;
-$mobile-breakpoint: 480px;
-
-// ==============================
-// Styles globaux
-// ==============================
+//RESPONSIVE DANS CHAQUE STYLE AU LIEU DE LE METTRE A LA FIN TEST
+/* ==========================================================
+         BASE STYLES (MOBILE FIRST) 
+========================================================== */
 
 .animal-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: $background-color;
-
+  background-color: $addModifyAnimal-background-color;
 }
 
 // ==============================
 // Layout principal
 // ==============================
-
 .animal-layout {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
-  max-width: 1200px;
+  gap: 20px;
+  justify-content: center; // Centre les éléments horizontalement
   width: 100%;
 
-  @media (max-width: $tablet-breakpoint) {
-    flex-direction: column;
-    align-items: center;
-  }
-}
+  .image-section,
+  .animal-form {
+    order: 0; // Ordre par défaut
+    width: 100%; // Utilise toute la largeur sur mobile
+    max-width: 500px; // Largeur maximale
+    margin: 0 auto; // Centre horizontalement
+    box-sizing: border-box;
 
-// ==============================
-// Formulaire
-// ==============================
-
-.animal-form {
-  flex: 1;
-  min-width: 300px;
-  max-width: 500px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: $box-shadow;
-
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
-  .animal-form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    input,
-    select,
-    textarea {
-      padding: 10px;
-      font-size: $font-size-small;
-      border: 1px solid $border-color;
-      border-radius: 5px;
-      &:focus {
-        outline: none;
-        border-color: $primary-color;
-      }
+    @media (min-width: variable.$breakpoint-tablet) {
+      width: auto; 
+      margin: 0; 
+      flex: 1; 
     }
 
-    textarea {
-      resize: none;
-      height: 80px; // Hauteur fixe pour cohérence
+    @media (min-width: variable.$breakpoint-desktop) {
+      // No specific styles for desktop here, but you can add if needed
     }
   }
 
-  button {
-    padding: 10px 15px;
-    background-color: $primary-color;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: $font-size-medium;
-
-    &:hover {
-      background-color: $primary-color;
-    }
+  .image-section {
+    order: -1; // Les images apparaissent en premier sur mobile
   }
 
-}
-
-.error-message {
-  color: $error-color;
-  font-size: $font-size-small;
-}
-
-// =============================
-// Style bouton de retour à la liste
-// =============================
-
-.back-button-animal-container {
-  display: flex;
-  align-items: center; /* Aligne les éléments verticalement */
-  position: relative; /* Nécessaire pour positionner absolument le h3 */
-  width: 100%; /* Utilise toute la largeur de la page */
-  padding: 0 20px;
-  margin-bottom: 20px;
-}
-
-.back-button-addAnimal {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  margin: 0; /* Supprime les marges */
-  background-color: #f5f5f5;
-  color: #27586e;
-  border: 2px solid #27586e;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  cursor: pointer;
-
-  i {
-    margin-right: 8px; /* Espacement entre l'icône et le texte */
+  @media (min-width: variable.$breakpoint-tablet) {
+    flex-direction: row;
+    gap: 40px;
   }
 
-  &:hover {
-    background-color: #27586e;
-    color: #ffffff;
-    border-color: #27586e;
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
+  @media (min-width: variable.$breakpoint-desktop) {
+    gap: 50px;
   }
 }
-
-.animal-title {
-  position: absolute; /* Indépendant pour un alignement parfait */
-  left: 50%; /* Centré horizontalement */
-  transform: translateX(-50%); /* Ajusté pour être réellement centré */
-  margin: 0; /* Supprime les marges inutiles */
-  margin-bottom: 15px; /* Un espace agréable sous le titre */
-  font-size: 1.6rem; /* Taille légèrement réduite pour la sobriété */
-  font-weight: 400; /* Police régulière pour plus de subtilité */
-  color: #495057; /* Couleur neutre et moderne */
-  text-align: center; /* Centre le texte visuellement */
-  line-height: 1.4; /* Ajoute de la légèreté au titre */
-  border-bottom: 0.5px solid #e9ecef; /* Une bordure ultra fine */
-  padding-bottom: 8px; /* Ajoute un petit espace avec la bordure */
-}
-
-
 
 // ==============================
 // Section des images
 // ==============================
 
 .image-section {
-  flex: 1;
-  min-width: 300px;
-  max-width: 500px;
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: $box-shadow;
+  box-shadow: $addModifyAnimal-box-shadow;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  // ============================
-  // Photo de profil
-  // ============================
   .image-profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
+    margin-bottom: 20px;
 
     img {
-      width: 200px;
-      height: 200px;
+      width: 150px;
+      height: 150px;
       object-fit: cover;
       border-radius: 50%;
-      border: 2px solid $border-color;
-      box-shadow: $box-shadow;
-    }
+      border: 2px solid $addModifyAnimal-border-color;
 
-    .remove-photo-btn {
-      position: absolute;
-      top: 50px;
-      right: 10px;
-      background: $error-color;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 25px;
-      height: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: $font-size-small;
-      line-height: 1;
-      box-shadow: $box-shadow;
-      transition: background-color 0.3s ease;
+      @media (min-width: variable.$breakpoint-tablet) {
+        width: 200px;
+        height: 200px;
+      }
 
-      &:hover {
-        background-color: $error-color;
+      @media (min-width: variable.$breakpoint-desktop) {
+        width: 250px;
+        height: 250px;
       }
     }
   }
 
-  // ============================
-  // Photos optionnelles
-  // ============================
   .image-grid {
-    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     width: 100%;
 
     .optional-photo-input {
-      margin-bottom: 15px;
-      width: 100%;
+      margin-bottom: 10px;
     }
 
     .photo-preview-grid {
       display: flex;
-      justify-content: flex-start;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 10px; /* Espacement entre les miniatures */
 
       .photo-thumbnail {
         position: relative;
         width: 80px;
         height: 80px;
-        border: 1px solid $border-color;
+        border: 1px solid $addModifyAnimal-border-color;
         border-radius: 5px;
         overflow: hidden;
 
@@ -266,17 +140,26 @@ $mobile-breakpoint: 480px;
           position: absolute;
           top: 5px;
           right: 5px;
-          background: $error-color;
+          background: $addModifyAnimal-error-color;
           color: #fff;
-          border: none;
           border-radius: 50%;
           width: 20px;
           height: 20px;
+          font-size: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          font-size: $font-size-small;
+        }
+
+        @media (min-width: variable.$breakpoint-tablet) {
+          width: 100px;
+          height: 100px;
+        }
+
+        @media (min-width: variable.$breakpoint-desktop) {
+          width: 120px;
+          height: 120px;
         }
       }
     }
@@ -284,35 +167,160 @@ $mobile-breakpoint: 480px;
 }
 
 // ==============================
-// Styles responsives
+// Formulaire
 // ==============================
 
-@media (max-width: $tablet-breakpoint) {
-  .animal-container {
-    padding: 10px;
-  }
+.animal-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: $addModifyAnimal-box-shadow;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 
-  .animal-layout {
+  .animal-form-group {
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    
+    gap: 5px;
+
+    input,
+    select,
+    textarea {
+      padding: 10px;
+      font-size: $addModifyAnimal-font-size-small;
+      border: 1px solid $addModifyAnimal-border-color;
+      border-radius: 5px;
+
+      &:focus {
+        outline: none;
+        border-color: $addModifyAnimal-primary-color;
+      }
+    }
+
+    textarea {
+      resize: none;
+      height: 80px;
+    }
   }
 
-  .animal-form,
-  .image-section {
-    min-width: 400px;
-    max-width: 100%;
+  button {
+    padding: 10px 15px;
+    background-color: $addModifyAnimal-primary-color;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: $addModifyAnimal-font-size-medium;
+
+    &:hover {
+      background-color: darken($addModifyAnimal-primary-color, 10%);
+    }
   }
 }
 
-@media (max-width: $mobile-breakpoint) {
-  .image-profile img {
-    width: 150px;
-    height: 150px;
+.error-message {
+  color: $addModifyAnimal-error-color;
+  font-size: $addModifyAnimal-font-size-small;
+}
+// ==============================
+// Bouton de soumission
+// ==============================
+.animal-button {
+  padding: 10px 15px;
+  background-color: $addModifyAnimal-primary-color;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: $addModifyAnimal-font-size-medium;
+
+  &:hover {
+    background-color: darken($addModifyAnimal-primary-color, 10%);
   }
 
-  .photo-thumbnail {
-    width: 60px;
-    height: 60px;
+  &.disabled {
+    background-color: #ccc; // Gray out the button
+    cursor: not-allowed; // Change cursor to indicate it's disabled
+    opacity: 0.6; // Reduce opacity to show it's disabled
   }
+}
+
+// ==============================
+// Bouton de retour
+// ==============================
+
+.back-button-animal-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 0 20px;
+  position: relative;
+
+  .add-animal-back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #27586e;
+    border: 2px solid #27586e;
+    border-radius: 8px;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    i {
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      background-color: #27586e;
+      color: #ffffff;
+      border-color: #27586e;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    // Compact version on mobile
+    @media (max-width: variable.$breakpoint-tablet) {
+      padding: 8px;
+      border: none;
+      background: none;
+      font-size: 1.5rem;
+      color: #27586e;
+
+      .back-text {
+        display: none; // Cache le texte du bouton sur mobile
+      }
+    }
+  }
+
+  .animal-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #495057;
+    text-align: center;
+
+    @media (min-width: variable.$breakpoint-tablet) {
+      font-size: 1.6rem;
+    }
+
+    @media (min-width: variable.$breakpoint-desktop) {
+      font-size: 1.8rem;
+    }
+  }
+  
 }

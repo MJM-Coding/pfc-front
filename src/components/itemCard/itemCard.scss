@@ -1,56 +1,86 @@
+@use '../../styles/commun/variable.scss'; // Breakpoints
+
 /* ============================= */
 /* Variables de couleur          */
 /* ============================= */
-$card-background: #e9e6e6;
-$text-card: #0e0d0d;
-$card-border: #cfcbc6;
-$hover-card: #27586E;
+$itemCard-background: #e9e6e6;
+$itemCard-text: #0e0d0d;
+$itemCard-border: #cfcbc6;
+$itemCard-hover: #27586E;
+
+/* ==========================================================
+        BASE STYLES (MOBILE FIRST)
+   ========================================================== */
+
 
 /* ============================= */
 /* Style des cartes individuelles */
 /* ============================= */
-
 .item-card {
-  background-color: $card-background !important;
-  border: 1px solid $card-border;
+  background-color: $itemCard-background !important;
+  border: 1px solid $itemCard-border;
   border-radius: 10px;
-  padding: 15px;
+  padding: 10px; /* Réduction du padding */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between; /* Répartit uniformément le contenu */
+  justify-content: space-between;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 340px; /* Fixe une hauteur totale */
-  flex-grow: 1; /* Permet à toutes les cartes de s'étendre également */
-  overflow: hidden; /* Cache le contenu dépassant */
+
+  /* Taille par défaut pour mobile */
+  width: 140px; /* Largeur fixe pour mobile */
+  
+  /* Hauteur automatique pour s'adapter au contenu */
+  height: auto;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* ============================= */
+ /* Conteneur pour l'image */
+/* ============================= */
+ 
+  .item-card-image {
+    width: 100%; /* Prend toute la largeur du conteneur */
+    height: 120px; /* Hauteur fixe pour toutes les images */
+    object-fit: cover; /* Remplit le conteneur sans déformer l'image */
+    border-radius: 5px; /* Arrondi des coins */
+    margin-bottom: 8px; /* Marge en bas */
+    overflow: hidden; /* Cache les parties de l'image qui débordent */
+    display: flex; /* Utilisé pour centrer l'image si nécessaire */
+    align-items: center; /* Centre verticalement l'image */
+    justify-content: center; /* Centre horizontalement l'image */
+  }
+
+  h2 {
+    font-size: 1rem; /* Taille du titre réduite */
+    color: $itemCard-text;
+    margin: 5px 0;
+  }
+
+  p {
+    font-size: 0.8rem; /* Taille du texte réduite */
+    color: $itemCard-text;
+  }
+
+  
+/* ============================= */
+/* Responsive Tablette          */
+/* ============================= */
+
+@media (min-width:variable.$breakpoint-tablet) {
+   width : 200px; /* Ajuste la largeur fixe pour trois cartes par ligne sur tablette */
 }
 
+/* ============================= */
+/* Responsive Desktop          */
+/* ============================= */
 
-.item-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+@media (min-width:variable.$breakpoint-desktop) {
+   width : 250px; /* Ajuste la largeur fixe pour quatre cartes par ligne sur desktop */
 }
-
-/* Uniformisation des images */
-.item-card img {
-  width: 100%;
-  max-width: 300px; /* Limite maximale pour la largeur */
-  height: 200px; /* Hauteur fixe pour uniformiser */
-  object-fit: cover; /* Découpe et centre l'image pour remplir l'espace */
-  border-radius: 8px;
-  margin-bottom: 10px;
 }
-
-.item-card h2 {
-  font-size: 1.2rem;
-  color: $text-card;
-  margin: 10px 0;
-}
-
-.item-card p {
-  font-size: 0.9rem;
-  color: $text-card;
-}
-

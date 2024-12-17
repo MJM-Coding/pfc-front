@@ -4,7 +4,6 @@ import type { IAsk } from "../../@types/ask";
 import AuthContext from "../../contexts/authContext";
 import Toast from "../../components/toast/toast";
 import "../../styles/spaceAsso/associationAnimalAsk.scss";
-import "../../styles/commun/commun.scss";
 import Swal from "sweetalert2";
 
 const AssociationAnimalAsk: React.FC = () => {

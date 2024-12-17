@@ -4,9 +4,10 @@ import { GetAllAssociations } from "../../api/association.api";
 import Filters from "../../components/filters/filter";
 import ItemList from "../../components/itemList/itemList";
 import ItemCard from "../../components/itemCard/itemCard";
+import SearchBar from "../../components/searchBar/searchBar"; // Importez le composant SearchBar
 import type { IAnimal } from "../../@types/animal";
 import "./animalsListPage.scss";
-import "../../styles/commun/commun.scss"
+import "../../styles/commun/commun.scss";
 
 const AnimalsListPage: React.FC = () => {
   const [animals, setAnimals] = useState<IAnimal[]>([]);
@@ -19,6 +20,7 @@ const AnimalsListPage: React.FC = () => {
     Sexe: "", 
     "Date de publication": "",
   });
+  const [searchQuery, setSearchQuery] = useState(""); // État pour la recherche
 
   const [filterOptions, setFilterOptions] = useState<Record<string, string[]>>({
     Espèce: [],
@@ -27,7 +29,6 @@ const AnimalsListPage: React.FC = () => {
     Age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"], 
     Sexe: ["Mâle", "Femelle"], 
     "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
-
   });
 
   //! Chargement des données
@@ -92,109 +93,118 @@ const AnimalsListPage: React.FC = () => {
    // Exclure les animaux avec `is_paused: true`
    filtered = filtered.filter((animal) => !animal.is_paused);
 
-    // Exclure les animaux avec une demande ayant le statut "validée"
-    filtered = filtered.filter(
+   // Exclure les animaux avec une demande ayant le statut "validée"
+   filtered = filtered.filter(
       (animal) => !animal.asks || animal.asks.every((ask) => ask.status !== "validée")
-    );
+   );
   
-    if (filters.Espèce) {
+   if (filters.Espèce) {
       filtered = filtered.filter((a) => a.species === filters.Espèce);
-    }
-    if (filters.Taille) {
+   }
+   if (filters.Taille) {
       filtered = filtered.filter((a) => a.size === filters.Taille);
-    }
-    if (filters.Localisation) {
+   }
+   if (filters.Localisation) {
       filtered = filtered.filter(
-        (a) =>
-          a.association &&
-          `${a.association.city}, ${a.association.postal_code}` === filters.Localisation
+         (a) =>
+            a.association &&
+            `${a.association.city}, ${a.association.postal_code}` === filters.Localisation
       );
-    }
-    if (filters.Age) {
+   }
+   if (filters.Age) {
       if (filters.Age === "Moins de 2 ans") {
-        filtered = filtered.filter((a) => a.age < 2);
+         filtered = filtered.filter((a) => a.age < 2);
       } else if (filters.Age === "Entre 2 et 7 ans") {
-        filtered = filtered.filter((a) => a.age >= 2 && a.age <= 7);
+         filtered = filtered.filter((a) => a.age >= 2 && a.age <= 7);
       } else if (filters.age === "Plus de 7 ans") {
-        filtered = filtered.filter((a) => a.age > 7);
+         filtered = filtered.filter((a) => a.age > 7);
       }
-    }
-    if (filters.Sexe) {
+   }
+   if (filters.Sexe) {
       filtered = filtered.filter((a) => (filters.Sexe === "Mâle" ? a.gender === "M" : a.gender === "F"));
-    }
+   }
 
-    // Nouveau filtre : Date de parution
- if (filters["Date de publication"]) {
-  const now = new Date();
+   // Nouveau filtre : Date de parution
+   if (filters["Date de publication"]) {
+      const now = new Date();
 
-  filtered = filtered.filter((a) => {
-    const createdAt = new Date(a.created_at); // Vérifiez que la clé correspond
-    const diffInMonths =
-      (now.getFullYear() - createdAt.getFullYear()) * 12 +
-      now.getMonth() -
-      createdAt.getMonth();
+      filtered = filtered.filter((a) => {
+         const createdAt = new Date(a.created_at); // Vérifiez que la clé correspond
+         const diffInMonths =
+            (now.getFullYear() - createdAt.getFullYear()) * 12 +
+            now.getMonth() -
+            createdAt.getMonth();
 
-    if (filters["Date de publication"] === "Moins de 1 mois") {
-      return diffInMonths < 1;
-    }
-    if (filters["Date de publication"] === "Entre 1 et 3 mois") {
-      return diffInMonths >= 1 && diffInMonths <= 3;
-    }
-    if (filters["Date de publication"] === "Plus de 3 mois") {
-      return diffInMonths > 3;
-    }
-    return true;
-  });
-}
+         if (filters["Date de publication"] === "Moins de 1 mois") {
+            return diffInMonths < 1;
+         }
+         if (filters["Date de publication"] === "Entre 1 et 3 mois") {
+            return diffInMonths >= 1 && diffInMonths <= 3;
+         }
+         if (filters["Date de publication"] === "Plus de 3 mois") {
+            return diffInMonths > 3;
+         }
+         return true;
+      });
+   }
+
+   // Filtrer par recherche
+   if (searchQuery) {
+     filtered = filtered.filter(animal =>
+       animal.name.toLowerCase().includes(searchQuery.toLowerCase())
+     );
+   }
+
+   setFilteredAnimals(filtered);
+}, [filters, animals, searchQuery]); // Ajoutez searchQuery comme dépendance
   
-    setFilteredAnimals(filtered);
-  }, [filters, animals]);
+return (
+  <div className="animals-container">
+  <div className="filter-container">
   
-
-  return (
-    <div className="animals-container">
-      <Filters
-        filters={filters}
-        options={filterOptions}
-        onChange={handleFilterChange}
-        onReset={resetFilters}
+    <Filters
+      filters={filters}
+      options={filterOptions}
+      onChange={handleFilterChange}
+      onReset={resetFilters}
+    />
+      {/* Barre de recherche */}
+      <SearchBar onSearch={setSearchQuery} /> {/* Ajoutez la barre de recherche ici */}
+  </div>
+      
+      <ItemList
+        items={filteredAnimals}
+        renderItem={(animal) => (
+          <ItemCard
+            key={animal.id}
+            title={
+              <>
+                {animal.gender === "M" ? (
+                  <i className="fa-solid fa-mars" title="Mâle"></i>
+                ) : (
+                  <i className="fa-solid fa-venus" title="Femelle"></i>
+                )}{" "}
+                {animal.name}
+              </>
+            }
+            imageUrl={
+              animal.profile_photo?.startsWith("http")
+                ? animal.profile_photo
+                : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+            }
+            link={`/animal-info/${animal.id}`}
+          >
+            {/* Race */}
+            <p className="item-card-breed">{animal.breed || "Race inconnue"}</p>
+            {/* Localisation (sans code postal) */}
+            <p className="item-card-location">
+              <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
+            </p>
+          </ItemCard>
+        )}
       />
-<ItemList
-  items={filteredAnimals}
-  renderItem={(animal) => (
-    <ItemCard
-      key={animal.id}
-      title={
-        <>
-          {animal.gender === "M" ? (
-            <i className="fa-solid fa-mars" title="Mâle"></i>
-          ) : (
-            <i className="fa-solid fa-venus" title="Femelle"></i>
-          )}{" "}
-          {animal.name}
-        </>
-      }
-      imageUrl={
-        animal.profile_photo?.startsWith("http")
-          ? animal.profile_photo
-          : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
-      }
-      link={`/animal-info/${animal.id}`}
-    >
-      {/* Race */}
-      <p className="item-card-breed">{animal.breed || "Race inconnue"}</p>
-      {/* Localisation (sans code postal) */}
-      <p className="item-card-location">
-        <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
-      </p>
-
-    </ItemCard>
-  )}
-/>
-
-
     </div>
-  );
+);
 };
 
 export default AnimalsListPage;

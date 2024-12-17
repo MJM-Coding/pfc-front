@@ -16,16 +16,16 @@ $toast-warning: #ff7a22;
 ========================================================== */
 .toastContainer {
   position: fixed;
-  top: 12%;
-  right: 100px;
-  width: auto;
-  z-index: 200;
+  top: 10%; /* Positionné en haut */
+  left: 50%; /* Centre horizontalement */
+  transform: translateX(-50%); /* Ajuste parfaitement au centre */
+  z-index: 200; /* Toujours au-dessus des autres éléments */
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  align-items: flex-end;
-  width: 80%;
+  flex-direction: column; /* Alignement vertical des toasts */
+  gap: 10px; /* Espacement entre les toasts */
+  width: 90%; /* Largeur adaptée pour mobile */
+  max-width: 500px; /* Largeur maximale pour tablette et PC */
+  text-align: center; /* Centre le texte à l'intérieur */
 }
 
 .toast {
@@ -34,14 +34,20 @@ $toast-warning: #ff7a22;
   padding: 10px 20px;
   border-radius: 5px;
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   transition: opacity 0.5s ease-out;
-  text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  text-align: center; /* Centre le texte */
+  display: flex; /* Active Flexbox */
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  width: 100%; /* Assure que la largeur reste constante */
+  max-width: 500px; /* Limite la largeur sur PC */
+  margin: 0 auto; /* Centre horizontalement le toast */
+  min-height: 50px; /* Hauteur minimale pour garder l'alignement vertical */
 }
+
+
 
 .toast button {
   position: absolute;
