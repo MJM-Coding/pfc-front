@@ -32,6 +32,35 @@ const AnimalInfoPage: React.FC = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
+  
+  
+  //! Détection mobile
+  const isMobile = () => window.innerWidth <= 768;
+
+  //! Format date mobile : jj/mm/aa
+  const formatShortDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2);
+    return `${day}/${month}/${year}`;
+  };
+
+  //! Format date/heure complète
+  const formatDateTime = (dateInput: string | Date): string => {
+    const date =
+      typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+    return date
+      .toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+      .replace(",", " à");
+  };
+
 
   //! Chargement des données de l'animal et de son association
   useEffect(() => {
@@ -160,26 +189,20 @@ const AnimalInfoPage: React.FC = () => {
     }
   };
 
-  //! Fonction pour formater la date et l'heure
-  const formatDateTime = (dateInput: string | Date): string => {
-    const date =
-      typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-
-    const options: Intl.DateTimeFormatOptions = {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-
-    return date.toLocaleDateString("fr-FR", options).replace(",", " à");
-  };
 
   //! Affichage des détails de l'animal
   const renderAnimalDetails = (animal: IAnimal) => (
-    <div className="animal_info-details">
-      <h2 className="animal_info-name">{animal.name}</h2>
+<div className="animal_info-details">
+  <div className="back-adopt-buttons">
+    <Link to="/animaux" className="back-button">
+      <i className="fas fa-arrow-left"></i> 
+      <span className="back-button-text">Retour à la liste</span>
+    </Link>
+    <h2 className="animal_info-name">{animal.name}</h2>
+  </div>
+
+
+
 
       {requestError && <p className="error-message">{requestError}</p>}
 
@@ -301,9 +324,13 @@ const AnimalInfoPage: React.FC = () => {
           </p>
           {/* Date de création */}
           <p className="animal_info-date">
-            <i className="info-icon fas fa-calendar-alt"></i>
+          <i className="info-icon fas fa-calendar-alt"></i>
             <span>Date de mise en ligne :</span>
-            <span className="value">{formatDateTime(animal.created_at)}</span>
+            <span className="value">
+              {isMobile()
+                ? formatShortDate(animal.created_at.toLocaleString())
+                : formatDateTime(animal.created_at.toLocaleString())}
+            </span>
           </p>
           <p className="animal_info-description">{animal.description}</p>
         </div>
@@ -347,12 +374,7 @@ const AnimalInfoPage: React.FC = () => {
 
   return (
     <div className="animalDetail-container">
-      <div className="back-adopt-buttons">
-        <Link to="/animaux" className="back-button">
-          <i className="fas fa-arrow-left"></i> Retour à la liste
-        </Link>
-      </div>
-
+    
       {animal ? renderAnimalDetails(animal) : <p>Chargement de l'animal...</p>}
 
       {isModalOpen && selectedPhoto && (

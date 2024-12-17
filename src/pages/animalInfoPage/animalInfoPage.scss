@@ -1,384 +1,321 @@
-// =============================
-// Variables de couleurs
-// =============================
-$primary-color: #262E33; // Vert principal
-$secondary-color: #FF5722; // Orange
-$background-color: #f4f4f4; // Fond léger
-$text-color: #333; // Couleur de texte principal
-$border-color: #ddd; // Bordure grise
-$photo-border-radius: 10px; // Bordure arrondie pour les images
+/* ============================= */
+/* Variables de couleurs */
+/* ============================= */
+$animalInfoPage-primary-color: #262E33; // Vert principal
+$animalInfoPage-secondary-color: #FF5722; // Orange
+$animalInfoPage-background-color: #f4f4f4; // Fond léger
+$animalInfoPage-text-color: #333; // Couleur principale du texte
+$animalInfoPage-border-color: #ddd; // Bordure grise
+$animalInfoPage-photo-border-radius: 10px; // Bordure arrondie pour les images
 
+/* ============================= */
+/* Breakpoints Responsive */
+/* ============================= */
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
 
-
-// =============================
-// Style du conteneur principal
-// =============================
+/* ============================= */
+/* Conteneur principal */
+/* ============================= */
 .animalDetail-container {
-  position: relative; /* Permet de positionner les éléments enfants relativement */
-  height: auto;
+  position: relative;
   min-height: 91.3vh;
-  justify-content: space-between;
+  background-color: $animalInfoPage-background-color;
 }
 .animal_info-details {
-  background-color: $background-color;
-  padding: 0;
-  border-radius: 8px;
-  max-width: 1500px;
-  margin: 0 auto;
-  justify-content: center;
-  ;
-  
-
-  .animal_info-name {
-    position: absolute; /* Permet de placer le titre absolument */
-    top: 20px; /* Place le titre en haut avec un léger espacement */
-    left: 50%; /* Centre le titre horizontalement */
-    transform: translateX(-50%); /* Ajuste pour un centrage parfait */
-    font-size: 2rem; /* Taille du texte */
-    font-weight: bold; /* Texte en gras */
-    color: $primary-color; /* Couleur principale */
-    text-align: center; /* Centre le texte */
-    z-index: 10; /* Assure que le titre est au-dessus des autres éléments */
-  }
-  
-  
+  position: relative;
+  padding-top: 40px; /* Espace pour le titre */
 }
-
-// =============================
-// Bouton demande accueil
-// =============================
-
-.center-container {
+/* ============================= */
+/* Conteneur Header (Bouton + Titre) */
+/* ============================= */
+.animal_info-header {
   display: flex; /* Active Flexbox */
-  justify-content: center; /* Centre horizontalement */
-  align-items: center; /* Centre verticalement */
+  align-items: center; /* Centre les éléments verticalement */
+  justify-content: space-between; /* Bouton à gauche, titre centré */
+  padding: 10px; /* Espacement autour */
+  margin-bottom: 10px;
 
+  @media (max-width: 768px) {
+    justify-content: center; /* Centre tous les éléments sur mobile */
+    flex-wrap: nowrap; /* Évite le passage à la ligne */
+  }
 }
 
-// =============================
-// Style commun pour les boutons
-// =============================
-.button-common {
-  display: inline-flex;
+/* Bouton Retour */
+.back-button {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  font-weight: bold;
-  color: #ffffff;
-  border: none;
+  padding: 5px 8px;
+  background-color: #f5f5f5;
+  color: #27586e;
+  border: 2px solid #27586e;
   border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  margin: 15px 0;
-}
+  font-size: 1rem;
+  text-decoration: none;
 
-// =============================
-// Bouton adoption
-// =============================
-.adopt-button {
-  @extend .button-common;
-  background: linear-gradient(135deg, #4caf50, #087f23);
-  padding: 10px 24px;
-  margin-right: 10px;
+  i {
+    font-size: 1.2rem;
+    margin-right: 5px;
 
-  &:hover {
-    background: linear-gradient(135deg, #087f23, #4caf50);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
+    @media (max-width: 768px) {
+      margin-right: 0; /* Supprime l'espacement sur mobile */
+    }
   }
 
-  &:active {
-    transform: translateY(1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  &:disabled {
-    background: #cccccc;
-    cursor: not-allowed;
-    box-shadow: none;
+  .back-button-text {
+    @media (max-width: 768px) {
+      display: none; /* Masque le texte sur mobile */
+    }
   }
 }
 
-// =============================
-// Bouton voir les animaux de l'association
-// =============================
-.view-association-animals-button {
-  @extend .button-common;
-  background: linear-gradient(135deg, #f16161, #c50e0e);
-  padding: 7px;
+/* Titre */
+.animal_info-name {
+  flex: 1; /* Permet au titre de prendre l'espace restant */
+  text-align: center; /* Centre le titre */
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $animalInfoPage-primary-color;
+  margin: 0;
 
-  &:hover {
-    background: linear-gradient(135deg, #c50e0e, #f16161);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-}
-
-
-// =============================
-// Style des informations de l'animal
-// =============================
-.animal_info-left {
-  background-color: #f9f9f9; /* Fond gris clair */
-  padding: 20px; /* Espacement interne */
-  border-radius: 15px; /* Coins arrondis */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre élégante */
-  font-family: 'Roboto', sans-serif; /* Police moderne */
-  color: $text-color;
-
-  p {
-    margin: 10px 0; /* Espacement entre les paragraphes */
-    font-size: 1rem; /* Taille du texte */
-    display: flex; /* Alignement des icônes et du texte */
-    gap: 10px; /* Espacement entre l'icône et le texte */
-    align-items: center; /* Centrage vertical */
-  }
-
-  span {
-    font-weight: bold; /* Texte en gras pour les titres */
-    color: #555; /* Couleur différente pour les titres */
-  }
-
-  .value {
-    color: #7a2424; /* Couleur spécifique pour les valeurs */
-    font-weight: normal; /* Poids normal pour les valeurs */
-  }
-
-  .animal_info-description {
-    margin-top: 20px; /* Espacement supérieur */
-    color: #575555; /* Couleur légèrement atténuée */
-    border-top: 1px solid $border-color; /* Trait de séparation */
-    padding-top: 15px; /* Espacement entre le trait et le texte */
-  }
-
-  .info-icon {
-    font-size: 1.2rem; /* Taille des icônes */
-    color: $secondary-color; /* Couleur orange pour contraster */
+  @media (min-width: $breakpoint-tablet) {
+    font-size: 2rem;
   }
 }
 
 
 
-
-// =============================
-// Style bouton de retour à la liste
-// =============================
+/* ============================= */
+/* Bouton Retour */
+/* ============================= */
 .back-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  margin: 20px; /* Espacement autour du bouton */
-  background-color: #f5f5f5; /* Couleur de fond neutre */
-  color: #27586e; /* Couleur principale du texte */
-  border: 2px solid #27586e; /* Bordure subtile */
-  border-radius: 8px; /* Coins arrondis */
-  text-decoration: none; /* Supprime le soulignement */
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  color: #27586e;
+  border: 2px solid #27586e;
+  border-radius: 8px;
   font-size: 1rem;
-  font-weight: 500;
-  transition: all 0.3s ease; /* Transition fluide pour les effets */
-  cursor: pointer;
+  margin-left: 20px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  i {
+    font-size: 1.2rem; /* Taille de l'icône */
+    margin-right: 5px; /* Espacement entre l'icône et le texte */
+  }
+
+  &:hover {
+    background-color: #27586e;
+    color: #ffffff;
+  }
+
+  /* Masquer le texte sur mobile */
+  @media (max-width: 768px) {
+    .back-button-text {
+      display: none; /* Masque le texte uniquement sur mobile */
+    }
+
+    i {
+      margin-right: 0; /* Supprime l'espacement sur mobile */
+    }
+  }
 }
 
-.back-button i {
-  margin-right: 8px; /* Espacement entre l'icône et le texte */
+
+/* ============================= */
+/* Titres */
+/* ============================= */
+.animal_info-name {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $animalInfoPage-primary-color;
+  text-align: center;
+
+  @media (min-width: $breakpoint-tablet) {
+    font-size: 2rem;
+    top: 40px;
+  }
 }
 
-.back-button:hover {
-  background-color: #27586e; /* Couleur de fond au survol */
-  color: #ffffff; /* Texte blanc au survol */
-  border-color: #27586e; /* Bordure assortie */
-  transform: translateY(-2px); /* Soulèvement au survol */
-}
-
-.back-button:active {
-  transform: translateY(0); /* Réinitialise l'effet de soulèvement */
-}
-
-.adopt-button {
- text-align: center;
-}
-
-// =============================
-// Style des images
-// =============================
+/* ============================= */
+/* Photos */
+/* ============================= */
 .animal_info-photos {
-  display: flex;
-  justify-content: center;
-  gap: 10px; // Espacement entre les images
-  flex-wrap: wrap;
-  
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Grille 2x2 sur mobile */
+  gap: 10px;
+  justify-items: center;
+  margin: 60px 10px;
 
   .animal_info-photo {
-    width: 300px; // Taille fixe pour les images
-    height: 200px; // Carré parfait
-    object-fit: cover; // Recadrer pour remplir sans déformer
-    border-radius: $photo-border-radius;
-    margin: 5px;
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    border-radius: $animalInfoPage-photo-border-radius;
+    object-fit: cover;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: transform 0.3s ease;
 
     &:hover {
-      transform: scale(1.05); // Légère augmentation au survol
+      transform: scale(1.05);
     }
   }
-}
 
-// =============================
-// Style des sections principales
-// =============================
-.animal_info-sections {
-  display: flex;
-  justify-content: space-between; // Écarte les deux colonnes
-  gap: 20px; 
-  align-items: stretch; // Étire les colonnes à la même hauteur
-
-
-  .animal_info-left,
-  .animal_info-right {
-    flex: 1; // Chaque colonne prend un espace égal
-    background: #ffffff;
-    border-radius: 15px;
-    padding: 0 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
-  }
-
-  .animal_info-right {
-    .animal_info-map {
-      width: 100%; // Assure que la carte occupe tout l’espace
-      height: 90%; // Ajuste la hauteur de la carte
-      min-height: 220px;
-    }
-  }
-}
-
-.animal_info-right {
-  background-color: #f9f9f9; /* Fond gris clair */
-  padding: 20px; /* Espacement interne */
-  border-radius: 15px; /* Coins arrondis */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre élégante */
-  font-family: 'Roboto', sans-serif; /* Police moderne */
-  color: #333; /* Couleur de texte principale */
-  margin-top: 20px; /* Espace entre les sections */
-}
-
-.association-title {
-  margin-top: 10px;
-  font-size: 1.5rem; /* Taille de la police */
-  font-weight: bold; /* Texte en gras */
-  color: #262E33; /* Couleur principale */
-  margin-bottom: 15px; /* Espacement inférieur */
-  text-align: center; /* Aligner à gauche */
-}
-
-.animal_info-association,
-.animal_info-address,
-.animal_info-phone {
-  margin: 10px 0; /* Espacement entre les éléments */
-  font-size: 1rem; /* Taille du texte */
-  display: flex; /* Pour aligner les icônes avec le texte */
-  gap: 10px; /* Espacement entre l'icône et le texte */
-  align-items: center; /* Centrage vertical */
-}
-
-
-.info-icon {
-  font-size: 1.2rem; /* Taille de l'icône */
-  color: #FF5722; /* Couleur des icônes */
-}
-// =============================
-// Responsive design
-// =============================
-@media (max-width: 1024px) {
-  .animal_info-sections {
-    flex-direction: column; // Sections empilées sur tablette
+  @media (orientation: landscape) and (max-width: $breakpoint-tablet) {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 10px;
   }
 
-  .animal_info-photos {
-    justify-content: center;
+  @media (min-width: $breakpoint-desktop) {
+    display: flex;
+    justify-content: center; /* Centre les photos */
+    gap: 20px;
 
     .animal_info-photo {
-      width: 120px;
-      height: 120px;
+      max-width: 200px;
+      height: 200px;
     }
   }
 }
 
-@media (max-width: 768px) {
-  .animal_info-details {
-    padding: 10px;
+/* ============================= */
+/* Sections principales */
+/* ============================= */
+.animal_info-sections {
+  display: flex;
+  flex-direction: column; /* Par défaut : empilées */
+  gap: 15px;
+  margin: 0 10px;
+
+  .animal_info-left,
+  .animal_info-right {
+    background: #fff;
+    border: 2px solid $animalInfoPage-border-color; /* Bordure grise */
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre */
+    font-size: 1rem;
+    color: $animalInfoPage-text-color;
+
+    p {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .value {
+      color: $animalInfoPage-secondary-color;
+    }
   }
 
-  .animal_info-name {
-    font-size: 1.5rem;
-  }
+  @media (min-width: $breakpoint-desktop) {
+    flex-direction: row; /* Les sections côte à côte */
+    justify-content: space-between;
+    gap: 30px;
+    margin: 0 20px;
 
-  .animal_info-sections {
-    gap: 15px;
-  }
-
-  .animal_info-photo {
-    width: 100px;
-    height: 100px;
+    .animal_info-left,
+    .animal_info-right {
+      flex: 1;
+    }
   }
 }
 
-@media (max-width: 480px) {
-  .animal_info-name {
-    font-size: 1.2rem;
-  }
+@media (min-width: $breakpoint-tablet) and (orientation: portrait) {
+  .animal_info-photos {
+    display: flex; /* Les photos passent en ligne */
+    flex-wrap: wrap; /* Permet le retour à la ligne si nécessaire */
+    justify-content: center; /* Centre les photos horizontalement */
+    gap: 10px;
 
-  .animal_info-photo {
-    width: 80px;
-    height: 80px;
+    .animal_info-photo {
+      max-width: 150px; /* Taille des photos sur tablette */
+      height: 150px;
+    }
   }
 }
 
-// =============================
-// Modale
-// =============================
+
+/* ============================= */
+/* Boutons */
+/* ============================= */
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  gap: 10px;
+}
+
+.button-common {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.adopt-button {
+  @extend .button-common;
+  background: linear-gradient(135deg, #4caf50, #087f23);
+
+  &:hover {
+    background: linear-gradient(135deg, #087f23, #4caf50);
+  }
+}
+
+.view-association-animals-button {
+  @extend .button-common;
+  background: linear-gradient(135deg, #f16161, #c50e0e);
+
+  &:hover {
+    background: linear-gradient(135deg, #c50e0e, #f16161);
+  }
+}
+
+/* ============================= */
+/* Modale */
+/* ============================= */
 .modal_info-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); // Fond sombre
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; // Modale au-dessus de tous les autres éléments
+  z-index: 1000;
 }
 
-.modal_info-content {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: auto; // Permet à la modale de s'ajuster à la taille de l'image
-  height: auto;
-  max-width: 100%; // Pas de limite de largeur
-  max-height: 100%; // Pas de limite de hauteur
-  overflow: hidden; // Permet le défilement si l'image est trop grande
-  padding: 20px;
+.modal_info-content img.modal_info-photo {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: $animalInfoPage-photo-border-radius;
 }
-
-.modal_info-photo {
-  border-radius: $photo-border-radius;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  max-width: none;
-  max-height: none;
-  cursor: pointer;
-}
-

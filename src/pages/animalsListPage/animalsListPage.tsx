@@ -4,7 +4,7 @@ import { GetAllAssociations } from "../../api/association.api";
 import Filters from "../../components/filters/filter";
 import ItemList from "../../components/itemList/itemList";
 import ItemCard from "../../components/itemCard/itemCard";
-import SearchBar from "../../components/searchBar/searchBar"; // Importez le composant SearchBar
+import SearchBar from "../../components/searchBar/searchBar";
 import type { IAnimal } from "../../@types/animal";
 import "./animalsListPage.scss";
 import "../../styles/commun/commun.scss";
@@ -20,7 +20,7 @@ const AnimalsListPage: React.FC = () => {
     Sexe: "", 
     "Date de publication": "",
   });
-  const [searchQuery, setSearchQuery] = useState(""); // État pour la recherche
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [filterOptions, setFilterOptions] = useState<Record<string, string[]>>({
     Espèce: [],
@@ -124,7 +124,7 @@ const AnimalsListPage: React.FC = () => {
       filtered = filtered.filter((a) => (filters.Sexe === "Mâle" ? a.gender === "M" : a.gender === "F"));
    }
 
-   // Nouveau filtre : Date de parution
+   //!  Nouveau filtre :Date de publication
    if (filters["Date de publication"]) {
       const now = new Date();
 
@@ -148,7 +148,7 @@ const AnimalsListPage: React.FC = () => {
       });
    }
 
-   // Filtrer par recherche
+   //! Filtrer par recherche
    if (searchQuery) {
      filtered = filtered.filter(animal =>
        animal.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -156,7 +156,7 @@ const AnimalsListPage: React.FC = () => {
    }
 
    setFilteredAnimals(filtered);
-}, [filters, animals, searchQuery]); // Ajoutez searchQuery comme dépendance
+}, [filters, animals, searchQuery]); 
   
 return (
   <div className="animals-container">
@@ -169,7 +169,7 @@ return (
       onReset={resetFilters}
     />
       {/* Barre de recherche */}
-      <SearchBar onSearch={setSearchQuery} /> {/* Ajoutez la barre de recherche ici */}
+      <SearchBar onSearch={setSearchQuery} /> 
   </div>
       
       <ItemList
