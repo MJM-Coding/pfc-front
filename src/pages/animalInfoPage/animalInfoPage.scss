@@ -1,18 +1,15 @@
+@use '../../styles/commun/commun.scss';
+@use '../../styles/commun/variable.scss'; // breakpoints
+
 /* ============================= */
 /* Variables de couleurs */
 /* ============================= */
-$animalInfoPage-primary-color: #262E33; // Vert principal
-$animalInfoPage-secondary-color: #FF5722; // Orange
-$animalInfoPage-background-color: #f4f4f4; // Fond léger
-$animalInfoPage-text-color: #333; // Couleur principale du texte
-$animalInfoPage-border-color: #ddd; // Bordure grise
-$animalInfoPage-photo-border-radius: 10px; // Bordure arrondie pour les images
-
-/* ============================= */
-/* Breakpoints Responsive */
-/* ============================= */
-$breakpoint-tablet: 768px;
-$breakpoint-desktop: 1024px;
+$animalInfoPage-primary-color: #262E33;
+$animalInfoPage-secondary-color: #FF5722;
+$animalInfoPage-background-color: #f4f4f4;
+$animalInfoPage-text-color: #333;
+$animalInfoPage-border-color: #ddd;
+$animalInfoPage-photo-border-radius: 10px;
 
 /* ============================= */
 /* Conteneur principal */
@@ -22,75 +19,31 @@ $breakpoint-desktop: 1024px;
   min-height: 91.3vh;
   background-color: $animalInfoPage-background-color;
 }
+
 .animal_info-details {
   position: relative;
-  padding-top: 40px; /* Espace pour le titre */
-}
-/* ============================= */
-/* Conteneur Header (Bouton + Titre) */
-/* ============================= */
-.animal_info-header {
-  display: flex; /* Active Flexbox */
-  align-items: center; /* Centre les éléments verticalement */
-  justify-content: space-between; /* Bouton à gauche, titre centré */
-  padding: 10px; /* Espacement autour */
-  margin-bottom: 10px;
-
-  @media (max-width: 768px) {
-    justify-content: center; /* Centre tous les éléments sur mobile */
-    flex-wrap: nowrap; /* Évite le passage à la ligne */
-  }
+  padding-top: 40px;
 }
 
-/* Bouton Retour */
-.back-button {
+/* ============================= */
+/* Bouton Retour + Titre */
+/* ============================= */
+.back-adopt-buttons {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 8px;
-  background-color: #f5f5f5;
-  color: #27586e;
-  border: 2px solid #27586e;
-  border-radius: 8px;
-  font-size: 1rem;
-  text-decoration: none;
+  padding: 10px 0;
 
-  i {
-    font-size: 1.2rem;
-    margin-right: 5px;
-
-    @media (max-width: 768px) {
-      margin-right: 0; /* Supprime l'espacement sur mobile */
-    }
-  }
-
-  .back-button-text {
-    @media (max-width: 768px) {
-      display: none; /* Masque le texte sur mobile */
-    }
+  @media (max-width: variable.$breakpoint-tablet) {
+    /* Styles pour les écrans mobiles et petites tablettes (768px ou moins) */
+    justify-content: center;
   }
 }
 
-/* Titre */
-.animal_info-name {
-  flex: 1; /* Permet au titre de prendre l'espace restant */
-  text-align: center; /* Centre le titre */
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: $animalInfoPage-primary-color;
-  margin: 0;
-
-  @media (min-width: $breakpoint-tablet) {
-    font-size: 2rem;
-  }
-}
-
-
-
-/* ============================= */
-/* Bouton Retour */
-/* ============================= */
 .back-button {
+  position: absolute;
+  left: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -99,14 +52,13 @@ $breakpoint-desktop: 1024px;
   color: #27586e;
   border: 2px solid #27586e;
   border-radius: 8px;
-  font-size: 1rem;
-  margin-left: 20px;
+  font-size: 1.2rem;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s, color 0.3s;
 
   i {
-    font-size: 1.2rem; /* Taille de l'icône */
-    margin-right: 5px; /* Espacement entre l'icône et le texte */
+    font-size: 1.5rem;
+    margin-right: 10px;
   }
 
   &:hover {
@@ -114,35 +66,36 @@ $breakpoint-desktop: 1024px;
     color: #ffffff;
   }
 
-  /* Masquer le texte sur mobile */
-  @media (max-width: 768px) {
-    .back-button-text {
-      display: none; /* Masque le texte uniquement sur mobile */
+  .back-button-text {
+    @media (max-width:  variable.$breakpoint-tablet) {
+      /* Masque le texte sur les écrans mobiles et petites tablettes */
+      display: none;
     }
+  }
+
+  @media (max-width:  variable.$breakpoint-tablet) {
+    /* Styles pour les écrans mobiles et petites tablettes */
+    width: 40px;
+    height: 40px;
+    padding: 0;
 
     i {
-      margin-right: 0; /* Supprime l'espacement sur mobile */
+      font-size: 1.5rem;
+      margin-right: 0px;
     }
   }
 }
 
-
-/* ============================= */
-/* Titres */
-/* ============================= */
 .animal_info-name {
-  position: absolute;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: bold;
   color: $animalInfoPage-primary-color;
   text-align: center;
+  margin: 0;
 
-  @media (min-width: $breakpoint-tablet) {
-    font-size: 2rem;
-    top: 40px;
+  @media (max-width:  variable.$breakpoint-tablet) {
+    /* Réduction de la taille du texte sur les écrans mobiles et petites tablettes */
+    font-size: 1.2rem;
   }
 }
 
@@ -151,10 +104,10 @@ $breakpoint-desktop: 1024px;
 /* ============================= */
 .animal_info-photos {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Grille 2x2 sur mobile */
-  gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
   justify-items: center;
-  margin: 60px 10px;
+  margin: 20px 10px;
 
   .animal_info-photo {
     width: 100%;
@@ -171,16 +124,18 @@ $breakpoint-desktop: 1024px;
     }
   }
 
-  @media (orientation: landscape) and (max-width: $breakpoint-tablet) {
+  @media (orientation: landscape) and (max-width:  variable.$breakpoint-tablet) {
+    /* Styles pour les écrans mobiles en mode paysage (768px ou moins) */
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
   }
 
-  @media (min-width: $breakpoint-desktop) {
+  @media (min-width:  variable.$breakpoint-desktop) {
+    /* Styles pour les écrans desktop (1024px ou plus) */
     display: flex;
-    justify-content: center; /* Centre les photos */
+    justify-content: center;
     gap: 20px;
 
     .animal_info-photo {
@@ -195,17 +150,17 @@ $breakpoint-desktop: 1024px;
 /* ============================= */
 .animal_info-sections {
   display: flex;
-  flex-direction: column; /* Par défaut : empilées */
+  flex-direction: column;
   gap: 15px;
   margin: 0 10px;
 
   .animal_info-left,
   .animal_info-right {
     background: #fff;
-    border: 2px solid $animalInfoPage-border-color; /* Bordure grise */
+    border: 2px solid $animalInfoPage-border-color;
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-size: 1rem;
     color: $animalInfoPage-text-color;
 
@@ -221,8 +176,9 @@ $breakpoint-desktop: 1024px;
     }
   }
 
-  @media (min-width: $breakpoint-desktop) {
-    flex-direction: row; /* Les sections côte à côte */
+  @media (min-width:  variable.$breakpoint-desktop) {
+    /* Styles pour les écrans desktop (1024px ou plus) */
+    flex-direction: row;
     justify-content: space-between;
     gap: 30px;
     margin: 0 20px;
@@ -234,21 +190,26 @@ $breakpoint-desktop: 1024px;
   }
 }
 
-@media (min-width: $breakpoint-tablet) and (orientation: portrait) {
+@media (min-width:  variable.$breakpoint-tablet) and (orientation: portrait) {
+  /* Styles pour les tablettes en mode portrait (768px ou plus) */
   .animal_info-photos {
-    display: flex; /* Les photos passent en ligne */
-    flex-wrap: wrap; /* Permet le retour à la ligne si nécessaire */
-    justify-content: center; /* Centre les photos horizontalement */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
 
     .animal_info-photo {
-      max-width: 150px; /* Taille des photos sur tablette */
+      max-width: 150px;
       height: 150px;
     }
   }
 }
 
-
+// nom de l'association
+.association-title {
+  text-align: center;
+  font-weight: bold;
+}
 /* ============================= */
 /* Boutons */
 /* ============================= */
@@ -260,41 +221,62 @@ $breakpoint-desktop: 1024px;
   gap: 10px;
 }
 
-.button-common {
+.adopt-button,
+.view-association-animals-button {
+  all: unset;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
   font-weight: bold;
   color: #ffffff;
-  border: none;
   border-radius: 8px;
-  padding: 10px 15px;
+  padding: 10px 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   text-decoration: none;
   transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
 }
 
 .adopt-button {
-  @extend .button-common;
   background: linear-gradient(135deg, #4caf50, #087f23);
 
   &:hover {
     background: linear-gradient(135deg, #087f23, #4caf50);
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
   }
 }
 
 .view-association-animals-button {
-  @extend .button-common;
   background: linear-gradient(135deg, #f16161, #c50e0e);
 
   &:hover {
     background: linear-gradient(135deg, #c50e0e, #f16161);
+    transform: translateY(-2px);
+  }
+}
+
+.desktop-text {
+  display: inline;
+}
+
+.mobile-text {
+  display: none;
+}
+
+@media (max-width:  variable.$breakpoint-tablet) {
+  /* Styles pour les écrans mobiles et petites tablettes (768px ou moins) */
+  .desktop-text {
+    display: none;
+  }
+  .mobile-text {
+    display: inline;
   }
 }
 

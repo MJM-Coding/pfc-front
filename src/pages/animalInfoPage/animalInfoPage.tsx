@@ -192,13 +192,14 @@ const AnimalInfoPage: React.FC = () => {
   //! Affichage des détails de l'animal
   const renderAnimalDetails = (animal: IAnimal) => (
 <div className="animal_info-details">
-  <div className="back-adopt-buttons">
-    <Link to="/animaux" className="back-button">
-      <i className="fas fa-arrow-left"></i> 
-      <span className="back-button-text">Retour à la liste</span>
-    </Link>
-    <h2 className="animal_info-name">{animal.name}</h2>
-  </div>
+<div className="back-adopt-buttons">
+  <Link to="/animaux" className="back-button">
+    <i className="fas fa-arrow-left"></i>
+    <span className="back-button-text">Retour à la liste</span>
+  </Link>
+  <h2 className="animal_info-name">{animal.name}</h2>
+</div>
+
 
 
 
@@ -272,19 +273,25 @@ const AnimalInfoPage: React.FC = () => {
       onClick={handleAdoptClick}
       disabled={isRequesting}
     >
-      {isRequesting ? "Envoi en cours..." : "Faire une demande d'accueil"}
+      <span className="desktop-text">
+        {isRequesting ? "Envoi en cours..." : "Faire une demande d'accueil"}
+      </span>
+      <span className="mobile-text">
+        {isRequesting ? "Envoi..." : "Demande accueil"}
+      </span>
     </button>
   )}
-  {/* Bouton pour voir les animaux de l'association */}
   {association && (
     <Link
       to={`/associations/${association.id}/animaux`}
       className="view-association-animals-button"
     >
-      Voir les animaux de cette association
+      <span className="desktop-text">Voir les animaux de cette association</span>
+      <span className="mobile-text">Voir nos animaux</span>
     </Link>
   )}
 </div>
+
 
       {/* Sections en colonnes pour les infos de l'animal et de l'association */}
       <div className="animal_info-sections">
