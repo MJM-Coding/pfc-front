@@ -154,7 +154,7 @@ const AnimalInfoPage: React.FC = () => {
       setIsRequesting(true);
       setRequestError(null);
 
-      // Préparer les données à envoyer
+      // Prépare les données à envoyer
       const requestData = {
         id_animal: Number(animalId),
         id_family: authContext.user.family?.id,
@@ -162,7 +162,7 @@ const AnimalInfoPage: React.FC = () => {
 
       console.log("Données envoyées à CreateAsk :", requestData);
 
-      // Appeler la fonction API pour créer la demande
+      //! Appel API pour créer la demande
       const response = await CreateAsk(requestData, userToken);
 
       console.log("Réponse de l'API :", response);
@@ -182,8 +182,7 @@ const AnimalInfoPage: React.FC = () => {
       setToastMessage(errorMessage);
       setToastType("error");
 
-      // Optionnel : si tu veux logguer l'erreur en plus (uniquement si nécessaire)
-      // console.error("Erreur lors de l'envoi de la demande :", error);
+
     } finally {
       setIsRequesting(false);
     }

@@ -101,6 +101,60 @@ $filter-input-focus-bg: #e0f7e9;
 .reset-btn:hover {
   color: $filter-hover-button;
 }
+/* ==========================================================
+       Bouton  pour afficher les filtres
+========================================================== */
+.filters-container {
+  display: flex; /* Utilisation de flexbox */
+  flex-direction: column; /* Les enfants sont empilés verticalement */
+  align-items: center; /* Centre tout horizontalement */
+  justify-content: flex-start; /* Alignement en haut du conteneur */
+  margin-bottom: 10px;
+  width: 100%; /* Assure que le conteneur occupe toute la largeur */
+}
+
+.filters {
+  width: 100%; /* Prend toute la largeur du conteneur parent */
+  display: flex;
+  flex-direction: column; /* Les éléments internes sont alignés verticalement */
+  align-items: center; /* Centre les filtres horizontalement */
+  margin-top: 10px; /* Espacement au-dessus des filtres */
+  gap: 10px; /* Espacement entre les éléments */
+}
+
+.toggle-filters-btn {
+  background: linear-gradient(135deg, #2e546b, #4e7d91); /* Dégradé pour un effet moderne */
+  color: white; /* Texte en blanc pour un bon contraste */
+  border: none; /* Pas de bordure */
+  padding: 12px 20px; /* Un padding équilibré pour un meilleur confort visuel */
+  font-size: 16px; /* Taille du texte lisible */
+  font-weight: bold; /* Texte légèrement plus en gras */
+  border-radius: 30px; /* Coins très arrondis pour un look plus "pill button" */
+  cursor: pointer; /* Curseur en pointer pour indiquer un bouton cliquable */
+  transition: all 0.3s ease; /* Transition fluide pour toutes les propriétés */
+  width: 200px; /* Largeur fixe légèrement augmentée pour plus d'espace */
+  text-align: center; /* Centrage du texte */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Ombre subtile pour un effet surélevé */
+  margin-bottom: 15px; /* Espace entre le bouton et les filtres */
+
+  &:hover {
+    background: linear-gradient(135deg, #4e7d91, #88adb7); /* Dégradé plus clair au survol */
+    transform: translateY(-2px); /* Effet de "remontée" */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Augmente l'ombre au survol */
+  }
+
+  &:active {
+    transform: scale(0.96); /* Réduction subtile pour un effet de clic */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombre réduite au clic */
+  }
+
+  &:focus {
+    outline: none; /* Supprime l'outline par défaut */
+    box-shadow: 0 0 0 3px rgba(128, 189, 255, 0.7); /* Highlight bleu clair pour accessibilité */
+  }
+}
+
+
 
 /* ==========================================================
         RESPONSIVE STYLES
