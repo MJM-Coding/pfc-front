@@ -21,7 +21,6 @@ const AnimalsListPage: React.FC = () => {
     "Date de publication": "",
   });
   const [searchQuery, setSearchQuery] = useState("");
-
   const [filterOptions, setFilterOptions] = useState<Record<string, string[]>>({
     Espèce: [],
     Taille: [],
@@ -30,6 +29,9 @@ const AnimalsListPage: React.FC = () => {
     Sexe: ["Mâle", "Femelle"], 
     "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
   });
+  
+  // Etat isLoading pour gérer le chargement
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   //! Chargement des données
   useEffect(() => {
@@ -60,6 +62,8 @@ const AnimalsListPage: React.FC = () => {
         });
       } catch (err) {
         console.error("Erreur lors du chargement des données", err);
+      } finally {
+        setIsLoading(false); // Données chargées, état isLoading à false
       }
     };
   
@@ -160,52 +164,52 @@ const AnimalsListPage: React.FC = () => {
   
 return (
   <div className="animals-container">
-  <div className="filter-container">
-  
-    <Filters
-      filters={filters}
-      options={filterOptions}
-      onChange={handleFilterChange}
-      onReset={resetFilters}
-    />
-      {/* Barre de recherche */}
-      <SearchBar onSearch={setSearchQuery} /> 
-  </div>
+    <div className="filter-container">
+      {/* Afficher un message pendant le chargement */}
+      {isLoading && <p className="loading">Chargement des données...</p>}
       
-      <ItemList
-        items={filteredAnimals}
-        renderItem={(animal) => (
-          <ItemCard
-            key={animal.id}
-            title={
-              <>
-                {animal.gender === "M" ? (
-                  <i className="fa-solid fa-mars" title="Mâle"></i>
-                ) : (
-                  <i className="fa-solid fa-venus" title="Femelle"></i>
-                )}{" "}
-                {animal.name}
-              </>
-            }
-            imageUrl={
-              animal.profile_photo?.startsWith("http")
-                ? animal.profile_photo
-                : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
-            }
-            link={`/animal-info/${animal.id}`}
-          >
-            <div className="item-card-details">
-            {/* Race */}
+      <Filters
+        filters={filters}
+        options={filterOptions}
+        onChange={handleFilterChange}
+        onReset={resetFilters}
+      />
+      {/* Barre de recherche */}
+      <SearchBar onSearch={setSearchQuery} />
+    </div>
+
+    <ItemList
+      items={filteredAnimals}
+      renderItem={(animal) => (
+        <ItemCard
+          key={animal.id}
+          title={
+            <>
+              {animal.gender === "M" ? (
+                <i className="fa-solid fa-mars" title="Mâle"></i>
+              ) : (
+                <i className="fa-solid fa-venus" title="Femelle"></i>
+              )}{" "}
+              {animal.name}
+            </>
+          }
+          imageUrl={
+            animal.profile_photo?.startsWith("http")
+              ? animal.profile_photo
+              : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+          }
+          link={`/animal-info/${animal.id}`}
+        >
+          <div className="item-card-details">
             <p className="breed">{animal.breed || "Race inconnue"}</p>
-            {/* Localisation (sans code postal) */}
             <p className="location">
               <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
             </p>
-            </div>
-          </ItemCard>
-        )}
-      />
-    </div>
+          </div>
+        </ItemCard>
+      )}
+    />
+  </div>
 );
 };
 
