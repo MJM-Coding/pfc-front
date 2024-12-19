@@ -3,11 +3,13 @@ import { useParams, Link } from "react-router-dom";
 import type { IAnimal } from "../../@types/animal";
 import AuthContext from "../../contexts/authContext";
 import DeleteAnimal from "./deleteAnimal";
-import "./animalsList.scss";
+import ItemList from "../../components/itemList/itemList";
+import ItemCard from "../../components/itemCard/itemCard";
+import SearchBar from "../searchBar/searchBar";
+import Toast from "../toast/toast";
 import { PatchAnimal } from "../../api/animal.api";
 import Swal from "sweetalert2";
-import Toast from "../toast/toast";
-import SearchBar from "../searchBar/searchBar";
+import "./animalsList.scss";
 
 interface AnimalListProps {
   animals: IAnimal[];
@@ -127,20 +129,64 @@ const AnimalList: React.FC<AnimalListProps> = ({
     animal.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  //! Fonction pour rendre chaque animal
+
+  const renderAnimalItem = (animal: IAnimal) => (
+    <ItemCard
+      key={animal.id}
+      title={
+        <>
+          {animal.name}
+        </>
+      }
+      imageUrl={
+        animal.profile_photo
+          ? animal.profile_photo.startsWith("http")
+            ? animal.profile_photo
+            : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+          : "/images/default-animal.jpg"
+      }
+      link="#"
+    >
+      {/* Ajoute uniquement des informations complémentaires */}
+      <p>Ajouté le : {new Date(animal.created_at).toLocaleDateString("fr-FR")}</p>
+      <div className="custom-animal-actions">
+        <Link
+          to={`/espace-association/animaux-association/${associationId}/modifier-animal/${animal.id}`}
+          className="custom-edit-button"
+        >
+          <i className="fas fa-edit"></i>
+        </Link>
+        {token && (
+          <DeleteAnimal
+            animalId={String(animal.id)}
+            onDeleteSuccess={onDelete}
+          />
+        )}
+        <button
+          onClick={() => handleTogglePause(animal.id, !animal.is_paused)}
+          className={`pause-button ${animal.is_paused ? "paused" : ""}`}
+          title={animal.is_paused ? "Réactiver l'animal" : "Mettre en pause l'animal"}
+        >
+          <i className={`fa-solid ${animal.is_paused ? "fa-play" : "fa-pause"}`}></i>
+        </button>
+      </div>
+    </ItemCard>
+  );
+  
+
   return (
     <div className="custom-animal-list-container">
-    <div className="custom-actions">
-      <Link
-        to={`/espace-association/animaux-association/ajout-animal/${associationId}`}
-        className="custom-add-button"
-      >
-        <i className="fas fa-plus-circle"></i> Ajouter un animal
-      </Link>
-      {/* Barre de recherche */}
-      <SearchBar onSearch={handleSearch} />
-    </div>
-
-  
+      <div className="custom-actions">
+        <Link
+          to={`/espace-association/animaux-association/ajout-animal/${associationId}`}
+          className="custom-add-button"
+        >
+          <i className="fas fa-plus-circle"></i> Ajouter un animal
+        </Link>
+        {/* Barre de recherche */}
+        <SearchBar onSearch={handleSearch} />
+      </div>
 
       {/* Gestion du chargement et des erreurs */}
       {isLoading && (
@@ -149,69 +195,8 @@ const AnimalList: React.FC<AnimalListProps> = ({
       {error && <p className="custom-error-message">{error}</p>}
 
       {/* Liste des animaux */}
-     
       {!isLoading && !error && (
-        <ul className="custom-animal-list">
-          {filteredAnimals.length > 0 ? (
-            filteredAnimals.map((animal) => (
-              <li key={animal.id} className="custom-animal-item">
-                {animal.profile_photo && (
-                  <img
-                    src={
-                      animal.profile_photo.startsWith("http")
-                        ? animal.profile_photo
-                        : `${import.meta.env.VITE_STATIC_URL}${
-                            animal.profile_photo
-                          }`
-                    }
-                    alt={animal.name}
-                    className="custom-animal-photo"
-                  />
-                )}
-                <h4 className="custom-animal-name">{animal.name}</h4>
-                <p className="custom-animal-date">
-                  {" "}
-                  {new Date(animal.created_at).toLocaleDateString("fr-FR")}
-                </p>
-                <div className="custom-animal-actions">
-                  <Link
-                    to={`/espace-association/animaux-association/${associationId}/modifier-animal/${animal.id}`}
-                    className="custom-edit-button"
-                  >
-                    <i className="fas fa-edit"></i>
-                  </Link>
-                  {token && (
-                    <DeleteAnimal
-                      animalId={String(animal.id)}
-                      onDeleteSuccess={onDelete}
-                    />
-                  )}
-                  <button
-                    onClick={() =>
-                      handleTogglePause(animal.id, !animal.is_paused)
-                    }
-                    className={`pause-button ${
-                      animal.is_paused ? "paused" : ""
-                    }`}
-                    title={
-                      animal.is_paused
-                        ? "Réactiver l'animal"
-                        : "Mettre en pause l'animal"
-                    }
-                  >
-                    <i
-                      className={`fa-solid ${
-                        animal.is_paused ? "fa-play" : "fa-pause"
-                      }`}
-                    ></i>
-                  </button>
-                </div>
-              </li>
-            ))
-          ) : (
-            <p className="custom-no-animals">Aucun animal trouvé.</p>
-          )}
-        </ul>
+        <ItemList items={filteredAnimals} renderItem={renderAnimalItem} />
       )}
 
       {/* Composant Toast */}

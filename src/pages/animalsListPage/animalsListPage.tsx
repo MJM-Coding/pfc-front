@@ -123,7 +123,8 @@ const AnimalsListPage: React.FC = () => {
   //! Affichage principal
   return (
     <div className="animals-container">
-      <div className="filter-container">
+       <div className="content-wrapper">
+      <div className="filter-wrapper">
         <Filters
           filters={filters}
           options={filterOptions}
@@ -168,6 +169,7 @@ const AnimalsListPage: React.FC = () => {
           </ItemCard>
         )}
       />
+    </div>
     </div>
   );
 };

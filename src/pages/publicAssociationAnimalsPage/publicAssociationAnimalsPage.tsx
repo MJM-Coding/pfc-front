@@ -161,7 +161,7 @@ const PublicAssociationAnimalsPage: React.FC = () => {
         </div>
   
         {/* Liste des animaux */}
-        <div className="animals-list">
+        
           <ItemList
             items={filteredAnimals}
             renderItem={(animal) => (
@@ -193,7 +193,7 @@ const PublicAssociationAnimalsPage: React.FC = () => {
           />
         </div>
       </div>
-    </div>
+    
   );
   
   

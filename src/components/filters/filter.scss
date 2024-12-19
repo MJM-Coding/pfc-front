@@ -122,13 +122,18 @@ $filter-input-focus-bg: #e0f7e9;
        Disposition globale des filtres et du contenu
 ========================================================== */
 .content-wrapper {
+  padding-top: 5px;
   display: flex;
   flex-direction: column; /* Mobile : empilé */
+  align-items: center;
+  overflow: auto;
   gap: 20px;
+ 
 
   @media (min-width: variable.$breakpoint-desktop) {
     flex-direction: row; /* PC : filtre à gauche, liste à droite */
     align-items: flex-start;
+   
 
   }
 }
@@ -137,12 +142,14 @@ $filter-input-focus-bg: #e0f7e9;
        Configuration de la section des filtres
 ========================================================== */
 .filter-wrapper {
-  width: 100%; /* Mobile : filtre prend toute la largeur */
+  width: 100%; /* Mobile */
   @media (min-width: variable.$breakpoint-desktop) {
-    width: 300px; /* PC : largeur fixe pour le filtre */
-    flex-shrink: 0; /* Empêche le filtre de rétrécir */
+    width: 300px; /* Largeur fixe sur desktop */
+    flex-shrink: 0;
   }
 }
+
+
 
 
 /* ==========================================================

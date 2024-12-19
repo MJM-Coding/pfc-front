@@ -1,6 +1,8 @@
 @use '../../styles/commun/variable.scss'; // Breakpoints
 
-
+/* Breakpoints */
+$breakpoint-tablet: 768px; // Taille pour les tablettes et plus
+$breakpoint-desktop: 1024px; // Taille pour les PC et plus
 
 /* ============================= */
 /* Variables de couleur          */
@@ -14,26 +16,24 @@ $page-background: #f4f4f4;
 .association-animals-container {
   background-color: $page-background;
   display: flex;
-  flex-direction: column; /* Mobile : empilé */
+  flex-direction: column; /* Empile les enfants sur mobile */
   gap: 20px;
   padding: 20px;
   box-sizing: border-box;
 
-  /* Titre centré */
-  .page-title {
-    text-align: center;
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 0px;
 
-    @media (min-width: variable.$breakpoint-desktop) {
-      text-align: center; /* Toujours centré même sur PC */
-      font-size: 1.5rem;
-      margin-bottom: 20px;
+
+
+    @media (min-width: 576px) and (orientation: landscape) {
+      grid-template-columns: repeat(3, 1fr); /* Mobile paysage */
+    }
+
+    @media (min-width: $breakpoint-tablet) {
+      grid-template-columns: repeat(3, 1fr); /* Tablette */
+    }
+
+    @media (min-width: $breakpoint-desktop) {
+      grid-template-columns: repeat(4, 1fr); /* Desktop */
     }
   }
 
-
-
- 
-}
