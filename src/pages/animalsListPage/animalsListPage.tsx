@@ -161,13 +161,19 @@ const AnimalsListPage: React.FC = () => {
 
    setFilteredAnimals(filtered);
 }, [filters, animals, searchQuery]); 
-  
+
+// Rendu
 return (
   <div className="animals-container">
     <div className="filter-container">
       {/* Afficher un message pendant le chargement */}
       {isLoading && <p className="loading">Chargement des données...</p>}
-      
+
+      {/* Afficher un message si aucun animal n'est trouvé après le chargement */}
+      {!isLoading && filteredAnimals.length === 0 && (
+        <p className="no-items">Aucun élément trouvé</p>
+      )}
+
       <Filters
         filters={filters}
         options={filterOptions}
