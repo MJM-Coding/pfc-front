@@ -34,7 +34,7 @@ const App: React.FC = () => {
       <Header />
       <main className="main-content">
       <Routes>
-        <Route path="/confirmation-email/:token" element={<ConfirmEmailPage />} />
+        <Route path="/confirm-email/:token" element={<ConfirmEmailPage />} />
 
         <Route path="/" element={<HomePage />} />
         <Route path="/animaux" element={<AnimalsListPage />} />

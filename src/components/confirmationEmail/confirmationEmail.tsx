@@ -6,6 +6,7 @@ const ConfirmEmailPage: React.FC = () => {
   const { token } = useParams<{ token: string }>();
 
   useEffect(() => {
+    console.log("Token reçu :", token);
     const confirmUserEmail = async () => {
       if (token) {
         try {
