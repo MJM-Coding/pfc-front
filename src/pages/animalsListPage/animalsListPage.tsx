@@ -166,9 +166,6 @@ const AnimalsListPage: React.FC = () => {
 return (
   <div className="animals-container">
     <div className="filter-container">
-      {/* Afficher un message pendant le chargement */}
-      {isLoading && <p className="loading">Chargement des données...</p>}
-
       <Filters
         filters={filters}
         options={filterOptions}
@@ -210,6 +207,7 @@ return (
           </div>
         </ItemCard>
       )}
+      isLoading={isLoading}
     />
   </div>
 );
