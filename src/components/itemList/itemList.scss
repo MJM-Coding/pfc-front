@@ -1,0 +1,29 @@
+
+/* ============================= */
+/* Variables de couleur          */
+/* ============================= */
+$text-main: #383838;
+
+/* ============================= */
+/* Style pour le conteneur de la liste */
+/* ============================= */
+.item-list {
+  display: flex; /* Utilisation de Flexbox */
+  flex-wrap: wrap; /* Permet aux cartes de passer à la ligne */
+  gap: 20px; /* Espacement entre les cartes */
+  justify-content: center; /* Centre toutes les cartes sur la largeur */
+  align-items: flex-start; /* Aligne les cartes en haut */
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+
+}
+
+
+#no-items-found {
+  color: $text-main;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 20px;
+}

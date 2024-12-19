@@ -7,7 +7,7 @@ import { AuthProvider } from './contexts/authContext.tsx';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter> 
-      <AuthProvider>
+    <AuthProvider token={null}> {/* Fournir un token initial */}
         <App />
       </AuthProvider>
     </BrowserRouter>

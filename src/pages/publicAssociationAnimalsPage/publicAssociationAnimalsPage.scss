@@ -1,0 +1,39 @@
+@use '../../styles/commun/variable.scss'; // Breakpoints
+
+
+
+/* ============================= */
+/* Variables de couleur          */
+/* ============================= */
+$page-background: #f4f4f4;
+
+
+/* ==========================================================
+       Conteneur principal
+========================================================== */
+.association-animals-container {
+  background-color: $page-background;
+  display: flex;
+  flex-direction: column; /* Mobile : empilé */
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+
+  /* Titre centré */
+  .page-title {
+    text-align: center;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0px;
+
+    @media (min-width: variable.$breakpoint-desktop) {
+      text-align: center; /* Toujours centré même sur PC */
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+  }
+
+
+
+ 
+}

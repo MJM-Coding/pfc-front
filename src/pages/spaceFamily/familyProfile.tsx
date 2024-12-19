@@ -1,17 +1,19 @@
 import React, { useEffect, useState, useContext } from "react"; // Importation des hooks React nécessaires
-import "../../../styles/profilePage.scss"; // Importation du fichier SCSS pour les styles
+import "../../styles/asso-fa/commun.profilePage.scss";
 import {
   GetFamilyById,
   PatchFamily,
   DeleteProfilePhoto,
-} from "../../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
-import AuthContext from "../../../contexts/authContext"; // Importation du contexte d'authentification
-import type { IFamily, IFamilyForm } from "../../../@types/family"; // Importation des types pour les données de famille
-import ImageUpload from "../../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
-import Toast from "../../../components/toast/toast"; // Importation du composant Toast pour les notifications
-import Message from "../../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de succès
-import { validateForm } from "../../../components/validateForm/validateForm";
-import "../../../components/validateForm/validateForm.scss";
+} from "../../api/family.api"; // Importation des fonctions API pour récupérer et mettre à jour les données de la famille
+import AuthContext from "../../contexts/authContext"; // Importation du contexte d'authentification
+import type { IFamily, IFamilyForm } from "../../@types/family"; // Importation des types pour les données de famille
+import ImageUpload from "../../components/imageUpload/imageUpload"; // Importation du composant d'upload d'image
+import Toast from "../../components/toast/toast"; // Importation du composant Toast pour les notifications
+import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de succès
+import { validateForm } from "../../components/validateForm/validateForm";
+import "../../components/validateForm/validateForm.scss";
+import "../../styles/commun/commun.scss"
+import Swal from "sweetalert2";
 
 function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
@@ -23,7 +25,10 @@ function FamilyProfile() {
   const [_image, setImage] = useState<string | File | null>(null); // Etat pour l'image de profil (fichier ou URL)
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isEditable, setIsEditable] = useState<boolean>(false); // Etat pour gérer l'édition
-
+  const [initialFormData, setInitialFormData] = useState<IFamilyForm | null>(
+    null
+  );
+  
   // State pour les messages d'erreur et de succès
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
@@ -77,6 +82,7 @@ function FamilyProfile() {
 
         setFamilyData(familyData);
         setFormData(familyData);
+        setInitialFormData(familyData);
 
         // Utiliser l'image par défaut si aucune image n'est disponible
         const baseUrl = import.meta.env.VITE_STATIC_URL || "";
@@ -91,7 +97,8 @@ function FamilyProfile() {
         console.error("Erreur lors de la récupération des données :", error);
       }
     };
-
+    setFormData(familyData);
+    
     fetchFamilyData();
   }, [familyId, token]);
 
@@ -134,9 +141,24 @@ function FamilyProfile() {
 
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {
+    const result = await Swal.fire({
+      title: "Confirmer la suppression",
+      text: "Êtes-vous sûr de vouloir supprimer la photo de profil ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Non, revenir",
+    });
+  
+    if (!result.isConfirmed) {
+      return; // L'utilisateur a annulé l'action
+    }
+  
     try {
       await DeleteProfilePhoto(familyId as number, token as string);
-
+  
       // Mettre à jour l'état local après la suppression
       setImageUrl(defaultImage);
       setToastMessage("Photo supprimée avec succès !");
@@ -154,6 +176,7 @@ function FamilyProfile() {
       setShowToast(true);
     }
   };
+  
 
   //! Gérer la soumission des champs sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -228,10 +251,19 @@ function FamilyProfile() {
     }
   };
 
-  //! Basculer le mode édition
-  const toggleEdit = () => {
-    setIsEditable(!isEditable);
-  };
+
+//! Basculer le mode édition
+const toggleEdit = () => {
+  if (isEditable) {
+    // Restaurer les données initiales si on annule l'édition
+    setFormData({ ...initialFormData });
+  } else {
+    // Sauvegarder les données actuelles comme données initiales si on active l'édition
+    setInitialFormData({ ...formData });
+  }
+  setIsEditable(!isEditable);
+};
+
 
   if (!user)
     return <div>Veuillez vous connecter pour accéder à cette page.</div>;

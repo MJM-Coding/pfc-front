@@ -8,6 +8,7 @@ interface ImageUploadProps {
   customClassName?: string; // Classe CSS personnalisée
 }
 
+//! Composant d'upload d'image
 const ImageUpload: React.FC<ImageUploadProps> = ({ initialImageUrl, onImageChange,  customClassName = "",  }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(initialImageUrl);
 

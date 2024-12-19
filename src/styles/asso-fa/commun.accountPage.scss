@@ -1,0 +1,173 @@
+@use "../commun/commun.scss";
+@use "../commun/variable.scss"; // breakpoints + couleurs
+
+
+/* ==========================================================
+        BASE STYLES (MOBILE FIRST)
+   ========================================================== */
+.containerAccount {
+  background: variable.$accountPage-background;
+  display: flex;
+  flex-direction: column; /* Mobile-first : les cartes empilées */
+  align-items: center;
+  padding: 32px;
+  width: 100vw;
+  min-height: 84.7vh;
+
+  h1 {
+    font-size: 24px;
+    color: variable.$accountPage-primary-color;
+    position: relative;
+    text-transform: uppercase;
+
+    &::after {
+      content: attr(data-title);
+      position: absolute;
+      font-size: 14px;
+      color: variable.$accountPage-accent-color;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .forms-container {
+    display: flex;
+    flex-direction: column; /* Mobile : cartes en colonne */
+    gap: 20px; /* Espacement entre les cartes */
+    margin-top: 40px;
+    width: 100%; /* S’assurer que le conteneur occupe toute la largeur */
+
+    .form-container,
+    .delete-container {
+      background: variable.$accountPage-background-card;
+      border: 1px solid variable.$accountPage-border;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 100%; /* Pleine largeur sur mobile */
+      max-width: 350px; /* Largeur maximale ajustée */
+      display: flex;
+      flex-direction: column;
+
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: variable.$accountPage-text-dark;
+      }
+
+      .infoFieldContainer {
+        margin-bottom: 15px;
+        
+        label {
+          display: block; /* Garantit que le label est au-dessus de l’input */
+          font-size: 0.9rem;
+          margin-bottom: 8px; /* Espace suffisant entre le label et l’input */
+          color: variable.$accountPage-text-light;
+        }
+
+        input {
+          width: 100%; /* Assure une largeur pleine */
+          padding: 8px;
+          border: 1px solid variable.$accountPage-border;
+          border-radius: 4px;
+          font-size: 0.95rem;
+          line-height: 1.2; /* Améliore la lisibilité */
+          box-sizing: border-box; /* Évite que la largeur soit affectée par les bordures */
+        }
+      }
+
+      .submit-btn {
+        background: variable.$accountPage-success;
+        color: white;
+        padding: 10px;
+        font-size: 0.9rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: auto;
+
+        &:hover {
+          background: variable.$accountPage-success-hover;
+        }
+      }
+    }
+
+    .delete-container {
+      background: variable.$accountPage-bg-delete-container; /* Couleur de fond différente */
+      color: rgb(2, 2, 2); /* Assure que le texte est lisible sur le fond rouge */
+      border: none; /* Supprime la bordure si nécessaire */
+
+      h3 {
+        color: rgb(0, 0, 0); /* Texte du titre en blanc */
+        text-align: center;
+      }
+
+      p {
+      color: #ad130e; /* Couleur légèrement gris clair pour le texte descriptif */
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 20px;
+      }
+
+      .delete-btn {
+        background: variable.$accountPage-danger; /* Couleur rouge foncé pour le bouton */
+        color: white;
+        border: 1px solid variable.$accountPage-danger-darkness;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: auto;
+
+        &:hover {
+          background: variable.$accountPage-danger-hover; /* Change la couleur au survol */
+        }
+      }
+    }
+  }
+
+  /* ========================
+          Tablette
+     ======================== */
+
+     @media (min-width: variable.$breakpoint-tablet) and (max-width: 1023px) {
+      
+      /* Mode Portrait : Les cartes sont en colonne */
+      .forms-container {
+        flex-direction: column; /* Empile les cartes en colonne */
+        gap: 20px; /* Ajoute un espace entre les cartes */
+        padding: 0 20px;
+      }
+    
+      .form-container,
+      .delete-container {
+        flex: 1 1 100%; /* Chaque carte occupe toute la largeur */
+        max-width: none; /* Supprime toute limite de largeur */
+      }
+    }
+    
+    @media (min-width: variable.$breakpoint-desktop) {
+      h1 {
+        margin-bottom: 50px;
+       }
+      /* Mode Paysage : Les cartes sont en ligne */
+      .forms-container {
+        flex-direction: row; /* Aligne les cartes en ligne */
+        flex-wrap: nowrap; /* Empêche le wrapping des cartes */
+        gap: 20px; /* Ajoute un espace entre les cartes */
+        padding: 0 20px;
+        width: 100%; /* Utilise toute la largeur de l'écran */
+        max-width: 100%; /* Limite les marges latérales */
+        margin: 0 auto; /* Centre le conteneur */
+      }
+    
+      .form-container,
+      .delete-container {
+        flex: 1 1 calc(48% - 20px); /* Chaque carte occupe environ la moitié de l'espace disponible */
+        max-width: 500px; /* Permet à la carte de s'étendre librement */
+      }
+    }
+  }    

@@ -1,10 +1,10 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
-import { IAsk } from "../@types/ask"; 
+import { IAsk } from "../@types/ask";
 
 /**
  *! Récupère la liste de toutes les demandes.
- * * Authentification + réservée aux administrateurs.
+ * * Authentification + réservée aux administrateurs + association
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec un tableau d'objets IAsk.
  */
@@ -47,7 +47,7 @@ export const GetAskById = async (id: string, token: string): Promise<IAsk> => {
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec l'objet IAsk modifié.
  */
-export const UpdateAsk = async (
+export const PatchAsk = async (
   id: string,
   askData: Partial<IAsk>,
   token: string
@@ -88,5 +88,44 @@ export const CreateAsk = async (
     throw error;
   }
 };
+
+
+//! Récupérer les demandes d'accueil pour une famille
+export const GetFamilyAsks = async (id_family: string, token: string): Promise<IAsk[]> => {
+  try {
+    const response = await api.get(`/ask/family/${id_family}/asks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "la récupération des demandes pour cette famille");
+    throw error;
+  }
+};
+
+
+/**
+ *! Supprime une demande spécifique.
+ ** Authentification + réservée aux familles.
+ * @param id L'identifiant unique de la demande à supprimer.
+ * @param token Le token d'authentification de l'utilisateur.
+ * @returns Une promesse qui résout avec un message de succès.
+ */
+ export const DeleteAsk = async (id: string, token: string): Promise<{ message: string }> => {
+  try {
+    const response: AxiosResponse<{ message: string }> = await api.delete(`/ask/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, `la suppression de la demande avec l'ID ${id}`);
+    throw error;
+  }
+};
+
+
+
+
+
 
 export type { IAsk };

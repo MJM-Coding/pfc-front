@@ -1,0 +1,202 @@
+@use '../../styles/commun/variable.scss'; // Breakpoints
+
+/* ============================= */
+/* Variables de couleur          */
+/* ============================= */
+$filter-background: #e9e6e6;
+$filter-select-bg: #ffffff;
+$filter-button-primary: #ffffff;
+$filter-border: #a39789;
+$filter-text: #313030;
+$filter-reset: #ffffff;
+$filter-hover-reset: #313030;
+$filter-hover-button: #276e47;
+$filter-input-focus-bg: #e0f7e9;
+
+/* ==========================================================
+        BASE STYLES (MOBILE FIRST)
+   ========================================================== */
+
+/* ==========================================================
+       Conteneur principal des filtres
+========================================================== */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+/* ==========================================================
+       Styles des filtres
+========================================================== */
+.filters {
+  background: linear-gradient(135deg, #4e7d91, #88adb7);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: grid;
+  gap: 10px;
+  min-width: 250px;
+  width: auto;
+  position: relative;
+  align-items: center;
+
+/* Deux colonnes pour mobile portrait */
+@media (max-width: 767px) and (orientation: portrait) {
+  grid-template-columns: repeat(2, 1fr); /* Deux colonnes de largeur égale */
+}
+
+/* Deux colonnes pour mobile paysage */
+@media (max-width: 767px) and (orientation: landscape) {
+  grid-template-columns: repeat(2, 1fr); /* Deux colonnes équilibrées */
+  width: 100%; /* Prend toute la largeur de l'écran */
+}
+
+/* Deux colonnes pour tablette portrait */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+  grid-template-columns: repeat(2, 1fr); /* Deux colonnes pour tablette portrait */
+}
+
+/* Une seule colonne pour tablette paysage et desktop */
+@media (min-width: 768px) and (orientation: landscape),
+       (min-width: 1024px) {
+  grid-template-columns: 1fr; /* Une seule colonne */
+}
+
+
+  select,
+  .reset-btn {
+    width: 100%;
+  }
+
+  /* Centrer le bouton uniquement en mobile (portrait et paysage) + tablette portrait */
+  @media (max-width: 768px) {
+    .reset-btn {
+      grid-column: span 2; /* Étend le bouton sur les deux colonnes */
+      text-align: center; /* Centre le texte dans le bouton */
+      justify-self: center; /* Centre le bouton horizontalement */
+    }
+  }
+}
+
+.filters select {
+  appearance: none;
+  background-color: $filter-select-bg;
+  border: 1px solid $filter-border;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.9rem;
+  color: $filter-text;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:focus {
+    background-color: $filter-input-focus-bg;
+    border-color: $filter-hover-button;
+    outline: none;
+    box-shadow: 0 0 5px rgba($filter-hover-button, 0.5);
+  }
+}
+
+/* ==========================================================
+       Bouton "Réinitialiser" des filtres
+========================================================== */
+.reset-btn {
+  background: none;
+  border: none;
+  color: $filter-reset;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $filter-hover-reset;
+  }
+}
+
+/* ==========================================================
+       Disposition globale des filtres et du contenu
+========================================================== */
+.content-wrapper {
+  display: flex;
+  flex-direction: column; /* Mobile : empilé */
+  gap: 20px;
+
+  @media (min-width: variable.$breakpoint-desktop) {
+    flex-direction: row; /* PC : filtre à gauche, liste à droite */
+    align-items: flex-start;
+    padding-left: 0px; /* Ajoute un espacement global */
+  }
+}
+
+/* ==========================================================
+       Configuration de la section des filtres
+========================================================== */
+.filter-wrapper {
+  width: 100%; /* Mobile : filtre prend toute la largeur */
+  @media (min-width: variable.$breakpoint-desktop) {
+    width: 300px; /* PC : largeur fixe pour le filtre */
+    flex-shrink: 0; /* Empêche le filtre de rétrécir */
+  }
+}
+
+
+/* ==========================================================
+       Bouton pour afficher/masquer les filtres
+========================================================== */
+.toggle-filters-btn {
+  background: linear-gradient(135deg, #2e546b, #4e7d91);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 5px;
+
+  &:hover {
+    background: linear-gradient(135deg, #4e7d91, #88adb7);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(128, 189, 255, 0.7);
+  }
+}
+
+/* ==========================================================
+       Responsive styles pour tablettes et desktop
+========================================================== */
+@media (min-width: variable.$breakpoint-tablet) and (max-width: 1023px) {
+  .filters {
+    width: 100%;
+    margin-bottom: 10px;
+    top: 20px;
+  }
+}
+
+@media (min-width: variable.$breakpoint-desktop) {
+  .filters {
+    max-width: 250px;
+    position: sticky;
+    top: 20px;
+    margin: 0 auto;
+  }
+}
+
+

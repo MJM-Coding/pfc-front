@@ -1,0 +1,72 @@
+@use '../../styles/commun/variable.scss';
+
+/* ============================= */
+/* Variables de couleur          */
+/* ============================= */
+$searchBar-background: #F4F4F4;
+$searchBar-border: #88ADB7;
+$searchBar-placeholder: #585f64;
+$searchBar-text: #272626;
+$searchBar-focus-background: #fff;
+$searchBar-focus-border: #88ADB7;
+$searchBar-focus-shadow: rgba(40, 133, 255, 0.3);
+
+/* ==========================================================
+        BASE STYLES (MOBILE FIRST)
+   ========================================================== */
+
+/* ============================= */
+/* Styles de la barre de recherche */
+/* ============================= */
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+
+  width: 100%; 
+  max-width: 250px; 
+  
+  .custom-search-input {
+    width: 100%; 
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: $searchBar-text; 
+    background-color: $searchBar-background; 
+    border: 2px solid $searchBar-border; 
+    border-radius: 25px;
+    outline: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+
+    &::placeholder {
+      color: $searchBar-placeholder; 
+      font-size: 1rem;
+      font-style: italic;
+    }
+
+    &:focus {
+      background-color: $searchBar-focus-background; 
+      border-color: $searchBar-focus-border; 
+      box-shadow: 0 4px 8px $searchBar-focus-shadow; 
+    }
+  }
+
+  /* Responsive pour tablette */
+  @media (max-width: variable.$breakpoint-tablet) {
+    .custom-search-input {
+      padding: 10px 15px; 
+      font-size: 0.9rem; 
+    }
+  }
+
+  /* Responsive pour grand écran */
+  @media (min-width: variable.$breakpoint-desktop) {
+    .custom-search-input {
+      max-width: none; 
+      font-size: 1.1rem; 
+    }
+  }
+}

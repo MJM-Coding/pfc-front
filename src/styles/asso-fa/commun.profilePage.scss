@@ -1,0 +1,294 @@
+@use "../commun/commun.scss";
+@use "../commun/variable.scss"; // breakpoints + couleurs
+
+
+/* ==========================================================
+        BASE STYLES (MOBILE FIRST)
+   ========================================================== */
+.containerProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: variable.$profilePage-secondary-color;
+  padding: 20px;
+  max-width: 100vw;
+  margin: auto;
+
+  h1 {
+    font-size: 24px;
+    color: variable.$profilePage-primary-color;
+    position: relative;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+
+    &::after {
+      content: attr(data-title);
+      position: absolute;
+      font-size: 14px;
+      color: variable.$profilePage-accent-color;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.infoSection {
+  width: 100%;
+  max-width:100vw;
+  min-width: 400px;
+  background-color: white;
+  padding: 40px;
+
+
+  .infoTitle {
+    text-align: center;
+    font-weight: bold;
+    color: variable.$profilePage-primary-color;
+  }
+
+  .infoBody {
+    margin-top: 16px ;
+
+    .forms {
+      display: flex;
+      flex-direction: column;
+      gap: 16px ;
+
+      .fieldsWrap {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px ;
+      }
+
+      .infoFieldContainer {
+        display: flex;
+        flex-direction: column;
+
+        &.row {
+          grid-column: span 2;
+        }
+
+        .infoLabel {
+          font-size: 14px;
+          color: variable.$profilePage-text-color;
+          margin-bottom: 8px;
+        }
+
+        .infoInput,
+        select,
+        textarea {
+          border: 1px solid variable.$profilePage-secondary-color;
+          padding: 10px;
+          border-radius: variable.$profilePage-border-radius;
+          font-size: 16px;
+          background-color: #fff;
+          color: variable.$profilePage-text-color;
+          transition: border-color 0.3s;
+          width: 100%;
+          box-sizing: border-box;
+
+          &:focus {
+            border-color: variable.$profilePage-primary-color;
+            outline: none;
+          }
+
+          &[disabled] {
+            background-color: variable.$profilePage-secondary-color;
+            color: #aaa;
+          }
+        }
+      }
+
+      .infoFieldContainer-radio {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .infoLabel {
+          font-size: 14px;
+          color: variable.$profilePage-text-color;
+          margin-bottom: 8px;
+        }
+
+        .radio-group {
+          display: flex;
+          gap: 32px;
+
+          .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #333;
+
+            input {
+              display: none;
+            }
+
+            .custom-radio {
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              border: 2px solid variable.$profilePage-primary-color;
+              margin-right: 8px;
+              display: inline-block;
+              position: relative;
+
+              &::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 8px;
+                height: 8px;
+                background-color: variable.$profilePage-primary-color;
+                border-radius: 50%;
+                opacity: 0;
+                transition: opacity 0.2s;
+              }
+            }
+
+            input:checked + .custom-radio::after {
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      .formBtns {
+        display: flex;
+        justify-content: center;
+        gap: 16px ;
+
+        button {
+          padding: 10px 20px;
+          border: none;
+          border-radius: variable.$profilePage-border-radius;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &.submitBtnProfile {
+            background-color: variable.$profilePage-primary-color;
+            color: white;
+
+            &:hover {
+              background-color: variable.$profilePage-primary-color;
+            }
+
+            &:disabled {
+              background-color: variable.$profilePage-primary-color;
+              cursor: not-allowed;
+            }
+          }
+
+          &.editBtn {
+            background-color: variable.$profilePage-accent-color;
+            color: white;
+
+            &:hover {
+              background-color: variable.$profilePage-accent-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.uploadMessage {
+  margin-top: 8px;
+  font-size: 14px;
+  text-align: center;
+  color: #28a745;
+}
+
+.button-container {
+  text-align: center;
+}
+
+.deletePhotoBtn {
+  padding: 8px 16px;
+  width: auto;
+  background-color: #ff4d4f;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #d9363e;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    background-color: #c02c2e;
+    transform: translateY(1px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.5);
+  }
+}
+
+/* ==========================================================
+        Tablette
+   ========================================================== */
+@media (min-width: variable.$breakpoint-tablet) {
+  .containerProfile {
+    padding: 32px;
+    max-width: 100%;
+  }
+
+  .infoSection {
+    width: 100%;
+    max-width: 800px;
+    min-width: 800px;
+    background-color: white;
+    padding: 32px ;
+    border-radius: variable.$profilePage-border-radius;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .forms {
+    gap: 16px ;
+  }
+}
+
+/* ==========================================================
+        Desktop
+   ========================================================== */
+
+@media (min-width: variable.$breakpoint-desktop) {
+  .containerProfile {
+    padding: 32px;
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .infoSection {
+    padding: 16px;
+  }
+
+  .fieldsWrap {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .formBtns {
+    flex-direction: row;
+    gap: 16px;
+  }
+}

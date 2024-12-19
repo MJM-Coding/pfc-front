@@ -1,4 +1,4 @@
-// Fonction utilitaire pour convertir un objet en FormData
+//! Fonction utilitaire pour convertir un objet en FormData
 export const convertToFormData = (data: any): FormData => {
     const formData = new FormData();
     for (const key in data) {

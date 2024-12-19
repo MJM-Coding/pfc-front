@@ -1,0 +1,183 @@
+@use '../../styles/commun/variable.scss'; //breakpoints
+
+/* ============================= */
+/* Variables loginSignupModale (modale de connexion/inscription)                 */
+/* ============================= */
+$loginSigninmodal-bg-modal: rgba(0, 0, 0, 0.7);
+$loginSigninmodal-bg-modal-content: #262E33;
+$loginSigninmodal-bg-button: #228B22;
+$loginSigninmodal-bg-hover-button: #1d791d;
+$loginSigninmodal-bg-register-button: #007BFF;
+$loginSigninmodal-bg-hover-register-button: #022a55;
+$loginSigninmodal-color-title: #ffffff;
+$loginSigninmodal-color-text: #333;
+$loginSigninmodal-color-error: #e74c3c;
+$loginSigninmodal-button-signup:white;
+
+/* ============================= */
+/* Mobile-first styles           */
+/* ============================= */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $loginSigninmodal-bg-modal;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: $loginSigninmodal-bg-modal-content;
+  border: solid 1px white;
+  padding: 10px;
+  border-radius: 8px;
+  width: 85%; /* Largeur par défaut pour mobile */
+  max-width: 420px; /* Limite pour les petits écrans */
+  max-height: 80%;
+  position: relative;
+}
+
+/* ============================= */
+/* Bouton de fermeture           */
+/* ============================= */
+.close {
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  font-size: 30px;
+  cursor: pointer;
+  color: white;
+  transition: color 0.3s ease;
+  z-index: 3000;
+}
+
+.close:hover {
+  color: $loginSigninmodal-color-error;
+}
+
+/* ============================= */
+/* Titre de la modale            */
+/* ============================= */
+h2 {
+  font-size: 20px; /* Par défaut pour mobile */
+  font-weight: 600;
+  color: $loginSigninmodal-color-title;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* ============================= */
+/* Switch entre formulaires      */
+/* ============================= */
+.switch-form {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.switch-form p {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.switch-form button {
+  background-color: $loginSigninmodal-bg-button;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.switch-form button:hover {
+  background-color: $loginSigninmodal-bg-hover-button;
+}
+
+/* ============================= */
+/* Formulaire d'inscription      */
+/* ============================= */
+
+.register-options {
+  margin-top: 20px;
+}
+
+.register-options label {
+  display: block;
+
+  margin: 20px 0 20px 0;
+  font-size: 14px; /* Par défaut pour mobile */
+}
+
+.register-options input[type="radio"] {
+  margin-right: 10px;
+}
+
+button:disabled {
+  background-color: #0f0e0e;
+  cursor: not-allowed;
+}
+
+/* ============================= */
+/* Bouton "S'inscrire"           */
+/* ============================= */
+.register-button {
+  background-color: $loginSigninmodal-bg-register-button;
+  color: $loginSigninmodal-button-signup;
+  width: 100%;
+  padding: 14px;
+  font-size: 14px; /* Par défaut pour mobile */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.register-button:hover {
+  background-color: $loginSigninmodal-bg-hover-register-button;
+}
+
+/* ============================= */
+/* Media Queries - Tablette      */
+/* ============================= */
+@media (min-width: variable.$breakpoint-tablet) {
+  .modal-content {
+    width: 70%; /* Largeur sur tablette */
+    max-width: 400px;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 24px; /* Plus grand sur tablette */
+  }
+.register-options label {
+  margin: 10px 0;
+}
+  .register-button {
+    font-size: 16px;
+    padding: 14px;
+  }
+}
+
+/* ============================= */
+/* Media Queries - Desktop       */
+/* ============================= */
+@media (min-width: variable.$breakpoint-desktop) {
+  .modal-content {
+    width: 50%; /* Largeur sur desktop */
+    max-width: 400px;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 28px; /* Plus grand sur desktop */
+  }
+
+  .register-button {
+    font-size: 18px;
+    padding: 16px;
+  }
+}

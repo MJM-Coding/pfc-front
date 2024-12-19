@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api";
 import { IAssociation } from "../@types/association";
-/* import { IAnimal } from "../@types//animal";  */// Assurez-vous d'avoir défini ce type
+import { IAnimal } from "../@types/animal";  
 
 /**
  *! Récupère la liste de toutes les associations.
@@ -134,7 +134,7 @@ export const DeleteAssociation = async (
  * @param token Le token d'authentification de l'utilisateur.
  * @returns Une promesse qui résout avec un tableau d'objets IAnimal.
  */
-/* export const GetAllAnimalsByAssociation = async (
+ export const GetAllAnimalsByAssociation = async (
   associationId: string,
   token: string
 ): Promise<IAnimal[]> => {
@@ -153,7 +153,7 @@ export const DeleteAssociation = async (
     );
     throw error;
   }
-}; */
+}; 
 
 /**
  *! Récupère un animal spécifique lié à une association par son ID.

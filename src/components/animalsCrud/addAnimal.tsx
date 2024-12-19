@@ -24,6 +24,8 @@ const AddAnimal: React.FC = () => {
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const [toast, setToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
@@ -33,7 +35,9 @@ const AddAnimal: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsSubmitting(true);
+  
+    // Validation de l'âge
     const ageError = age !== undefined ? validateAge(age) : null;
     if (ageError) {
       setToastMessage(ageError);
@@ -41,7 +45,8 @@ const AddAnimal: React.FC = () => {
       setToast(true);
       return;
     }
-
+  
+    // Vérification des champs obligatoires
     if (!name || !species || (age ?? 0) <= 0 || !breed || !gender || !size) {
       setErrorMessage("Tous les champs doivent être remplis correctement.");
       setToastMessage("Veuillez remplir tous les champs !");
@@ -49,7 +54,16 @@ const AddAnimal: React.FC = () => {
       setToast(true);
       return;
     }
-
+  
+    // Vérification de la photo de profil
+    if (!profilePhoto) {
+      setErrorMessage("Veuillez charger une photo de profil pour l'animal.");
+      setToastMessage("Photo de profil obligatoire !");
+      setToastType("error");
+      setToast(true);
+      return;
+    }
+  
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -60,23 +74,24 @@ const AddAnimal: React.FC = () => {
       formData.append("size", size);
       formData.append("description", description);
       formData.append("id_association", associationId!);
-
+  
       if (profilePhoto) {
         formData.append("image", profilePhoto); // La première photo est la photo de profil
       }
-
+  
       photos.forEach((photo) => {
         formData.append("image", photo); // Les autres photos
       });
-
+  
       await PostAnimal(formData, token!);
-
+  
       setToastMessage("Animal ajouté avec succès !");
       setToastType("success");
       setToast(true);
-
+  
       setTimeout(() => {
         navigate(`/espace-association/animaux-association/${associationId}`);
+        setIsSubmitting(false); 
       }, 3000);
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'animal :", error);
@@ -85,6 +100,7 @@ const AddAnimal: React.FC = () => {
       setToast(true);
     }
   };
+  
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -106,11 +122,16 @@ const AddAnimal: React.FC = () => {
 
   {/* Bouton de retour */}
   <div className="back-button-animal-container">
-  <Link to={`/espace-association/animaux-association/${associationId}`} className="back-button-addAnimal">
-  <i className="fas fa-arrow-left"></i> Retour à la liste
-      </Link>
-      <h1 className="animal-title">Ajouter un animal</h1>
-    </div>
+  <Link
+    to={`/espace-association/animaux-association/${associationId}`}
+    className="add-animal-back-button"
+  >
+    <i className="fas fa-arrow-left"></i>
+    <span className="back-text">Retour à la liste</span>
+  </Link>
+  <h1 className="animal-title">Ajouter un animal</h1>
+</div>
+
 
       <div className="animal-layout">
         <form onSubmit={handleSubmit} className="animal-form">
@@ -205,9 +226,9 @@ const AddAnimal: React.FC = () => {
 
           {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-          <button type="submit" className="animal-button">
-            Ajouter l'animal
-          </button>
+          <button type="submit" className={`animal-button ${isSubmitting ? 'disabled' : ''}`} disabled={isSubmitting}>
+  Ajouter l'animal
+</button>
         </form>
 
         <div className="image-section">

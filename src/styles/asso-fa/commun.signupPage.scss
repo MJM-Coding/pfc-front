@@ -1,0 +1,189 @@
+@use "../commun/commun.scss";
+@use "../commun/variable.scss"; // breakpoints + couleurs
+
+/* ==========================================================
+         BASE STYLES (MOBILE FIRST)
+    ========================================================== */
+.containerSignup {
+  width: 100vw;
+  min-height: 100vh;
+  background: variable.$signupPage-background-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+// =============================
+// Style du formulaire d'inscription
+// =============================
+.signup {
+  max-width: 500px;
+  width: 100%;
+  padding: 25px 30px;
+
+  .signup_Header {
+    text-align: center;
+    margin-bottom: 20px;
+
+    h1 {
+      color: variable.$signupPage-primary-color;
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+  }
+
+  .subscribeFormContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    .formConnexionPage {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+
+      .formColumns {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+
+        .formColumnLeft,
+        .formColumnRight {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .fieldContainer {
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 500px;
+
+            label {
+              font-size: 1rem;
+              color: variable.$signupPage-label-color;
+              margin-bottom: 5px;
+              display: block;
+            }
+
+            input {
+              width: 100%;
+              padding: 12px;
+              font-size: 1rem;
+              border: 1px solid variable.$signupPage-input-border-color;
+              border-radius: 5px;
+              outline: none;
+
+              &:focus {
+                border-color: variable.$signupPage-primary-color;
+              }
+
+              &.error {
+                border-color: variable.$signupPage-danger-color;
+              }
+            }
+
+            .errorMessage {
+              font-size: 0.875rem;
+              color: variable.$signupPage-error-color;
+              margin-top: 5px;
+            }
+          }
+        }
+      }
+
+      button[type="submit"] {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px;
+        font-size: 1rem;
+        font-weight:500;
+        background-color: variable.$signupPage-button-bg-color;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: variable.$signupPage-button-hover-bg-color;
+        }
+      }
+
+      .errorMessage {
+        color: variable.$signupPage-danger-color;
+        font-size: 1rem;
+        margin-top: 15px;
+      }
+    }
+  }
+}
+
+// =============================
+// Tablette
+// =============================
+@media (min-width: variable.$breakpoint-tablet) {
+  .signup .signup_Header h1 {
+    font-size: 2.1rem;
+  }
+
+  .signup {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    max-width: 700px;
+    margin: 10px 10px;
+    border-radius: 10px;
+  }
+
+  .subscribeFormContainer {
+    .formConnexionPage {
+      flex-direction: row;
+      justify-content: center;
+
+      .formColumns {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 30px;
+
+        .formColumnLeft,
+        .formColumnRight {
+          width: 48%;
+
+          .fieldContainer {
+            max-width: 600px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// =============================
+// Desktop
+// =============================
+
+@media (min-width: variable.$breakpoint-desktop) {
+  .signup {
+    max-width: 900px;
+  }
+
+  .subscribeFormContainer {
+    .formConnexionPage {
+      .formColumns {
+        .formColumnLeft,
+        .formColumnRight {
+          width: 100%;
+
+          .fieldContainer {
+            max-width: 800px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@
  * Contient les informations de l'utilisateur, son rôle et ses informations de connexion.
  */
 export interface IUser {
+  family: any;
   id: number; // ID unique utilisateur.
   firstname: string | null; // Prénom utilisateur.
   lastname: string | null; // Nom utilisateur.
@@ -13,8 +14,8 @@ export interface IUser {
   role: "family" | "association" | "admin"; // Rôle de l'utilisateur dans l'application.
   created_at: string; // Date de création (format ISO 8601, par exemple).
   updated_at: string; // Date de mise à jour (format ISO 8601).
-  id_family?: number | null; // ID famille optionnelle, utilisé si l'utilisateur appartient à une famille.
-  id_association?: number | null; // ID association optionnelle, utilisé si l'utilisateur appartient à une association.
+  id_family?: number ; // ID famille optionnelle, utilisé si l'utilisateur appartient à une famille.
+  id_association?: number ; // ID association optionnelle, utilisé si l'utilisateur appartient à une association.
 }
 
 /**

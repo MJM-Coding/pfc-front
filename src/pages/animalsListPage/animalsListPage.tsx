@@ -1,319 +1,212 @@
-import { useState, useEffect } from "react";
-import { GetAllAnimals } from "../../api/animal.api"; // Appel la fonction getallanimals
-import type { IAnimal } from "../../@types/animal";
+import React, { useState, useEffect } from "react";
+import { GetAllAnimals } from "../../api/animal.api";
 import { GetAllAssociations } from "../../api/association.api";
-
+import Filters from "../../components/filters/filter";
+import ItemList from "../../components/itemList/itemList";
+import ItemCard from "../../components/itemCard/itemCard";
+import SearchBar from "../../components/searchBar/searchBar";
+import type { IAnimal } from "../../@types/animal";
 import "./animalsListPage.scss";
 import "../../styles/commun/commun.scss";
-import { Link } from "react-router-dom";
 
-const AnimalsPage: React.FC = () => {
-  // États pour gérer les animaux, les filtres et les erreurs
+const AnimalsListPage: React.FC = () => {
   const [animals, setAnimals] = useState<IAnimal[]>([]);
   const [filteredAnimals, setFilteredAnimals] = useState<IAnimal[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState({
-    species: "",
-    size: "",
-    ageRange: "",
-    gender: "",
-    location: "",
+  const [filters, setFilters] = useState<Record<string, string>>({
+    Espèce: "",
+    Taille: "",
+    Localisation: "",
+    Age: "", 
+    Sexe: "", 
+    "Date de publication": "",
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [filterOptions, setFilterOptions] = useState<Record<string, string[]>>({
+    Espèce: [],
+    Taille: [],
+    localisation: [],
+    Age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"], 
+    Sexe: ["Mâle", "Femelle"], 
+    "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
   });
 
-  // États pour stocker les options uniques des filtres
-  const [species, setSpecies] = useState<string[]>([]);
-  const [sizes, setSizes] = useState<string[]>([]);
-  const [locations, setLocations] = useState<string[]>([]);
-
-  //! Permet d'afficher les tailles dans un ordre précis dans le select "Taille"
-  const predefinedSizes = ["Petit", "Moyen", "Grand"];
-  const sortedSizes = sizes.sort((a, b) => {
-    return predefinedSizes.indexOf(a) - predefinedSizes.indexOf(b);
-  });
-
-  //! Chargement des données des animaux et des localisations
+  //! Chargement des données
   useEffect(() => {
-    const loadAnimalsAndLocations = async () => {
+    const loadData = async () => {
       try {
-        setIsLoading(true);
-
-        //! Appel API pour obtenir tous les animaux
         const animalsData = await GetAllAnimals();
-
-        //! Appel API pour obtenir toutes les associations
         const associationsData = await GetAllAssociations();
-
-        //! Enrichir les animaux avec les données de localisation de leurs associations
+  
+        // Enrichir les animaux et exclure ceux avec des demandes validées
         const enrichedAnimals = animalsData.map((animal) => {
-          const association = associationsData.find(
-            (assoc) => assoc.id === animal.id_association
-          );
-          return {
-            ...animal,
-            association: association || null,
-          };
+          const association = associationsData.find((assoc) => assoc.id === animal.id_association);
+          return { ...animal, association: association || null };
         });
-
-        setAnimals(enrichedAnimals); // Stocke les animaux enrichis
-        setFilteredAnimals(enrichedAnimals); // Initialise les animaux filtrés
-
-        //! Récupère des valeurs uniques pour les espèces et les tailles
-        const uniqueSpecies = Array.from(
-          new Set(enrichedAnimals.map((animal) => animal.species))
-        ).filter(Boolean);
-        const uniqueSizes = Array.from(
-          new Set(enrichedAnimals.map((animal) => animal.size))
-        ).filter(Boolean);
-
-        setSpecies(uniqueSpecies); // Met à jour les espèces uniques
-        setSizes(uniqueSizes); // Met à jour les tailles uniques
-
-        //! Récupère des localisations uniques
-       const uniqueLocations = Array.from(
-  new Set(
-    associationsData.map(
-      (association) =>
-        `${association.city}, ${association.postal_code}`
-    )
-  )
-)
-  .filter(Boolean)
-  .sort((a, b) => {
-    // Tri par code postal
-    const codeA = parseInt(a.split(", ")[1] || "0", 10); // Extrait le code postal
-    const codeB = parseInt(b.split(", ")[1] || "0", 10);
-    return codeA - codeB;
-  });
-
-
-        setLocations(uniqueLocations); // Stocke les localisations uniques
+  
+        setAnimals(enrichedAnimals);
+        setFilteredAnimals(enrichedAnimals);
+        setFilterOptions({
+          Espèce: Array.from(new Set(enrichedAnimals.map((a) => a.species))).filter(Boolean),
+          Taille: ["Petit", "Moyen", "Grand"],
+          Localisation: Array.from(
+            new Set(
+              associationsData.map((a) => `${a.city}, ${a.postal_code}`)
+            )
+          ).filter(Boolean),
+          Age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"],
+          Sexe: ["Mâle", "Femelle"],
+          "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
+        });
       } catch (err) {
-        setError("Erreur lors du chargement des données");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+        console.error("Erreur lors du chargement des données", err);
       }
     };
-
-    loadAnimalsAndLocations();
+  
+    loadData();
   }, []);
+  
 
-  //! Application des filtres sur la liste des animaux
-  const applyFilters = () => {
-    let filtered = [...animals];
-
-    if (filters.species) {
-      filtered = filtered.filter((animal) =>
-        animal.species.toLowerCase().includes(filters.species.toLowerCase())
-      );
-    }
-
-    if (filters.size) {
-      filtered = filtered.filter((animal) =>
-        animal.size.toLowerCase().includes(filters.size.toLowerCase())
-      );
-    }
-
-    if (filters.ageRange !== "all") {
-      if (filters.ageRange === "under-2") {
-        filtered = filtered.filter((animal) => animal.age < 2);
-      } else if (filters.ageRange === "2-7") {
-        filtered = filtered.filter(
-          (animal) => animal.age >= 2 && animal.age <= 7
-        );
-      } else if (filters.ageRange === "over-7") {
-        filtered = filtered.filter((animal) => animal.age > 7);
-      }
-    }
-
-    // Filtrer par genre (M ou F)
-    if (filters.gender) {
-      filtered = filtered.filter((animal) => animal.gender === filters.gender);
-    }
-
-    // Filtrer par localisation
-    if (filters.location) {
-      filtered = filtered.filter((animal) => {
-        if (!animal.association) return false;
-        const location =
-          `${animal.association.city}, ${animal.association.postal_code}`.toLowerCase();
-        return location.includes(filters.location.toLowerCase());
-      });
-    }
-
-    setFilteredAnimals(filtered); // Met à jour la liste filtrée
-  };
-
-  //! Gère les changements dans les filtres
+  //! Gestion des changements de filtres
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  //! Réinitialise tous les filtres
+  //! Réinitialisation des filtres
   const resetFilters = () => {
     setFilters({
-      species: "",
-      size: "",
-      ageRange: "",
-      gender: "",
-      location: "",
+      Espèce: "",
+      Taille: "",
+      Localisation: "",
+      Age: "",
+      Sexe: "",
+      "Date de publication": "",
     });
-    setFilteredAnimals(animals); // Réinitialise la liste des animaux affichés
-
-
+    setFilteredAnimals(animals);
   };
 
-  //! Fonction pour rendre l'affichage d'un animal
-  const renderAnimal = (animal: IAnimal) => (
-    <li key={animal.id} className="animal-item">
-      <Link to={`/animal-info/${animal.id}`} className="animal-link">
-        <h2 className="animal-name">{animal.name}</h2>
-        {animal.profile_photo && (
-          <img
-            src={
-              animal.profile_photo.startsWith("http")
+  // Application des filtres
+  useEffect(() => {
+    let filtered = [...animals];
+    
+   // Exclure les animaux avec `is_paused: true`
+   filtered = filtered.filter((animal) => !animal.is_paused);
+
+   // Exclure les animaux avec une demande ayant le statut "validée"
+   filtered = filtered.filter(
+      (animal) => !animal.asks || animal.asks.every((ask) => ask.status !== "validée")
+   );
+  
+   if (filters.Espèce) {
+      filtered = filtered.filter((a) => a.species === filters.Espèce);
+   }
+   if (filters.Taille) {
+      filtered = filtered.filter((a) => a.size === filters.Taille);
+   }
+   if (filters.Localisation) {
+      filtered = filtered.filter(
+         (a) =>
+            a.association &&
+            `${a.association.city}, ${a.association.postal_code}` === filters.Localisation
+      );
+   }
+   if (filters.Age) {
+      if (filters.Age === "Moins de 2 ans") {
+         filtered = filtered.filter((a) => a.age < 2);
+      } else if (filters.Age === "Entre 2 et 7 ans") {
+         filtered = filtered.filter((a) => a.age >= 2 && a.age <= 7);
+      } else if (filters.age === "Plus de 7 ans") {
+         filtered = filtered.filter((a) => a.age > 7);
+      }
+   }
+   if (filters.Sexe) {
+      filtered = filtered.filter((a) => (filters.Sexe === "Mâle" ? a.gender === "M" : a.gender === "F"));
+   }
+
+   //!  Nouveau filtre :Date de publication
+   if (filters["Date de publication"]) {
+      const now = new Date();
+
+      filtered = filtered.filter((a) => {
+         const createdAt = new Date(a.created_at); // Vérifiez que la clé correspond
+         const diffInMonths =
+            (now.getFullYear() - createdAt.getFullYear()) * 12 +
+            now.getMonth() -
+            createdAt.getMonth();
+
+         if (filters["Date de publication"] === "Moins de 1 mois") {
+            return diffInMonths < 1;
+         }
+         if (filters["Date de publication"] === "Entre 1 et 3 mois") {
+            return diffInMonths >= 1 && diffInMonths <= 3;
+         }
+         if (filters["Date de publication"] === "Plus de 3 mois") {
+            return diffInMonths > 3;
+         }
+         return true;
+      });
+   }
+
+   //! Filtrer par recherche
+   if (searchQuery) {
+     filtered = filtered.filter(animal =>
+       animal.name.toLowerCase().includes(searchQuery.toLowerCase())
+     );
+   }
+
+   setFilteredAnimals(filtered);
+}, [filters, animals, searchQuery]); 
+  
+return (
+  <div className="animals-container">
+  <div className="filter-container">
+  
+    <Filters
+      filters={filters}
+      options={filterOptions}
+      onChange={handleFilterChange}
+      onReset={resetFilters}
+    />
+      {/* Barre de recherche */}
+      <SearchBar onSearch={setSearchQuery} /> 
+  </div>
+      
+      <ItemList
+        items={filteredAnimals}
+        renderItem={(animal) => (
+          <ItemCard
+            key={animal.id}
+            title={
+              <>
+                {animal.gender === "M" ? (
+                  <i className="fa-solid fa-mars" title="Mâle"></i>
+                ) : (
+                  <i className="fa-solid fa-venus" title="Femelle"></i>
+                )}{" "}
+                {animal.name}
+              </>
+            }
+            imageUrl={
+              animal.profile_photo?.startsWith("http")
                 ? animal.profile_photo
                 : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
             }
-            alt={animal.name}
-            className="animal-photo"
-          />
-        )}
-        <div className="animal-details">
-          {animal.species && <p>Espèce: {animal.species}</p>}
-          {animal.age && <p>Âge: {animal.age} ans</p>}
-          {animal.gender && (
-            <p>
-              {" "}
-              {animal.gender === "M" ? (
-                <i className="fa-solid fa-mars" title="Mâle"></i> // Icône pour Mâle
-              ) : (
-                <i className="fa-solid fa-venus" title="Femelle"></i> // Icône pour Femelle
-              )}
+            link={`/animal-info/${animal.id}`}
+          >
+            <div className="item-card-details">
+            {/* Race */}
+            <p className="breed">{animal.breed || "Race inconnue"}</p>
+            {/* Localisation (sans code postal) */}
+            <p className="location">
+              <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
             </p>
-          )}
-        </div>
-      </Link>
-    </li>
-  );
-
-  return (
-    <div className="animals-container">
-      <main className="Animals">
-        {isLoading && <p className="loading">Chargement...</p>}
-        {error && <p className="error">{error}</p>}
-
-        <div className="filters">
-  <button
-    id="reset-filters-btn"
-    className="reset-btn"
-    onClick={resetFilters}
-  >
-    <i className="fa-sharp fa-solid fa-eraser"></i>
-  </button>
-
-  {/* Filtre par espèce */}
-  <select
-    name="species"
-    value={filters.species}
-    onChange={handleFilterChange}
-    className={filters.species ? "selected" : ""}
-  >
-    <option value="" className="default-option">
-      Espèce
-    </option>
-    {species.map((species) => (
-      <option key={species} value={species}>
-        {species}
-      </option>
-    ))}
-  </select>
-
-  {/* Filtre par taille */}
-  <select
-    name="size"
-    value={filters.size}
-    onChange={handleFilterChange}
-    className={filters.size ? "selected" : ""}
-  >
-    <option value="" className="default-option">
-      Taille
-    </option>
-    {sortedSizes.map((size) => (
-      <option key={size} value={size}>
-        {size}
-      </option>
-    ))}
-  </select>
-
-  {/* Filtre par tranche d'âge */}
-  <select
-    name="ageRange"
-    value={filters.ageRange}
-    onChange={handleFilterChange}
-    className={filters.ageRange ? "selected" : ""}
-  >
-    <option value="" className="default-option">
-      Âge
-    </option>
-    <option value="under-2">Moins de 2 ans</option>
-    <option value="2-7">Entre 2 et 7 ans</option>
-    <option value="over-7">Plus de 7 ans</option>
-  </select>
-
-  {/* Filtre par genre */}
-  <select
-    name="gender"
-    value={filters.gender}
-    onChange={handleFilterChange}
-    className={filters.gender ? "selected" : ""}
-  >
-    <option value="" className="default-option">
-      Sexe
-    </option>
-    <option value="M">Mâle</option>
-    <option value="F">Femelle</option>
-  </select>
-
-  {/* Filtre par localisation */}
-  <select
-    name="location"
-    value={filters.location}
-    onChange={handleFilterChange}
-    className={filters.location ? "selected" : ""}
-  >
-    <option value="" className="default-option">
-      Localisation
-    </option>
-    {locations.map((location) => (
-      <option key={location} value={location}>
-        {location}
-      </option>
-    ))}
-  </select>
-
-  <button type="button" id="apply-filters-btn" onClick={applyFilters}>
-  <i className="fa-solid fa-filter"></i>
-  Filtrer
-  </button>
-</div>
-
-
-        {!isLoading &&
-          !error &&
-          (filteredAnimals.length > 0 ? (
-            <ul className="animal-list">{filteredAnimals.map(renderAnimal)}</ul>
-          ) : (
-            <p id="no-animals-found">Aucun animal trouvé</p>
-          ))}
-      </main>
+            </div>
+          </ItemCard>
+        )}
+      />
     </div>
-  );
+);
 };
 
-export default AnimalsPage;
+export default AnimalsListPage;

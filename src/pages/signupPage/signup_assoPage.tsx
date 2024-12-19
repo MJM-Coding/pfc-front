@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import "../../styles/signupPage.scss";
+import "../../styles/asso-fa/commun.signupPage.scss";
 import { CreateUser } from "../../api/user.api";
 import type { IUserRegistrationAssociation } from "../../@types/signupForm";
 import Toast from "../../components/toast/toast";
@@ -178,7 +178,7 @@ const signup_assoPage = () => {
       //! Affichage du message de success avec Toast
 
       setToastMessage(
-        "Inscription réussie ! Vous pouvez maintenant vous connecter."
+         "Félicitations, votre inscription est presque terminée ! Vérifiez votre boîte mail pour confirmer votre adresse et activer votre compte."
       );
       setToastType("success");
       setShowToast(true); // Ajout de cette ligne pour afficher le toast

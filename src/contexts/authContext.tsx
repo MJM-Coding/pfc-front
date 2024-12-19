@@ -5,11 +5,11 @@ import ModalLogin from "../components/longinSigninModale/loginSigninModale";
 
 
 
-const AuthContext = createContext<IAuthContext | null>(null);
+export const AuthContext = createContext<IAuthContext | null>(null);
 
 interface AuthProviderProps {
   children: ReactNode;
-  token: string | null;
+  token?: string | null;
 }
 
 

@@ -8,6 +8,7 @@ export interface IUser {
   newPassword: string;
   confirmPassword: string;
   role: "family" | "association" | "admin";
+  token?: string;
   id_family: number | null;
   id_association: number | null;
   family: {

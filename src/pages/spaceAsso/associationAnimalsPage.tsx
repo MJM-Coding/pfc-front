@@ -5,7 +5,7 @@ import { GetAllAnimals } from "../../api/animal.api"; // API pour récupérer le
 import AnimalList from "../../components/animalsCrud/animalsList"; // Import du composant AnimalList
 import Toast from "../../components/toast/toast"; // Import du composant Toast
 import { IAnimal } from "../../@types/animal"; // Import de type pour Animal
-import "./associationAnimalsPage.scss";
+import "../../styles/spaceAsso/associationAnimalsPage.scss";
 
 const AssociationAnimalsPage: React.FC = () => {
   //! Récupération de l'ID de l'association depuis l'URL

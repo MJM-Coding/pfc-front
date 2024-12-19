@@ -3,12 +3,13 @@ import { SigninUser } from "../../api/signin.api"; // Import de la fonction pour
 import { IAuthContext } from "../../@types/auth"; // Import du type pour le contexte d'authentification
 import "./loginForm.scss";
 
-// Définir le type des props pour LoginForm
+// Défini le type des props pour LoginForm
 interface ILoginFormProps {
   login: (token: string, user: any) => void; // Fonction de gestion de la connexion
   onClose: () => void; // Fonction pour fermer la modal
 }
 
+//! Composant pour gerer le formulaire de connexion
 const LoginForm: React.FC<ILoginFormProps> = ({ login, onClose }) => {
   const [email, setEmail] = useState(""); // Stocke l'email saisi par l'utilisateur
   const [password, setPassword] = useState(""); // Stocke le mot de passe saisi par l'utilisateur

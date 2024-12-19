@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../loginForm/loginForm"; // Import de LoginForm
-import "./longinSigninModale.scss";
+import "./loginSigninModale.scss";
 
 interface IModalLogin {
   show: boolean; // Détermine si la modal est visible ou non
@@ -21,6 +21,7 @@ const ModalLogin: React.FC<IModalLogin> = ({ show, onClose, login }) => {
   };
 
   if (!show) return null;
+  console.log("ModalLogin show:", show);
 
   //! Gestion de la redirection vers la page d'inscription
   const handleRegisterRedirect = () => {

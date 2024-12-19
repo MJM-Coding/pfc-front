@@ -1,6 +1,20 @@
+@use './variable.scss';
+
 /* Applique la police Montserrat globalement */
 #root {
   font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
 }
+
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Hauteur minimum de la page */
+}
+
+.main-content {
+  flex: 1; /* Prend tout l'espace disponible entre le header et le footer */
+}
+
 

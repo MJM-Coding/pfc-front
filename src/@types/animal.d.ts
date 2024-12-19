@@ -1,7 +1,7 @@
 // src/@types/animal.ts
 
 import { IAssociation } from "./association";
-
+import { IAsk } from "./ask";
 /**
  *! Interface pour représenter un animal dans le système.
  */
@@ -18,14 +18,19 @@ import { IAssociation } from "./association";
   photo1:string; // Photo supplémentaire (optionnel)
   photo2:string; // Photo supplémentaire (optionnel)
   photo3:string; // Photo supplémentaire (optionnel)
+  is_paused:boolean; // Indicateur pour savoir si l'animal est mis en pause (optionnel)
 
   id_family? :number|null; // ID de la famille d'accueil (optionnel)
   id_association? :number|null; // ID de l'association (optionnel)
   association?: IAssociation | null;
+
+  asks?: IAsk[]; 
   
   created_at:Date; // Date création (obligatoire)
   updated_at:Date; // Date mise à jour (obligatoire)
 }
+
+
 
 /**
 *! Interface pour le formulaire d'ajout d'un animal.

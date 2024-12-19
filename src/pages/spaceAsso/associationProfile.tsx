@@ -1,27 +1,31 @@
 // src/components/AssociationProfile/AssociationProfile.tsx
 
 import React, { useEffect, useState, useContext } from "react";
-import "../../../styles/profilePage.scss";
+import "../../styles/asso-fa/commun.profilePage.scss";
 import {
   GetAssociationById,
   PatchAssociation,
   DeleteProfilePhoto,
-} from "../../../api/association.api";
-import AuthContext from "../../../contexts/authContext";
+} from "../../api/association.api";
+import AuthContext from "../../contexts/authContext";
 import type {
   IAssociation,
   IAssociationForm,
-} from "../../../@types/association";
-import ImageUpload from "../../../components/imageUpload/imageUpload";
-import Message from "../../../components/errorSuccessMessage/errorSuccessMessage";
-import Toast from "../../../components/toast/toast";
-import { validateForm } from "../../../components/validateForm/validateForm";
-import "../../../components/validateForm/validateForm.scss";
+} from "../../@types/association";
+import ImageUpload from "../../components/imageUpload/imageUpload";
+import Message from "../../components/errorSuccessMessage/errorSuccessMessage";
+import Toast from "../../components/toast/toast";
+import { validateForm } from "../../components/validateForm/validateForm";
+import "../../components/validateForm/validateForm.scss";
+import Swal from "sweetalert2";
 
 function AssociationProfile() {
   const { user, token } = useContext(AuthContext) || {};
   const associationId = user?.id_association;
 
+  const [initialFormData, setInitialFormData] = useState<IAssociationForm | null>(
+    null
+  );  
   const [associationData, setAssociationData] = useState<IAssociation | null>(
     null
   );
@@ -82,6 +86,7 @@ function AssociationProfile() {
 
         setAssociationData(associationData);
         setFormData(associationData);
+        setInitialFormData(associationData); 
 
         const baseUrl = import.meta.env.VITE_STATIC_URL || "";
         setImageUrl(
@@ -137,21 +142,39 @@ function AssociationProfile() {
 
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {
+    const result = await Swal.fire({
+      title: "Confirmer la suppression",
+      text: "Êtes-vous sûr de vouloir supprimer cette photo de profil ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Non, revenir",
+    });
+  
+    if (!result.isConfirmed) {
+      return; // L'utilisateur a annulé l'action
+    }
+  
     try {
       await DeleteProfilePhoto(associationId as number, token as string);
-      // Mettre à jour l'état local aprés la suppression
+  
+      // Mettre à jour l'état local après la suppression
       setImageUrl(defaultImage);
       setToastMessage("Photo supprimée avec succès !");
       setToastType("success");
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message || error.message || "Erreur inconnue.";
+      console.error("Erreur lors de la suppression de la photo :", errorMessage);
       setToastMessage(`Erreur : ${errorMessage}`);
       setToastType("error");
     } finally {
       setShowToast(true);
     }
   };
+  
 
   //! Gérer la soumission du formulaire sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -225,6 +248,13 @@ function AssociationProfile() {
 
   //! Basculer le mode édition
   const toggleEdit = () => {
+    if (isEditable) {
+      // Restaurer les données initiales si on annule l'édition
+      setFormData({ ...initialFormData });
+    } else {
+      // Sauvegarder les données actuelles comme données initiales si on active l'édition
+      setInitialFormData({ ...formData });
+    }
     setIsEditable(!isEditable);
   };
 
