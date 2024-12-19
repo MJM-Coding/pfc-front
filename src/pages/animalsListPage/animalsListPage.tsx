@@ -169,11 +169,6 @@ return (
       {/* Afficher un message pendant le chargement */}
       {isLoading && <p className="loading">Chargement des données...</p>}
 
-      {/* Afficher un message si aucun animal n'est trouvé après le chargement */}
-      {!isLoading && filteredAnimals.length === 0 && (
-        <p className="no-items">Aucun élément trouvé</p>
-      )}
-
       <Filters
         filters={filters}
         options={filterOptions}
@@ -184,6 +179,7 @@ return (
       <SearchBar onSearch={setSearchQuery} />
     </div>
 
+    {/* Affichage de la liste des animaux */}
     <ItemList
       items={filteredAnimals}
       renderItem={(animal) => (
