@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // useEffect pour charger les données de l'utilisateur et du token depuis le localStorage
   useEffect(() => {
-    const storedToken = localStorage.getItem("authToken");
+    const storedToken = localStorage.getItem("sessionToken");
     const storedUser = localStorage.getItem("authUser");
   
     if (storedToken) {
@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setTokenExpirationTime(expiration);
       } else {
         console.warn("Token expiré !");
-        localStorage.removeItem("authToken");
+        localStorage.removeItem("sessionToken");
         localStorage.removeItem("tokenExpirationTime");
       }
     }
@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setTokenExpirationTime(newExpirationTime);
 
             // Sauvegarde du nouveau token et expiration dans localStorage
-            localStorage.setItem("authToken", newToken);
+            localStorage.setItem("sessionToken", newToken);
             localStorage.setItem("tokenExpirationTime", newExpirationTime.toString());
           } catch (error) {
             console.error("Erreur lors du rafraîchissement du token :", error);
@@ -115,7 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const expirationTime = Date.now() + 60 * 60 * 1000; // Calcul de l'expiration du token (1 heure)
     setTokenExpirationTime(expirationTime);
 
-    localStorage.setItem("authToken", newToken);
+    localStorage.setItem("sessionToken", newToken);
     localStorage.setItem("tokenExpirationTime", expirationTime.toString());
     localStorage.setItem("authUser", JSON.stringify(userData));
 
@@ -127,7 +127,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
     setTokenExpirationTime(null);
 
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("sessionToken");
     localStorage.removeItem("tokenExpirationTime");
     localStorage.removeItem("authUser");
 

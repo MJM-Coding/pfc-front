@@ -39,7 +39,8 @@ const signup_assoPage = () => {
   const [rnaNumberError, setRnaNumberError] = useState<string>("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [passwordConfirmationError, setPasswordConfirmationError] = useState("");
+  const [passwordConfirmationError, setPasswordConfirmationError] =
+    useState("");
 
   // State pour gérer l'affichage de Toast
   const [showToast, setShowToast] = useState<boolean>(false);
@@ -48,6 +49,9 @@ const signup_assoPage = () => {
 
   // State pour gérer l'affichage du modal
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+
+  // state pour griser le bouton de soumission
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   //! Fonction pour gérer les changements dans les champs du formulaire
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -122,6 +126,7 @@ const signup_assoPage = () => {
   //! Fonction de soumission du formulaire
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsSubmitting(true);
 
     // Affichage du formulaire et des erreurs dans la console
     console.log("formData", formData);
@@ -166,7 +171,7 @@ const signup_assoPage = () => {
       if (errors.password) {
         setPasswordError(errors.password);
       }
-
+      setIsSubmitting(false);
       return; // Sortir si des erreurs existent
     }
 
@@ -178,15 +183,16 @@ const signup_assoPage = () => {
       //! Affichage du message de success avec Toast
 
       setToastMessage(
-         "Félicitations, votre inscription est presque terminée ! Vérifiez votre boîte mail pour confirmer votre adresse et activer votre compte."
+        "Félicitations, votre inscription est presque terminée ! Vérifiez votre boîte mail pour confirmer votre adresse et activer votre compte."
       );
       setToastType("success");
       setShowToast(true); // Ajout de cette ligne pour afficher le toast
+      setIsSubmitting(false);
 
       // Retarder la redirection de 5 secondes (5000ms)
       setTimeout(() => {
         window.location.href = "/";
-      }, 5000); // 5000ms = 5 secondes
+      }, 4000); // 5000ms = 5 secondes
 
       //!  Reinitialisation du formulaire après soumission résussie
       setFormData({
@@ -212,10 +218,11 @@ const signup_assoPage = () => {
       setRnaNumberError("");
     } catch (error: any) {
       //! Affichage du message d'erreur avec Toast
+
       const errorMessage =
         error?.response?.data?.message ||
         `Une erreur s'est produite lors de l'inscription: ${error.message}`;
-
+      setIsSubmitting(false);
       setToastMessage(`errorMessage : ${errorMessage}`);
       setToastType("error");
       setShowToast(true);
@@ -236,7 +243,6 @@ const signup_assoPage = () => {
             id="subscribeForm"
           >
             <div className="formColumns">
-              {/* Colonne de gauche */}
               <div className="formColumnLeft">
                 {/* Nom de l'association */}
                 <div className="fieldContainer">
@@ -275,10 +281,7 @@ const signup_assoPage = () => {
 
                 {/* Prénom du représentant */}
                 <div className="fieldContainer">
-                  <label
-                    className="labelConnexionPage"
-                    htmlFor="firstname"
-                  >
+                  <label className="labelConnexionPage" htmlFor="firstname">
                     Prénom du représentant
                   </label>
                   <input
@@ -310,10 +313,7 @@ const signup_assoPage = () => {
 
                 {/* Code postal */}
                 <div className="fieldContainer">
-                  <label
-                    className="labelConnexionPage"
-                    htmlFor="postal_code"
-                  >
+                  <label className="labelConnexionPage" htmlFor="postal_code">
                     Code postal
                   </label>
                   <input
@@ -348,15 +348,10 @@ const signup_assoPage = () => {
                 </div>
               </div>
 
-              {/* Colonne de droite */}
-
               <div className="formColumnRight">
                 {/* RNA */}
                 <div className="fieldContainer">
-                  <label
-                    className="labelConnexionPage"
-                    htmlFor="rna_number"
-                  >
+                  <label className="labelConnexionPage" htmlFor="rna_number">
                     RNA
                   </label>
                   <input
@@ -387,9 +382,7 @@ const signup_assoPage = () => {
                     onChange={handleChange}
                     required
                   />
-                  {phoneError && (
-                    <p className="errorMessage">{phoneError}</p>
-                  )}
+                  {phoneError && <p className="errorMessage">{phoneError}</p>}
                 </div>
 
                 {/* Email */}
@@ -450,8 +443,17 @@ const signup_assoPage = () => {
                   )}
                 </div>
                 {/* Bouton de validation */}
-                <button type="submit" className="buttonConnexionPage">
-                  Créer un compte
+                <button
+                  type="submit"
+                  className="buttonConnexionPage"
+                  disabled={isSubmitting}
+                  style={{
+                    backgroundColor: isSubmitting ? "#ccc" : undefined,
+                    color: isSubmitting ? "#666" : undefined,
+                    cursor: isSubmitting ? "not-allowed" : undefined,
+                  }}
+                >
+                  {isSubmitting ? "Inscription en cours..." : "Créer un compte"}
                 </button>
               </div>
             </div>

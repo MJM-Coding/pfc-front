@@ -105,7 +105,7 @@ const familyAccount = () => {
       setShowToast(true);
   
       // Déconnexion après mise à jour de l'email
-      localStorage.removeItem("authToken");
+      localStorage.removeItem("sessionToken");
       localStorage.removeItem("authUser");
       setTimeout(() => {
         window.location.href = "/";
@@ -146,7 +146,7 @@ const familyAccount = () => {
       setShowToast(true);
   
       // Déconnexion après mise à jour du mot de passe
-      localStorage.removeItem("authToken");
+      localStorage.removeItem("sessionToken");
       localStorage.removeItem("authUser");
       setTimeout(() => {
         window.location.href = "/";
@@ -198,7 +198,7 @@ const handleDeleteAccount = async (e: React.FormEvent) => {
     setShowToast(true);
 
     // Déconnexion de l'utilisateur après suppression du compte
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("sessionToken");
     localStorage.removeItem("authUser");
 
     // Redirection après un délai

@@ -22,7 +22,7 @@ export const SigninUser = async (
     // Récupérer et sauvegarder le token dans le localStorage 
     const { token } = response.data;
     if (token) {
-      localStorage.setItem("authToken", token); // Sauvegarde du token JWT
+      localStorage.setItem("sessionToken", token); // Sauvegarde du token JWT
     }
     
     // Retourner les données utilisateur après une connexion réussie
@@ -76,7 +76,7 @@ export const refreshToken = async (
     const { token: newToken } = response.data;
 
     // Mettre à jour le localStorage 
-    localStorage.setItem("authToken", newToken);
+    localStorage.setItem("sessionToken", newToken);
 
     return newToken;
   } catch (error: any) {

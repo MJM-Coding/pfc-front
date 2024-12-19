@@ -27,7 +27,7 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     try {
       logout && logout();
-      localStorage.removeItem("authToken");
+      localStorage.removeItem("sessionToken");
       navigate("/");
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);

@@ -13,7 +13,6 @@ import {
   validatePassword,
 } from "../../components/validateForm/validateForm"; // Import des fonctions de validation des champs
 
-
 const Signup_faPage = () => {
   const [formData, setFormData] = useState<IUserRegistrationFamily>({
     firstname: "",
@@ -42,7 +41,11 @@ const Signup_faPage = () => {
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
+  // State pour gérer l'affichage du modal
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+
+  // state pour griser le bouton de soumission
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   //! Gère les changements dans les champs du formulaire
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +99,7 @@ const Signup_faPage = () => {
   // Soumission du formulaire
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     //! Utilisation de validateForm pour valider tous les champs nécessaires
     const errors = validateForm(
@@ -123,6 +127,7 @@ const Signup_faPage = () => {
         setPasswordError(errors.password);
         setPasswordConfirmationError(errors.password);
       }
+      setIsSubmitting(false); 
       return;
     }
 
@@ -136,12 +141,12 @@ const Signup_faPage = () => {
       );
       setToastType("success");
       setShowToast(true); // Ajout de cette ligne pour afficher le toast
+      setIsSubmitting(false);
 
-       // Retarder la redirection de 5 secondes (5000ms)
-setTimeout(() => {
-  window.location.href = "/";
-}, 6000); // 5000ms = 5 secondes
-
+      // Retarder la redirection de 5 secondes (5000ms)
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 4000); // 5000ms = 5 secondes
 
       // Réinitialisation du formulaire après soumission réussie
       setFormData({
@@ -167,6 +172,7 @@ setTimeout(() => {
         error?.response?.data?.message ||
         `Une erreur s'est produite lors de l'inscription: ${error.message}`;
 
+      setIsSubmitting(false);
       setToastMessage(`errorMessage : ${errorMessage}`);
       setToastType("error");
       setShowToast(true);
@@ -187,7 +193,6 @@ setTimeout(() => {
             id="subscribeForm"
           >
             <div className="formColumns">
-              {/* Colonne de gauche */}
               <div className="formColumnLeft">
                 {/* Nom */}
                 <div className="fieldContainer">
@@ -239,10 +244,7 @@ setTimeout(() => {
 
                 {/* Code postal */}
                 <div className="fieldContainer">
-                  <label
-                    className="labelConnexionPage"
-                    htmlFor="postal_code"
-                  >
+                  <label className="labelConnexionPage" htmlFor="postal_code">
                     Code postal
                   </label>
                   <input
@@ -276,7 +278,6 @@ setTimeout(() => {
                 </div>
               </div>
 
-              {/* Colonne de droite */}
               <div className="formColumnRight">
                 {/* Téléphone */}
                 <div className="fieldContainer">
@@ -352,12 +353,21 @@ setTimeout(() => {
                     <p className="errorMessage">{passwordConfirmationError}</p>
                   )}
                 </div>
-            {/* Bouton de validation */}
-            <div className="submitContainer">
-              <button className="buttonConnexionPage" type="submit">
-                Créer un compte
-              </button>
-            </div>
+                {/* Bouton de validation */}
+                <div className="submitContainer">
+                <button
+                  type="submit"
+                  className="buttonConnexionPage"
+                  disabled={isSubmitting}
+                  style={{
+                    backgroundColor: isSubmitting ? "#ccc" : undefined,
+                    color: isSubmitting ? "#666" : undefined,
+                    cursor: isSubmitting ? "not-allowed" : undefined,
+                  }}
+                >
+                  {isSubmitting ? "Inscription en cours..." : "Créer un compte"}
+                </button>
+                </div>
               </div>
             </div>
           </form>

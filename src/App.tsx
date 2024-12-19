@@ -34,7 +34,8 @@ const App: React.FC = () => {
       <Header />
       <main className="main-content">
       <Routes>
-
+    {/*   <Route path="/test-confirm-email" element={<ConfirmEmailPage />}/> route pour tester la page de confirmation mail */}
+    
         <Route path="/confirm-email/:token" element={<ConfirmEmailPage />} />
 
         <Route path="/" element={<HomePage />} />

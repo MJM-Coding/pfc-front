@@ -11,7 +11,7 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Récupérer le token depuis le localStorage
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("sessionToken");
 
     // Si le token existe, on l'ajoute dans les en-têtes Authorization
     if (token) {
