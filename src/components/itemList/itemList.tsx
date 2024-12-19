@@ -6,16 +6,11 @@ import "./itemList.scss";
 interface ItemListProps<T> {
   items: T[]; // Liste des éléments à afficher
   renderItem: (item: T) => React.ReactNode; // Fonction pour rendre chaque élément
-  isLoading: boolean; // Indique si les données sont en cours de chargement
 }
 
-const ItemList = <T,>({ items, renderItem, isLoading }: ItemListProps<T>) => {
-  if (isLoading) {
-    return <p className="loading">Chargement des éléments...</p>; // Afficher pendant le chargement
-  }
-
+const ItemList = <T,>({ items, renderItem }: ItemListProps<T>) => {
   if (items.length === 0) {
-    return <p className="no-items">Aucun élément trouvé</p>; // Afficher si aucun élément
+    return <p className="no-items">Aucun élément trouvé</p>;
   }
 
   return <ul className="item-list">{items.map(renderItem)}</ul>;

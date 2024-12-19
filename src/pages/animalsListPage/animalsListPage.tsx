@@ -31,8 +31,6 @@ const AnimalsListPage: React.FC = () => {
     "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
   });
 
-  const [isLoading, setIsLoading] = useState(true);
-
   //! Chargement des données
   useEffect(() => {
     const loadData = async () => {
@@ -60,10 +58,8 @@ const AnimalsListPage: React.FC = () => {
           Sexe: ["Mâle", "Femelle"],
           "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
         });
-        setIsLoading(false);
       } catch (err) {
         console.error("Erreur lors du chargement des données", err);
-        setIsLoading(false);
       }
     };
   
@@ -176,40 +172,39 @@ return (
       <SearchBar onSearch={setSearchQuery} /> 
   </div>
       
-  <ItemList
-  items={filteredAnimals}
-  renderItem={(animal) => (
-    <ItemCard
-      key={animal.id}
-      title={
-        <>
-          {animal.gender === "M" ? (
-            <i className="fa-solid fa-mars" title="Mâle"></i>
-          ) : (
-            <i className="fa-solid fa-venus" title="Femelle"></i>
-          )}{" "}
-          {animal.name}
-        </>
-      }
-      imageUrl={
-        animal.profile_photo?.startsWith("http")
-          ? animal.profile_photo
-          : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
-      }
-      link={`/animal-info/${animal.id}`}
-    >
-      <div className="item-card-details">
-        <p className="breed">{animal.breed || "Race inconnue"}</p>
-        <p className="location">
-          <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
-        </p>
-      </div>
-    </ItemCard>
-  )}
-  isLoading={isLoading}  // Passer l'état isLoading ici
-/>
-
-
+      <ItemList
+        items={filteredAnimals}
+        renderItem={(animal) => (
+          <ItemCard
+            key={animal.id}
+            title={
+              <>
+                {animal.gender === "M" ? (
+                  <i className="fa-solid fa-mars" title="Mâle"></i>
+                ) : (
+                  <i className="fa-solid fa-venus" title="Femelle"></i>
+                )}{" "}
+                {animal.name}
+              </>
+            }
+            imageUrl={
+              animal.profile_photo?.startsWith("http")
+                ? animal.profile_photo
+                : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+            }
+            link={`/animal-info/${animal.id}`}
+          >
+            <div className="item-card-details">
+            {/* Race */}
+            <p className="breed">{animal.breed || "Race inconnue"}</p>
+            {/* Localisation (sans code postal) */}
+            <p className="location">
+              <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
+            </p>
+            </div>
+          </ItemCard>
+        )}
+      />
     </div>
 );
 };
