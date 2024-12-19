@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api, handleApiError } from "../api"; // Importez votre instance Axios et la fonction de gestion des erreurs
-import { IUser } from "../@types/vieuxtypes/user"; // Assurez-vous d'avoir défini ce type
+import { IUser } from "../@types/user"; // Assurez-vous d'avoir défini ce type
 
 
 /**
