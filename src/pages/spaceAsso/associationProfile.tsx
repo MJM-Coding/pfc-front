@@ -260,7 +260,7 @@ function AssociationProfile() {
 
   if (!user)
     return <div>Vous devez vous connecter pour accéder à cette page.</div>;
-  if (!associationData) return <div>Chargement des données...</div>;
+  if (!associationData) return <div>Chargement du profil...</div>;
 
   return (
     <div className="containerProfile">

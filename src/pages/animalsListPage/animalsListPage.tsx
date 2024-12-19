@@ -21,6 +21,7 @@ const AnimalsListPage: React.FC = () => {
     "Date de publication": "",
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true); // État pour le chargement
 
   const [filterOptions, setFilterOptions] = useState<Record<string, string[]>>({
     Espèce: [],
@@ -33,6 +34,7 @@ const AnimalsListPage: React.FC = () => {
 
   //! Chargement des données
   useEffect(() => {
+    setLoading(true); 
     const loadData = async () => {
       try {
         const animalsData = await GetAllAnimals();
@@ -60,6 +62,8 @@ const AnimalsListPage: React.FC = () => {
         });
       } catch (err) {
         console.error("Erreur lors du chargement des données", err);
+      } finally {
+        setLoading(false);
       }
     };
   
@@ -85,6 +89,10 @@ const AnimalsListPage: React.FC = () => {
     });
     setFilteredAnimals(animals);
   };
+
+  if (loading) {
+    return <p className="loading-message">Chargement des animaux...</p>;
+  }
 
   // Application des filtres
   useEffect(() => {
