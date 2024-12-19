@@ -21,6 +21,7 @@ const AnimalsListPage: React.FC = () => {
     "Date de publication": "",
   });
   const [searchQuery, setSearchQuery] = useState("");
+
   const [filterOptions, setFilterOptions] = useState<Record<string, string[]>>({
     Espèce: [],
     Taille: [],
@@ -29,9 +30,8 @@ const AnimalsListPage: React.FC = () => {
     Sexe: ["Mâle", "Femelle"], 
     "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
   });
-  
-  // Etat isLoading pour gérer le chargement
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   //! Chargement des données
   useEffect(() => {
@@ -60,10 +60,10 @@ const AnimalsListPage: React.FC = () => {
           Sexe: ["Mâle", "Femelle"],
           "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
         });
+        setIsLoading(false);
       } catch (err) {
         console.error("Erreur lors du chargement des données", err);
-      } finally {
-        setIsLoading(false); // Données chargées, état isLoading à false
+        setIsLoading(false);
       }
     };
   
@@ -161,55 +161,55 @@ const AnimalsListPage: React.FC = () => {
 
    setFilteredAnimals(filtered);
 }, [filters, animals, searchQuery]); 
-
-// Rendu
+  
 return (
   <div className="animals-container">
-    <div className="filter-container">
-      <Filters
-        filters={filters}
-        options={filterOptions}
-        onChange={handleFilterChange}
-        onReset={resetFilters}
-      />
-      {/* Barre de recherche */}
-      <SearchBar onSearch={setSearchQuery} />
-    </div>
-
-    {/* Affichage de la liste des animaux */}
-    <ItemList
-      items={filteredAnimals}
-      renderItem={(animal) => (
-        <ItemCard
-          key={animal.id}
-          title={
-            <>
-              {animal.gender === "M" ? (
-                <i className="fa-solid fa-mars" title="Mâle"></i>
-              ) : (
-                <i className="fa-solid fa-venus" title="Femelle"></i>
-              )}{" "}
-              {animal.name}
-            </>
-          }
-          imageUrl={
-            animal.profile_photo?.startsWith("http")
-              ? animal.profile_photo
-              : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
-          }
-          link={`/animal-info/${animal.id}`}
-        >
-          <div className="item-card-details">
-            <p className="breed">{animal.breed || "Race inconnue"}</p>
-            <p className="location">
-              <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
-            </p>
-          </div>
-        </ItemCard>
-      )}
-      isLoading={isLoading}
+  <div className="filter-container">
+  
+    <Filters
+      filters={filters}
+      options={filterOptions}
+      onChange={handleFilterChange}
+      onReset={resetFilters}
     />
+      {/* Barre de recherche */}
+      <SearchBar onSearch={setSearchQuery} /> 
   </div>
+      
+  <ItemList
+  items={filteredAnimals}
+  renderItem={(animal) => (
+    <ItemCard
+      key={animal.id}
+      title={
+        <>
+          {animal.gender === "M" ? (
+            <i className="fa-solid fa-mars" title="Mâle"></i>
+          ) : (
+            <i className="fa-solid fa-venus" title="Femelle"></i>
+          )}{" "}
+          {animal.name}
+        </>
+      }
+      imageUrl={
+        animal.profile_photo?.startsWith("http")
+          ? animal.profile_photo
+          : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+      }
+      link={`/animal-info/${animal.id}`}
+    >
+      <div className="item-card-details">
+        <p className="breed">{animal.breed || "Race inconnue"}</p>
+        <p className="location">
+          <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
+        </p>
+      </div>
+    </ItemCard>
+  )}
+  isLoading={isLoading}  // Passer l'état isLoading ici
+/>
+
+    </div>
 );
 };
 
