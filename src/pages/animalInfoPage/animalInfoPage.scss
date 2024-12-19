@@ -11,6 +11,10 @@ $animalInfoPage-text-color: #333;
 $animalInfoPage-border-color: #ddd;
 $animalInfoPage-photo-border-radius: 10px;
 
+/* ==========================================================
+        BASE STYLES (MOBILE FIRST)
+   ========================================================== */
+
 /* ============================= */
 /* Conteneur principal */
 /* ============================= */
@@ -49,12 +53,12 @@ $animalInfoPage-photo-border-radius: 10px;
   justify-content: center;
   padding: 8px 12px;
   background-color: #f5f5f5;
-  color: #27586e;
-  border: 2px solid #27586e;
+  color: $animalInfoPage-primary-color;
   border-radius: 8px;
   font-size: 1.2rem;
   text-decoration: none;
   transition: background-color 0.3s, color 0.3s;
+  margin-left: 20px;
 
   i {
     font-size: 1.5rem;
@@ -62,7 +66,7 @@ $animalInfoPage-photo-border-radius: 10px;
   }
 
   &:hover {
-    background-color: #27586e;
+    background-color: $animalInfoPage-primary-color;
     color: #ffffff;
   }
 
@@ -70,6 +74,7 @@ $animalInfoPage-photo-border-radius: 10px;
     @media (max-width:  variable.$breakpoint-tablet) {
       /* Masque le texte sur les écrans mobiles et petites tablettes */
       display: none;
+      
     }
   }
 
@@ -80,8 +85,14 @@ $animalInfoPage-photo-border-radius: 10px;
     padding: 0;
 
     i {
-      font-size: 1.5rem;
+      font-size: 2rem;
       margin-right: 0px;
+     
+    }
+
+    &:hover {
+      background-color: inherit;
+      color: $animalInfoPage-primary-color;      
     }
   }
 }
@@ -100,6 +111,23 @@ $animalInfoPage-photo-border-radius: 10px;
 }
 
 /* ============================= */
+/* Icones de la section detail d'un animal */
+/* ============================= */
+.animal_info-sections .info-icon {
+  color: $animalInfoPage-secondary-color; 
+  font-size: 1.2rem; 
+  margin-right: 5px; 
+}
+
+// trait au dessus de la description
+.animal_info-description {
+  border-top: 1px solid #ddd; 
+  margin-top: 10px; 
+  padding-top: 10px; 
+  font-weight: 600;
+}
+
+/* ============================= */
 /* Photos */
 /* ============================= */
 .animal_info-photos {
@@ -107,7 +135,7 @@ $animalInfoPage-photo-border-radius: 10px;
   grid-template-columns: repeat(2, 1fr);
   gap: 5px;
   justify-items: center;
-  margin: 20px 10px;
+  margin: 20px 15px;
 
   .animal_info-photo {
     width: 100%;
@@ -207,6 +235,8 @@ $animalInfoPage-photo-border-radius: 10px;
 
 // nom de l'association
 .association-title {
+  color: $animalInfoPage-primary-color;
+  font-size: 1.2rem;
   text-align: center;
   font-weight: bold;
 }

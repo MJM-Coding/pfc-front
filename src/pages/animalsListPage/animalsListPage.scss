@@ -1,15 +1,14 @@
-@use '../../styles/commun/variable.scss';
+@use '../../styles/commun/variable.scss'; // Breakpoints
+
 
 /* ============================= */
 /* Variables de couleur          */
 /* ============================= */
 $page-background: #f4f4f4;
 
-
 /* ==========================================================
         BASE STYLES (MOBILE FIRST)
    ========================================================== */
-
 .animals-container {
    background-color: $page-background;
    display: flex;
@@ -19,46 +18,19 @@ $page-background: #f4f4f4;
    box-sizing: border-box;
 
    @media (min-width: variable.$breakpoint-desktop) {
-     flex-direction: row; /* PC : Filtre à gauche */
+     flex-direction: row; /* PC : filtre à gauche */
      align-items: flex-start;
    }
 }
 
-/* ============================= */
-/* Liste des cartes              */
-/* ============================= */
-.item-list {
-   display: flex;
-   flex-wrap: wrap; 
-   justify-content: center; 
-
-   .item-card {
-      @extend .item-card; /* Utilise le style générique de ItemCard */
-      
-      /* Styles par défaut pour mobile */
-      width: 140px; 
-
-
-      @media (min-width: variable.$breakpoint-tablet) { // responsive tablette
-         width: 200px; 
-      }
-
-      @media (min-width: variable.$breakpoint-desktop) { // responsive desktop
-         width: 200px; 
-      }
-   }
-
-   
-}
 /* ==========================================================
-       /* Styles pour les téléphones en mode paysage */
-  /* ========================================================== */
-
-@media (min-width:480px) and (max-width:variable.$breakpoint-tablet) and (orientation:landscape) {
+        Styles pour les téléphones en mode paysage
+   ========================================================== */
+@media (min-width: 480px) and (max-width: variable.$breakpoint-tablet) and (orientation: landscape) {
    .item-list {
       .item-card {
-         width : 170px; 
-         height:220px; 
+         width: 170px;
+         height: auto;
       }
    }
 }

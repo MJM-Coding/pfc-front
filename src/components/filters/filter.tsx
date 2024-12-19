@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import "./filter.scss";
 
+//! Interface des props du composant Filters
 interface FiltersProps {
   filters: Record<string, string>; // Objet clé-valeur pour les filtres
   options: Record<string, string[]>; // Options disponibles pour chaque filtre
@@ -9,6 +10,7 @@ interface FiltersProps {
   onReset: () => void;
 }
 
+//! Composant Filters
 const Filters: React.FC<FiltersProps> = ({ filters, options, onChange, onReset }) => {
   const [showFilters, setShowFilters] = useState(false); // État pour gérer la visibilité
 
@@ -18,11 +20,8 @@ const Filters: React.FC<FiltersProps> = ({ filters, options, onChange, onReset }
         {showFilters ? "Masquer les filtres" : "Filtrer"}
       </button>
 
-      {showFilters && ( // Afficher les filtres seulement si showFilters est true
+      {showFilters && ( // Affiche les filtres seulement si showFilters est true
         <div className="filters">
-          <button className="reset-btn" onClick={onReset}>
-            <i className="fa-solid fa-eraser"></i>
-          </button>
           {Object.keys(options).map((filterKey) => (
             <select
               key={filterKey}
@@ -39,6 +38,9 @@ const Filters: React.FC<FiltersProps> = ({ filters, options, onChange, onReset }
               ))}
             </select>
           ))}
+          <button className="reset-btn" onClick={onReset}>
+            <i className="fa-solid fa-eraser"></i>
+          </button>
         </div>
       )}
     </div>

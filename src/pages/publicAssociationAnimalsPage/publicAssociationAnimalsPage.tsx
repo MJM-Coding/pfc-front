@@ -144,50 +144,59 @@ const PublicAssociationAnimalsPage: React.FC = () => {
 
   return (
     <div className="association-animals-container">
-      
-      <h2>
-        Animaux disponibles {association ? `de l'association "${association.representative}" à ${association.city}` : ""}
+      {/* Titre centré en haut */}
+      <h2 className="page-title">
+        Animaux disponibles{" "}
+        {association ? `de l'association "${association.representative}" à ${association.city}` : ""}
       </h2>
       <div className="content-wrapper">
-        {/* Filtres à gauche */}
-        <Filters
-          filters={filters}
-          options={filterOptions}
-          onChange={handleFilterChange}
-          onReset={resetFilters}
-        />
+        {/* Filtre */}
+        <div className="filter-wrapper">
+          <Filters
+            filters={filters}
+            options={filterOptions}
+            onChange={handleFilterChange}
+            onReset={resetFilters}
+          />
+        </div>
   
         {/* Liste des animaux */}
-        <ItemList
-          items={filteredAnimals}
-          renderItem={(animal) => (
-            <ItemCard
-              key={animal.id}
-              title={
-                <>
-                  {animal.gender === "M" ? (
-                    <i className="fa-solid fa-mars" title="Mâle"></i>
-                  ) : (
-                    <i className="fa-solid fa-venus" title="Femelle"></i>
-                  )}{" "}
-                  {animal.name}
-                </>
-              }
-              imageUrl={
-                animal.profile_photo?.startsWith("http")
-                  ? animal.profile_photo
-                  : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
-              }
-              link={`/animal-info/${animal.id}`}
-            >
-              {/* Race + age*/}
-              <p className="item-card-breed">{animal.breed || ""}, {animal.age || ""} ans</p>
-            </ItemCard>
-          )}
-        />
+        <div className="animals-list">
+          <ItemList
+            items={filteredAnimals}
+            renderItem={(animal) => (
+              <ItemCard
+                key={animal.id}
+                title={
+                  <>
+                    {animal.gender === "M" ? (
+                      <i className="fa-solid fa-mars" title="Mâle"></i>
+                    ) : (
+                      <i className="fa-solid fa-venus" title="Femelle"></i>
+                    )}{" "}
+                    {animal.name}
+                  </>
+                }
+                imageUrl={
+                  animal.profile_photo?.startsWith("http")
+                    ? animal.profile_photo
+                    : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+                }
+                link={`/animal-info/${animal.id}`}
+              >
+                <div className="item-card-details">
+                  <p className="breed">{animal.breed || "Race inconnue"}</p>
+                  <p className="age">{animal.age || "Âge inconnu"} ans</p>
+                </div>
+              </ItemCard>
+            )}
+          />
+        </div>
       </div>
     </div>
   );
+  
+  
   
 };
 

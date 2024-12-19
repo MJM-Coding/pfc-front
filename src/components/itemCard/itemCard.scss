@@ -3,7 +3,7 @@
 /* ============================= */
 /* Variables de couleur          */
 /* ============================= */
-$itemCard-background: #e9e6e6;
+$itemCard-background: #ffffff;
 $itemCard-text: #0e0d0d;
 $itemCard-border: #cfcbc6;
 $itemCard-hover: #27586E;
@@ -12,13 +12,12 @@ $itemCard-hover: #27586E;
         BASE STYLES (MOBILE FIRST)
    ========================================================== */
 
-
 /* ============================= */
 /* Style des cartes individuelles */
 /* ============================= */
 .item-card {
   background-color: $itemCard-background !important;
-  border: 1px solid $itemCard-border;
+  border: 2px solid #97b2be;
   border-radius: 10px;
   padding: 10px; /* Réduction du padding */
   display: flex;
@@ -28,9 +27,10 @@ $itemCard-hover: #27586E;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
 
   /* Taille par défaut pour mobile */
-  width: 140px; /* Largeur fixe pour mobile */
+  width: 150px; /* Largeur fixe pour mobile */
   
   /* Hauteur automatique pour s'adapter au contenu */
   height: auto;
@@ -40,21 +40,27 @@ $itemCard-hover: #27586E;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
 
+  .breed{
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
   /* ============================= */
  /* Conteneur pour l'image */
 /* ============================= */
  
-  .item-card-image {
-    width: 100%; /* Prend toute la largeur du conteneur */
-    height: 120px; /* Hauteur fixe pour toutes les images */
-    object-fit: cover; /* Remplit le conteneur sans déformer l'image */
-    border-radius: 5px; /* Arrondi des coins */
-    margin-bottom: 8px; /* Marge en bas */
-    overflow: hidden; /* Cache les parties de l'image qui débordent */
-    display: flex; /* Utilisé pour centrer l'image si nécessaire */
-    align-items: center; /* Centre verticalement l'image */
-    justify-content: center; /* Centre horizontalement l'image */
-  }
+.item-card-image {
+  width: 100%; /* Prend toute la largeur du conteneur */
+  height: 150px; /* Hauteur fixe pour toutes les images */
+  object-fit: cover; /* Remplit le conteneur sans déformer l'image */
+  object-position: center; /* Centre l'image */
+  border-radius: 5px; /* Arrondi des coins */
+  margin-bottom: 8px; /* Marge en bas */
+  overflow: hidden; /* Cache les parties de l'image qui débordent */
+  display: flex; /* Utilisé pour centrer l'image si nécessaire */
+  align-items: center; /* Centre verticalement l'image */
+  justify-content: center; /* Centre horizontalement l'image */
+}
+
 
   h2 {
     font-size: 1rem; /* Taille du titre réduite */
@@ -67,13 +73,15 @@ $itemCard-hover: #27586E;
     color: $itemCard-text;
   }
 
+
   
 /* ============================= */
 /* Responsive Tablette          */
 /* ============================= */
 
 @media (min-width:variable.$breakpoint-tablet) {
-   width : 200px; /* Ajuste la largeur fixe pour trois cartes par ligne sur tablette */
+   width : 180px; /* Ajuste la largeur fixe pour trois cartes par ligne sur tablette */
+   
 }
 
 /* ============================= */
@@ -81,6 +89,6 @@ $itemCard-hover: #27586E;
 /* ============================= */
 
 @media (min-width:variable.$breakpoint-desktop) {
-   width : 250px; /* Ajuste la largeur fixe pour quatre cartes par ligne sur desktop */
+   width : 200px; /* Ajuste la largeur fixe pour quatre cartes par ligne sur desktop */
 }
 }

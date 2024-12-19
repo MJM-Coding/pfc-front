@@ -194,12 +194,14 @@ return (
             }
             link={`/animal-info/${animal.id}`}
           >
+            <div className="item-card-details">
             {/* Race */}
-            <p className="item-card-breed">{animal.breed || "Race inconnue"}</p>
+            <p className="breed">{animal.breed || "Race inconnue"}</p>
             {/* Localisation (sans code postal) */}
-            <p className="item-card-location">
+            <p className="location">
               <i className="fa-solid fa-location-dot"></i> {animal.association?.city || "Localisation inconnue"}
             </p>
+            </div>
           </ItemCard>
         )}
       />

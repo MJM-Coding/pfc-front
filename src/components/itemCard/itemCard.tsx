@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import "./itemCard.scss";
 
-// Définition des propriétés que le composant ItemCard accepte
+//! Définition des propriétés que le composant ItemCard accepte
 interface ItemCardProps {
   title: React.ReactNode; // Le titre de la carte, peut inclure du texte ou des éléments JSX
   imageUrl: string; // L'URL de l'image affichée sur la carte
@@ -11,7 +11,7 @@ interface ItemCardProps {
   children?: React.ReactNode; // Contenu supplémentaire affiché sous l'image (facultatif)
 }
 
-// Définition du composant fonctionnel ItemCard
+//! Définition du composant fonctionnel ItemCard
 const ItemCard: React.FC<ItemCardProps> = ({ title, imageUrl, link, children }) => {
   // Gestion du texte alternatif (alt) pour l'image
   // Si le titre est une chaîne de caractères, on l'utilise directement
@@ -20,8 +20,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ title, imageUrl, link, children }) 
     typeof title === "string"
       ? title // Si le titre est une chaîne, on l'utilise
       : React.isValidElement(title) // Vérifie si le titre est un élément React (JSX)
-      ? "Carte d'information" // Texte par défaut pour les titres en JSX
-      : "Élément sans titre"; // Texte par défaut si le titre n'est ni une chaîne ni un élément React
+      ? "Carte de l'animal" // Texte par défaut pour les titres en JSX
+      : "Animal"; // Texte par défaut si le titre n'est ni une chaîne ni un élément React
 
   return (
     <li className="item-card">

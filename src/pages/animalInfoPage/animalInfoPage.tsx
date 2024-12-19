@@ -9,7 +9,8 @@ import type { IAnimal } from "../../@types/animal";
 import type { IAssociation } from "../../@types/association";
 import Map from "../../components/map/map";
 import Toast from "../../components/toast/toast";
-import "../../styles/commun/commun.scss"
+import "../../styles/commun/commun.scss";
+import sweetAlert2 from "sweetalert2";
 
 interface Coordinates {
   latitude: number;
@@ -32,8 +33,7 @@ const AnimalInfoPage: React.FC = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
-  
-  
+
   //! Détection mobile
   const isMobile = () => window.innerWidth <= 768;
 
@@ -60,7 +60,6 @@ const AnimalInfoPage: React.FC = () => {
       })
       .replace(",", " à");
   };
-
 
   //! Chargement des données de l'animal et de son association
   useEffect(() => {
@@ -127,8 +126,6 @@ const AnimalInfoPage: React.FC = () => {
 
   //! Gestion de la demande d'adoption
   const handleAdoptClick = async () => {
-    console.log("Début de la fonction handleAdoptClick");
-
     // Vérification de l'utilisateur et de son rôle
     if (!authContext?.user || authContext.user.role !== "family") {
       setShowToast(true);
@@ -147,8 +144,21 @@ const AnimalInfoPage: React.FC = () => {
       return;
     }
 
-    console.log("Token utilisateur :", userToken);
-    console.log("Données utilisateur :", authContext.user);
+    // Alerte de confirmation SweetAlert2
+    const confirmation = await sweetAlert2.fire({
+      title: "Confirmation",
+      text: "En soumettant cette demande, vous vous engagez à accueillir cet animal dans le respect des règles et des conditions définies par l'association. Celle-ci examinera votre demande et pourra l'accepter ou la refuser. Vous aurez également la possibilité d'annuler cette demande à tout moment depuis votre espace 'Demandes d'accueil'. Voulez-vous continuer ?",
+
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Oui, envoyer la demande",
+      cancelButtonText: "Annuler",
+    });
+
+    if (!confirmation.isConfirmed) {
+      // Si l'utilisateur annule, arrête l'exécution
+      return;
+    }
 
     try {
       setIsRequesting(true);
@@ -181,28 +191,22 @@ const AnimalInfoPage: React.FC = () => {
       setShowToast(true);
       setToastMessage(errorMessage);
       setToastType("error");
-
-
     } finally {
       setIsRequesting(false);
     }
   };
 
-
   //! Affichage des détails de l'animal
   const renderAnimalDetails = (animal: IAnimal) => (
-<div className="animal_info-details">
-<div className="back-adopt-buttons">
-  <Link to="/animaux" className="back-button">
-    <i className="fas fa-arrow-left"></i>
-    <span className="back-button-text">Retour à la liste</span>
-  </Link>
-  <h2 className="animal_info-name">{animal.name}</h2>
-</div>
+    <div className="animal_info-details">
+      <div className="back-adopt-buttons">
+        <Link to="/animaux" className="back-button">
+          <i className="fas fa-arrow-circle-left"></i>
 
-
-
-
+          <span className="back-button-text">Retour à la liste</span>
+        </Link>
+        <h2 className="animal_info-name">{animal.name}</h2>
+      </div>
 
       {requestError && <p className="error-message">{requestError}</p>}
 
@@ -267,31 +271,34 @@ const AnimalInfoPage: React.FC = () => {
 
       {/*      bouton de demande d'accueil */}
       <div className="center-container">
-  {(!authContext?.user || authContext?.user?.role === "family") && (
-    <button
-      className="adopt-button"
-      onClick={handleAdoptClick}
-      disabled={isRequesting}
-    >
-      <span className="desktop-text">
-        {isRequesting ? "Envoi en cours..." : "Faire une demande d'accueil"}
-      </span>
-      <span className="mobile-text">
-        {isRequesting ? "Envoi..." : "Demande accueil"}
-      </span>
-    </button>
-  )}
-  {association && (
-    <Link
-      to={`/associations/${association.id}/animaux`}
-      className="view-association-animals-button"
-    >
-      <span className="desktop-text">Voir les animaux de cette association</span>
-      <span className="mobile-text">Voir nos animaux</span>
-    </Link>
-  )}
-</div>
-
+        {(!authContext?.user || authContext?.user?.role === "family") && (
+          <button
+            className="adopt-button"
+            onClick={handleAdoptClick}
+            disabled={isRequesting}
+          >
+            <span className="desktop-text">
+              {isRequesting
+                ? "Envoi en cours..."
+                : "Faire une demande d'accueil"}
+            </span>
+            <span className="mobile-text">
+              {isRequesting ? "Envoi..." : "Demande accueil"}
+            </span>
+          </button>
+        )}
+        {association && (
+          <Link
+            to={`/associations/${association.id}/animaux`}
+            className="view-association-animals-button"
+          >
+            <span className="desktop-text">
+              Voir les animaux de cette association
+            </span>
+            <span className="mobile-text">Voir nos animaux</span>
+          </Link>
+        )}
+      </div>
 
       {/* Sections en colonnes pour les infos de l'animal et de l'association */}
       <div className="animal_info-sections">
@@ -330,7 +337,7 @@ const AnimalInfoPage: React.FC = () => {
           </p>
           {/* Date de création */}
           <p className="animal_info-date">
-          <i className="info-icon fas fa-calendar-alt"></i>
+            <i className="info-icon fas fa-calendar-alt"></i>
             <span>Date de mise en ligne :</span>
             <span className="value">
               {isMobile()
@@ -362,14 +369,13 @@ const AnimalInfoPage: React.FC = () => {
               <div className="animal_info-map">
                 {coordinates ? (
                   <Map
-                  latitude={coordinates.latitude}
-                  longitude={coordinates.longitude}
-                  address={`${association.address}, ${association.postal_code} ${association.city}`}
+                    latitude={coordinates.latitude}
+                    longitude={coordinates.longitude}
+                    address={`${association.address}, ${association.postal_code} ${association.city}`}
                   />
                 ) : (
                   <p>Chargement de la carte...</p>
                 )}
-                
               </div>
             </>
           )}
@@ -380,7 +386,6 @@ const AnimalInfoPage: React.FC = () => {
 
   return (
     <div className="animalDetail-container">
-    
       {animal ? renderAnimalDetails(animal) : <p>Chargement de l'animal...</p>}
 
       {isModalOpen && selectedPhoto && (

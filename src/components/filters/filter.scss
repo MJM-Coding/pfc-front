@@ -8,63 +8,76 @@ $filter-select-bg: #ffffff;
 $filter-button-primary: #ffffff;
 $filter-border: #a39789;
 $filter-text: #313030;
+$filter-reset: #ffffff;
+$filter-hover-reset: #313030;
 $filter-hover-button: #276e47;
 $filter-input-focus-bg: #e0f7e9;
 
 /* ==========================================================
         BASE STYLES (MOBILE FIRST)
+   ========================================================== */
+
+/* ==========================================================
+       Conteneur principal des filtres
+========================================================== */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+/* ==========================================================
+       Styles des filtres
 ========================================================== */
 .filters {
-  background-color: $filter-background !important;
+  background: linear-gradient(135deg, #4e7d91, #88adb7);
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 10px;
   min-width: 250px;
   width: auto;
-  
-  position: relative; /* Suppression de sticky sur mobile */
-  align-items: center; /* Centre les filtres horizontalement */
+  position: relative;
+  align-items: center;
 
-  /* Affichage en ligne pour les champs sur mobile */
-  @media (max-width: variable.$breakpoint-tablet) {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+/* Deux colonnes pour mobile portrait */
+@media (max-width: 767px) and (orientation: portrait) {
+  grid-template-columns: repeat(2, 1fr); /* Deux colonnes de largeur égale */
+}
 
-    select {
-      flex: 1 1 calc(50% - 10px); /* Deux champs par ligne */
-      max-width: 100%;
-      font-size: 0.9rem;
-      color: $filter-text; /* Réparation de la couleur du texte */
-    }
+/* Deux colonnes pour mobile paysage */
+@media (max-width: 767px) and (orientation: landscape) {
+  grid-template-columns: repeat(2, 1fr); /* Deux colonnes équilibrées */
+  width: 100%; /* Prend toute la largeur de l'écran */
+}
 
-    .reset-btn {
-      flex: 1 1 100%; /* Bouton Reset sur toute la largeur */
-      text-align: center;
-    }
+/* Deux colonnes pour tablette portrait */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+  grid-template-columns: repeat(2, 1fr); /* Deux colonnes pour tablette portrait */
+}
+
+/* Une seule colonne pour tablette paysage et desktop */
+@media (min-width: 768px) and (orientation: landscape),
+       (min-width: 1024px) {
+  grid-template-columns: 1fr; /* Une seule colonne */
+}
+
+
+  select,
+  .reset-btn {
+    width: 100%;
   }
 
-  /* Affichage en deux colonnes pour les tablettes */
-  @media (min-width: variable.$breakpoint-tablet) and (max-width: 1023px) {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-
-    select {
-      flex: 1 1 calc(50% - 10px); /* Deux champs par ligne */
-      max-width: 100%;
-      font-size: 0.9rem;
-      color: $filter-text; /* Réparation de la couleur du texte */
-    }
-
+  /* Centrer le bouton uniquement en mobile (portrait et paysage) + tablette portrait */
+  @media (max-width: 768px) {
     .reset-btn {
-      flex: 1 1 100%; /* Bouton Reset sur toute la largeur */
-      text-align: center;
+      grid-column: span 2; /* Étend le bouton sur les deux colonnes */
+      text-align: center; /* Centre le texte dans le bouton */
+      justify-self: center; /* Centre le bouton horizontalement */
     }
   }
 }
@@ -76,94 +89,102 @@ $filter-input-focus-bg: #e0f7e9;
   border-radius: 5px;
   padding: 10px;
   font-size: 0.9rem;
-  color: $filter-text; /* Correction de la couleur du texte */
+  color: $filter-text;
   cursor: pointer;
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  width: 100%;
+
+  &:focus {
+    background-color: $filter-input-focus-bg;
+    border-color: $filter-hover-button;
+    outline: none;
+    box-shadow: 0 0 5px rgba($filter-hover-button, 0.5);
+  }
 }
 
-.filters select:focus {
-  background-color: $filter-input-focus-bg;
-  border-color: $filter-hover-button;
-  outline: none;
-  box-shadow: 0 0 5px rgba($filter-hover-button, 0.5);
-}
-
+/* ==========================================================
+       Bouton "Réinitialiser" des filtres
+========================================================== */
 .reset-btn {
   background: none;
   border: none;
-  color: $filter-text;
+  color: $filter-reset;
   font-size: 1.1rem;
   cursor: pointer;
   transition: color 0.3s ease;
-}
-
-.reset-btn:hover {
-  color: $filter-hover-button;
-}
-/* ==========================================================
-       Bouton  pour afficher les filtres
-========================================================== */
-.filters-container {
-  display: flex; /* Utilisation de flexbox */
-  flex-direction: column; /* Les enfants sont empilés verticalement */
-  align-items: center; /* Centre tout horizontalement */
-  justify-content: flex-start; /* Alignement en haut du conteneur */
-  margin-bottom: 10px;
-  width: 100%; /* Assure que le conteneur occupe toute la largeur */
-}
-
-.filters {
-  width: 100%; /* Prend toute la largeur du conteneur parent */
-  display: flex;
-  flex-direction: column; /* Les éléments internes sont alignés verticalement */
-  align-items: center; /* Centre les filtres horizontalement */
-  margin-top: 10px; /* Espacement au-dessus des filtres */
-  gap: 10px; /* Espacement entre les éléments */
-}
-
-.toggle-filters-btn {
-  background: linear-gradient(135deg, #2e546b, #4e7d91); /* Dégradé pour un effet moderne */
-  color: white; /* Texte en blanc pour un bon contraste */
-  border: none; /* Pas de bordure */
-  padding: 12px 20px; /* Un padding équilibré pour un meilleur confort visuel */
-  font-size: 16px; /* Taille du texte lisible */
-  font-weight: bold; /* Texte légèrement plus en gras */
-  border-radius: 30px; /* Coins très arrondis pour un look plus "pill button" */
-  cursor: pointer; /* Curseur en pointer pour indiquer un bouton cliquable */
-  transition: all 0.3s ease; /* Transition fluide pour toutes les propriétés */
-  width: 200px; /* Largeur fixe légèrement augmentée pour plus d'espace */
-  text-align: center; /* Centrage du texte */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Ombre subtile pour un effet surélevé */
-  margin-bottom: 15px; /* Espace entre le bouton et les filtres */
 
   &:hover {
-    background: linear-gradient(135deg, #4e7d91, #88adb7); /* Dégradé plus clair au survol */
-    transform: translateY(-2px); /* Effet de "remontée" */
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Augmente l'ombre au survol */
+    color: $filter-hover-reset;
+  }
+}
+
+/* ==========================================================
+       Disposition globale des filtres et du contenu
+========================================================== */
+.content-wrapper {
+  display: flex;
+  flex-direction: column; /* Mobile : empilé */
+  gap: 20px;
+
+  @media (min-width: variable.$breakpoint-desktop) {
+    flex-direction: row; /* PC : filtre à gauche, liste à droite */
+    align-items: flex-start;
+    padding-left: 0px; /* Ajoute un espacement global */
+  }
+}
+
+/* ==========================================================
+       Configuration de la section des filtres
+========================================================== */
+.filter-wrapper {
+  width: 100%; /* Mobile : filtre prend toute la largeur */
+  @media (min-width: variable.$breakpoint-desktop) {
+    width: 300px; /* PC : largeur fixe pour le filtre */
+    flex-shrink: 0; /* Empêche le filtre de rétrécir */
+  }
+}
+
+
+/* ==========================================================
+       Bouton pour afficher/masquer les filtres
+========================================================== */
+.toggle-filters-btn {
+  background: linear-gradient(135deg, #2e546b, #4e7d91);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 5px;
+
+  &:hover {
+    background: linear-gradient(135deg, #4e7d91, #88adb7);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
   }
 
   &:active {
-    transform: scale(0.96); /* Réduction subtile pour un effet de clic */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombre réduite au clic */
+    transform: scale(0.96);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   &:focus {
-    outline: none; /* Supprime l'outline par défaut */
-    box-shadow: 0 0 0 3px rgba(128, 189, 255, 0.7); /* Highlight bleu clair pour accessibilité */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(128, 189, 255, 0.7);
   }
 }
 
-
-
 /* ==========================================================
-        RESPONSIVE STYLES
+       Responsive styles pour tablettes et desktop
 ========================================================== */
-
-/* Styles pour les tablettes et plus */
 @media (min-width: variable.$breakpoint-tablet) and (max-width: 1023px) {
   .filters {
-    width: 100%; /* Ou une largeur spécifique si nécessaire */
+    width: 100%;
     margin-bottom: 10px;
     top: 20px;
   }
@@ -171,9 +192,11 @@ $filter-input-focus-bg: #e0f7e9;
 
 @media (min-width: variable.$breakpoint-desktop) {
   .filters {
-    max-width: 250px; /* Définissez une largeur maximale pour les desktops */
+    max-width: 250px;
     position: sticky;
     top: 20px;
-    margin: 0 auto; /* Centre le filtre horizontalement */
+    margin: 0 auto;
   }
 }
+
+
