@@ -22,7 +22,7 @@ $searchBar-focus-shadow: rgba(40, 133, 255, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 0px;
   margin-left: auto;
   margin-right: auto;
 
@@ -54,6 +54,13 @@ $searchBar-focus-shadow: rgba(40, 133, 255, 0.3);
     }
   }
 
+  /* Tablette mode portrait */
+  @media (min-width: variable.$breakpoint-tablet) and (max-width: 1023px) and (orientation: portrait) {
+    .custom-search-input {
+      margin-top: 15px;
+    }
+  }
+
   /* Responsive pour tablette */
   @media (max-width: variable.$breakpoint-tablet) {
     .custom-search-input {
@@ -69,4 +76,6 @@ $searchBar-focus-shadow: rgba(40, 133, 255, 0.3);
       font-size: 1.1rem; 
     }
   }
-}
+
+    }
+

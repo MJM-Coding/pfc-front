@@ -58,6 +58,7 @@ $filter-input-focus-bg: #e0f7e9;
 /* Deux colonnes pour tablette portrait */
 @media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
   grid-template-columns: repeat(2, 1fr); /* Deux colonnes pour tablette portrait */
+  
 }
 
 /* Une seule colonne pour tablette paysage et desktop */
@@ -128,7 +129,7 @@ $filter-input-focus-bg: #e0f7e9;
   @media (min-width: variable.$breakpoint-desktop) {
     flex-direction: row; /* PC : filtre à gauche, liste à droite */
     align-items: flex-start;
-    padding-left: 0px; /* Ajoute un espacement global */
+
   }
 }
 

@@ -129,16 +129,18 @@ const AnimalList: React.FC<AnimalListProps> = ({
 
   return (
     <div className="custom-animal-list-container">
-      <div className="custom-actions">
-        <Link
-          to={`/espace-association/animaux-association/ajout-animal/${associationId}`}
-          className="custom-add-button"
-        >
-          <i className="fas fa-plus-circle"></i> Ajouter un animal
-        </Link>
-        {/* Barre de recherche */}
-        <SearchBar onSearch={handleSearch} />
-      </div>
+    <div className="custom-actions">
+      <Link
+        to={`/espace-association/animaux-association/ajout-animal/${associationId}`}
+        className="custom-add-button"
+      >
+        <i className="fas fa-plus-circle"></i> Ajouter un animal
+      </Link>
+      {/* Barre de recherche */}
+      <SearchBar onSearch={handleSearch} />
+    </div>
+
+  
 
       {/* Gestion du chargement et des erreurs */}
       {isLoading && (
@@ -147,11 +149,7 @@ const AnimalList: React.FC<AnimalListProps> = ({
       {error && <p className="custom-error-message">{error}</p>}
 
       {/* Liste des animaux */}
-      {isLoading && (
-        <p className="custom-loading-message">Chargement des animaux...</p>
-      )}
-      {error && <p className="custom-error-message">{error}</p>}
-
+     
       {!isLoading && !error && (
         <ul className="custom-animal-list">
           {filteredAnimals.length > 0 ? (
