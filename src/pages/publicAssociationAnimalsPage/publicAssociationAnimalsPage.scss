@@ -8,7 +8,7 @@ $breakpoint-desktop: 1024px; // Taille pour les PC et plus
 /* Variables de couleur          */
 /* ============================= */
 $page-background: #f4f4f4;
-
+$title-color:#262E33;
 
 /* ==========================================================
        Conteneur principal
@@ -22,6 +22,22 @@ $page-background: #f4f4f4;
   box-sizing: border-box;
 
 
+/* Style pour le titre de la page */
+.page-title {
+  color: $title-color; /* Couleur blanche */
+  text-align: center; /* Centrer le titre */
+  font-size: 1.2rem; /* Taille de police par défaut */
+  margin-bottom: 20px;
+
+  /* Responsive : Ajuste la taille sur les écrans plus grands */
+  @media (min-width: $breakpoint-tablet) {
+    font-size: 1.5rem; /* Augmenter la taille sur tablette */
+  }
+
+  @media (min-width: $breakpoint-desktop) {
+    font-size: 1.7rem; /* Augmenter encore plus sur desktop */
+  }
+}
 
 
     @media (min-width: 576px) and (orientation: landscape) {

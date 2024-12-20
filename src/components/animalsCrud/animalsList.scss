@@ -1,10 +1,22 @@
-@use "../../styles/commun/variable.scss"; // Import des variables globales
+@use "../../styles/commun/variable.scss"; // breakpoints 
 
 /* ============================= */
-/* Breakpoints                  */
+/* Variables de couleur          */
 /* ============================= */
-$breakpoint-tablet: variable.$breakpoint-tablet;
-$breakpoint-desktop: variable.$breakpoint-desktop;
+$animalsList-background: #F4F4F4;
+$animalsList-action-bg: linear-gradient(135deg, #4caf50, #087f23);
+$animalsList-action-text: #fff;
+$animalsList-loading-error-text: #333;
+$animalsList-no-animals-text: #777;
+$animalsList-card-bg: #f9f9f9;
+$animalsList-card-border: #ddd;
+$animalsList-edit-bg: #007bff;
+$animalsList-edit-bg-hover: #0056b3;
+$animalsList-delete-bg: #ff4d4d;
+$animalsList-delete-bg-hover: #e60000;
+$animalsList-pause-text: #555;
+$animalsList-pause-text-paused: rgb(31, 141, 16);
+$animalsList-pause-text-hover: #000;
 
 /* ============================= */
 /* Styles de base (Mobile First) */
@@ -12,7 +24,7 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
 .custom-animal-list-container {
   padding: 10px;
   width: 100%;
-  background-color: #F4F4F4;
+  background-color: $animalsList-background;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,8 +41,8 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #4caf50, #087f23);
-      color: #fff;
+      background: $animalsList-action-bg;
+      color: $animalsList-action-text;
       padding: 10px 20px;
       border-radius: 8px;
       text-decoration: none;
@@ -51,13 +63,11 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
         margin-right: 10px;
       }
     }
-
- 
   }
 
   .custom-loading-message,
   .custom-error-message {
-    color: #333;
+    color: $animalsList-loading-error-text;
     font-size: 1rem;
     text-align: center;
     margin: 20px 0;
@@ -65,7 +75,7 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
 
   .custom-no-animals {
     font-size: 1.2rem;
-    color: #777;
+    color: $animalsList-no-animals-text;
     text-align: center;
   }
 }
@@ -77,8 +87,8 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
   display: flex;
   justify-content: space-around;
   padding: 5px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
+  background-color: $animalsList-card-bg;
+  border-top: 1px solid $animalsList-card-border;
 
   .custom-edit-button,
   .delete-animal-button {
@@ -94,20 +104,20 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
   }
 
   .custom-edit-button {
-    background-color: #007bff;
-    color: #fff;
+    background-color: $animalsList-edit-bg;
+    color: $animalsList-action-text;
 
     &:hover {
-      background-color: #0056b3;
+      background-color: $animalsList-edit-bg-hover;
     }
   }
 
   .delete-animal-button {
-    background-color: #ff4d4d;
-    color: #fff;
+    background-color: $animalsList-delete-bg;
+    color: $animalsList-action-text;
 
     &:hover {
-      background-color: #e60000;
+      background-color: $animalsList-delete-bg-hover;
     }
   }
 
@@ -116,14 +126,14 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
-    color: #555;
+    color: $animalsList-pause-text;
 
     &.paused {
-      color: rgb(31, 141, 16);
+      color: $animalsList-pause-text-paused;
     }
 
     &:hover {
-      color: #000;
+      color: $animalsList-pause-text-hover;
     }
   }
 }
@@ -131,16 +141,23 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
 /* ============================= */
 /* Styles pour Tablette          */
 /* ============================= */
-@media (min-width: $breakpoint-tablet) {
+@media (min-width: variable.$breakpoint-tablet) {
   .custom-animal-list-container {
     .custom-actions {
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: flex-start;
+      margin-left: 200px;
+      align-items: flex-start;
     }
 
     .custom-add-button {
       font-size: 1.2rem;
     }
+  }
+
+  .custom-animal-list-container .search-bar {
+    margin-left: 0; /* Supprime le centrage horizontal */
+    margin-right: 0;
   }
 
   .custom-animal-actions {
@@ -155,7 +172,7 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
 /* ============================= */
 /* Styles pour Desktop           */
 /* ============================= */
-@media (min-width: $breakpoint-desktop) {
+@media (min-width: variable.$breakpoint-desktop) {
   .custom-animal-list-container {
     max-width: 100vw;
     margin: 0 auto;
@@ -163,6 +180,7 @@ $breakpoint-desktop: variable.$breakpoint-desktop;
 
     .custom-actions {
       margin-bottom: 20px;
+      width: 100%;
     }
 
     .custom-add-button {

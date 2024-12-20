@@ -137,6 +137,7 @@ const AnimalsListPage: React.FC = () => {
         <SearchBar onSearch={setSearchQuery} />
       </div>
 
+      <div className="no-padding-item-list">
       <ItemList
         items={filteredAnimals}
         renderItem={(animal) => (
@@ -169,6 +170,7 @@ const AnimalsListPage: React.FC = () => {
           </ItemCard>
         )}
       />
+    </div>
     </div>
     </div>
   );

@@ -1,4 +1,4 @@
-
+@use "../../styles/commun/variable.scss";// breakpoints 
 /* ============================= */
 /* Variables de couleur          */
 /* ============================= */
@@ -8,11 +8,11 @@ $text-main: #383838;
 /* Style pour le conteneur de la liste */
 /* ============================= */
 .item-list {
-  display: flex; /* Utilisation de Flexbox */
-  flex-wrap: wrap; /* Permet aux cartes de passer à la ligne */
-  gap: 20px; /* Espacement entre les cartes */
-  justify-content: center; /* Centre toutes les cartes sur la largeur */
-  align-items: flex-start; /* Aligne les cartes en haut */
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 20px; 
+  justify-content: center; 
+  align-items: flex-start; 
   padding: 0;
   margin: 0;
   list-style: none;
@@ -27,4 +27,24 @@ $text-main: #383838;
   text-align: center;
   font-size: 1.2rem;
   margin-top: 20px;
+}
+
+@media (min-width: variable.$breakpoint-tablet) {
+  .item-list {
+    justify-content: flex-start; 
+    align-items: center; 
+    width: 100%;
+  }
+  @media (min-width: variable.$breakpoint-desktop) {
+    .item-list {
+      padding-left: 100px; // pour animalList des asso uniquement
+      justify-content: flex-start; 
+      align-items: center; 
+   
+  }
+
+  .no-padding-item-list .item-list {
+    padding-left: 0;  //classe pour supprimer le padding dans animalsListPAge
+  }
+  }
 }
