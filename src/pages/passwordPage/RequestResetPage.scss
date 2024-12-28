@@ -1,73 +1,177 @@
+@use '../../styles/commun/commun.scss';
+@use '../../styles/commun/variable.scss';
+
+   /* ==========================================================
+   VARIABLES POUR LES COULEURS ET STYLES
+   ========================================================== */
+
+$requestResetPassword-background: #f4f4f4;
+$requestResetPassword-container-bg: #fff;
+$requestResetPassword-title-color: #333;
+$requestResetPassword-label-color: #555;
+$requestResetPassword-input-border: #ccc;
+$requestResetPassword-button-bg: #2ba75e;
+$requestResetPassword-button-hover: #1b6b3d;
+$requestResetPassword-message-color: #333;
+
+   /* ==========================================================
+   STYLE DE BASE DE LA PAGE
+   ========================================================== */
+
 .request-reset-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    background-color: #f4f4f4;
-    font-family: Arial, sans-serif;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: $requestResetPassword-background;
+  font-family: Arial, sans-serif;
+
+   /* ==========================================================
+   SECTION : CONTENEUR DU FORMULAIRE DE DEMANDE
+   ========================================================== */
+
   .reset-container {
-    background: #fff;
+    background: $requestResetPassword-container-bg;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 500px;
     width: 100%;
+
+     /* ==========================================================
+     TITRE DU FORMULAIRE
+     ========================================================== */
+
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+      color: $requestResetPassword-title-color;
+    }
+ /* ==========================================================
+     TEXTE DESCRIPTIF
+     ========================================================== */
+    .description {
+      margin-bottom: 20px;
+    }
+     /* ==========================================================
+     FORMULAIRE DE DEMANDE
+     ========================================================== */
+
+    .reset-form {
+      display: flex;
+      flex-direction: column;
+
+       /* ==========================================================
+       GROUPE D'ENTRÉES (INPUTS)
+       ========================================================== */
+
+      .input-group {
+        margin-bottom: 20px;
+
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+          color: $requestResetPassword-label-color;
+        }
+
+        .input-field {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid $requestResetPassword-input-border;
+          border-radius: 5px;
+          font-size: 16px;
+        }
+      }
+
+       /* ==========================================================
+       BOUTON DE VALIDATION
+       ========================================================== */
+
+      .submit-button {
+        width: 100%;
+        padding: 10px;
+        background-color: $requestResetPassword-button-bg;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $requestResetPassword-button-hover;
+        }
+      }
+    }
+
+     /* ==========================================================
+     MESSAGE DE RÉPONSE
+     ========================================================== */
+
+     .message {
+      margin-top: 20px;
+      text-align: center; 
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 5px;
+      width: 100%; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      
+      &.success {
+        color: #155724;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+      }
+    
+      &.error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+      }
+    }
+  }    
+    
+
+   /* ==========================================================
+   SECTION : STYLES POUR LES BREAKPOINTS
+   ========================================================== */
+
+  @media (min-width: variable.$breakpoint-tablet) {
+    .reset-container {
+      padding: 40px;
+      max-width: 500px;
+
+      .title {
+        font-size: 26px;
+      }
+
+      .reset-form {
+        .submit-button {
+          font-size: 18px;
+        }
+      }
+    }
   }
-  
-  .title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
+
+  @media (min-width: variable.$breakpoint-desktop) {
+    .reset-container {
+      padding: 50px;
+      max-width: 600px;
+
+      .title {
+        font-size: 32px;
+      }
+
+      .reset-form {
+        .submit-button {
+          font-size: 20px;
+        }
+      }
+    }
   }
-  
-  .reset-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .input-group {
-    margin-bottom: 20px;
-  }
-  
-  .input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .input-field {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  .submit-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .message {
-    margin-top: 20px;
-    text-align: center;
-    color: #333;
-    font-size: 14px;
-  }
-  
+}
