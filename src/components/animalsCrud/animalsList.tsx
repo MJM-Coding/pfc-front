@@ -69,7 +69,7 @@ const AnimalList: React.FC<AnimalListProps> = ({
       const result = await Swal.fire({
         title: isPaused
           ? "Mettre en pause cet animal ?"
-          : "Réactiver cet animal ?",
+          : "Remettre en ligne cet animal?",
         html: isPaused
           ? `<p>Cet animal ne sera plus visible dans la liste de recherche. </p>`
           : `<p>L'animal sera à nouveau visible dans la liste de recherche.</p>`,
@@ -77,7 +77,7 @@ const AnimalList: React.FC<AnimalListProps> = ({
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: isPaused ? "Oui, mettre en pause" : "Oui, réactiver",
+        confirmButtonText: isPaused ? "Oui, mettre en pause" : "Oui, remettre en ligne",
         cancelButtonText: "Annuler",
       });
 
@@ -166,7 +166,7 @@ const AnimalList: React.FC<AnimalListProps> = ({
         <button
           onClick={() => handleTogglePause(animal.id, !animal.is_paused)}
           className={`pause-button ${animal.is_paused ? "paused" : ""}`}
-          title={animal.is_paused ? "Réactiver l'animal" : "Mettre en pause l'animal"}
+          title={animal.is_paused ? "Remettre l'animal en ligne" : "Mettre en pause l'animal"}
         >
           <i className={`fa-solid ${animal.is_paused ? "fa-play" : "fa-pause"}`}></i>
         </button>

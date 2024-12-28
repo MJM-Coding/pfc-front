@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SigninUser } from "../../api/signin.api"; // Import de la fonction pour l'authentification
 import { IAuthContext } from "../../@types/auth"; // Import du type pour le contexte d'authentification
 import "./loginForm.scss";
+import { Link } from "react-router-dom";
 
 // Défini le type des props pour LoginForm
 interface ILoginFormProps {
@@ -24,7 +25,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ login, onClose }) => {
       const userData: IAuthContext = await SigninUser({ email, password });
 
       console.log(userData); // Debug : Affiche les données de l'utilisateur connecté
-    login(userData.token ?? '', userData.user); // Appelle la fonction login passée en prop
+      login(userData.token ?? "", userData.user); // Appelle la fonction login passée en prop
       onClose(); // Ferme la modal après la connexion réussie
       setIsLoading(false); // Désactive l'état de chargement
     } catch (error: any) {
@@ -38,34 +39,41 @@ const LoginForm: React.FC<ILoginFormProps> = ({ login, onClose }) => {
   };
 
   return (
-<div className="login-form">
-  <h2>Connexion</h2>
-  <form onSubmit={handleSubmit}>
-    <div className="input-group">
-      <label>Email</label>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-    </div>
-    <div className="input-group">
-      <label>Mot de passe</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-    </div>
-    {errorMessage && <p className="error">{errorMessage}</p>}
-    <button className="login-button" type="submit" disabled={isLoading}>
-      {isLoading ? "Connexion..." : "Se connecter"}
-    </button>
-  </form>
-</div>
+    <div className="login-form">
+      <h2>Connexion</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="input-group">
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="input-group">
+          <label>Mot de passe</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <div className="forgot-password">
+            <Link 
+            to="/reinitialisation-mot-de-passe" 
+            onClick={() => onClose()}> 
+              Mot de passe oublié ?
+            </Link>
+          </div>
+        </div>
 
+        {errorMessage && <p className="error">{errorMessage}</p>}
+        <button className="login-button" type="submit" disabled={isLoading}>
+          {isLoading ? "Connexion..." : "Se connecter"}
+        </button>
+      </form>
+    </div>
   );
 };
 
