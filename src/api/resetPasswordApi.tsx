@@ -8,7 +8,7 @@ export const requestPasswordReset = async (email: string) => {
 
 //! Fonction pour réinitialiser le mot de passe avec un nouveau
 export const resetPassword = async (token: string, newPassword: string): Promise<void> => {
-  const response = await api.post("/password/reset", { token, newPassword });
+  const response = await api.post("/password/reset-password", { token, newPassword });
 
   console.log("Mot de passe réinitialisé avec succès :", response.data);
 
