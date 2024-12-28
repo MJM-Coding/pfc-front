@@ -1,4 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; // Importer useNavigate pour la redirection
 import { resetPassword } from "../../api/resetPasswordApi";
 import { validatePassword } from "../../components/validateForm/validateForm";
@@ -8,7 +9,8 @@ import "./resetPasswordPage.scss";
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate(); // Initialiser la fonction de navigation
-  const token = "faketoken";
+const [searchParams] = useSearchParams();
+  const token = searchParams.get("token"); // Récupérer le token depuis l'URL
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
