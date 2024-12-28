@@ -69,7 +69,7 @@ const [searchParams] = useSearchParams();
 
     try {
       await resetPassword(token, newPassword);
-      setToastMessage("Mot de passe modifié avec succès !");
+      setToastMessage("Mot de passe modifié avec succès! Vous pouvez dès à présent vous connecter.");
       setToastType("success");
       setShowToast(true);
 
@@ -80,7 +80,7 @@ const [searchParams] = useSearchParams();
       // Redirection vers la page d'accueil après un court délai
       setTimeout(() => {
         navigate("/");
-      }, 3000);
+      }, 4000);
     } catch (error) {
       setToastMessage(
         "Une erreur s'est produite. Vérifiez le lien ou essayez à nouveau."
