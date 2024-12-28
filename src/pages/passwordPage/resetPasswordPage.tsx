@@ -4,6 +4,8 @@ import { resetPassword } from "../../api/resetPasswordApi";
 import { validatePassword } from "../../components/validateForm/validateForm";
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Import du composant pour les messages d'erreur/succès
 import Toast from "../../components/toast/toast"; // Import du composant Toast
+import "./resetPasswordPage.scss";
+
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
@@ -13,7 +15,7 @@ const ResetPasswordPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, _setMessage] = useState<string | null>(null);
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -64,7 +66,6 @@ const ResetPasswordPage = () => {
 
     try {
       await resetPassword(token, newPassword);
-      setMessage("Votre mot de passe a été réinitialisé avec succès !");
       setToastMessage("Mot de passe modifié avec succès !");
       setToastType("success");
       setShowToast(true);
