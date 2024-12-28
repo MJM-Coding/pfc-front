@@ -5,6 +5,8 @@ import 'bulma/css/bulma.min.css';
 import { Route, Routes } from "react-router-dom";
 
 import ConfirmEmailPage from "./components/confirmEmail/confirmEmail";
+import RequestResetPage from "./pages/passwordPage/RequestResetPage";
+import ResetPasswordPage from "./pages/passwordPage/resetPasswordPage";
 
 import Header from "./components/header/header";
 import HomePage from "./pages/homePage/homePage"; // page d'accueil
@@ -37,6 +39,9 @@ const App: React.FC = () => {
     {/*   <Route path="/test-confirm-email" element={<ConfirmEmailPage />}/> route pour tester la page de confirmation mail */}
     
         <Route path="/confirm-email/:token" element={<ConfirmEmailPage />} />
+        <Route path="/reinitialisation-mot-de-passe" element={<RequestResetPage />} /> {/* Page de demande de réinitialisation du mot de passe --> envoi un mail de réinitialisation */}
+        <Route path="/reset-password" element={<ResetPasswordPage />} /> {/* Page pour réinitialiser le mot de passe via le lien envoyé */}
+
 
         <Route path="/" element={<HomePage />} />
         <Route path="/animaux" element={<AnimalsListPage />} />

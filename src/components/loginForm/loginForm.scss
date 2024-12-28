@@ -85,6 +85,20 @@ $loginForm-modal-bg-color: rgba(0, 0, 0, 0.5); // Fond semi-transparent de la mo
   margin-top: 8px;
 }
 
+
+// =============================
+// Mot de passe oublié
+// =============================
+.forgot-password {
+  text-align: right;
+  margin-top: 5px;
+
+  a{
+    color: rgb(185, 184, 184);
+       font-size: 0.9rem;
+  }
+  
+}
 // =============================
 // Bouton de soumission
 // =============================
