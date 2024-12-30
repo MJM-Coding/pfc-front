@@ -65,18 +65,22 @@ $toast-warning: #ff7a22;
 ========================================================== */
 .toast.success {
   background-color: $toast-success;
+  color: white;
 }
 
 .toast.error {
   background-color: $toast-error;
+  color: white;
 }
 
 .toast.info {
   background-color: $toast-info;
+  
 }
 
 .toast.warning {
   background-color: $toast-warning;
+  color: white;
 }
 
 /* ==========================================================
