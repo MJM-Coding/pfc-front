@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import { confirmEmail } from "../../api/confirmationMailApi";
@@ -9,6 +9,7 @@ const ConfirmEmailPage: React.FC = () => {
     "verifying" | "success" | "error" | "alreadyConfirmed"
   >("verifying");
   const { token } = useParams<{ token: string }>();
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const confirmUserEmail = async () => {
@@ -28,6 +29,18 @@ const ConfirmEmailPage: React.FC = () => {
 
     confirmUserEmail();
   }, [token]);
+  
+  useEffect(() => {
+    // Redirection après 4 secondes si le statut est "success"
+    if (status === "success") {
+      const timer = setTimeout(() => {
+        navigate("/"); // Redirige vers la page d'accueil
+      }, 4000);
+
+      return () => clearTimeout(timer); // Nettoie le timeout pour éviter des fuites de mémoire
+    }
+  }, [status, navigate]);
+
 
   console.log("État actuel :", status);
   return (

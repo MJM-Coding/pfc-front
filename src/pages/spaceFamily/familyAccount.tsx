@@ -238,7 +238,7 @@ const handleDeleteAccount = async (e: React.FormEvent) => {
             </div>
 
             <div className="infoFieldContainer">
-              <label htmlFor="new-email">Nouveau Email</label>
+              <label htmlFor="new-email">Nouvel Email</label>
               <input
                 type="email"
                 id="new-email"
@@ -253,7 +253,7 @@ const handleDeleteAccount = async (e: React.FormEvent) => {
             </div>
 
             <div className="infoFieldContainer">
-              <label htmlFor="confirm-email">Confirmer le Nouveau Email</label>
+              <label htmlFor="confirm-email">Confirmer le Nouvel Email</label>
               <input
                 type="email"
                 id="confirm-email"
