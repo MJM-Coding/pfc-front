@@ -6,8 +6,8 @@ import AuthContext from "../../contexts/authContext";
 import ImageUpload from "../imageUpload/imageUpload";
 import "./add&modifyAnimal.scss";
 import { validateAge } from "../validateForm/validateForm";
-import { Link } from 'react-router-dom';
-
+import { Link } from "react-router-dom";
+import { compressImage } from "../../utils/compressImage";
 
 const AddAnimal: React.FC = () => {
   const navigate = useNavigate();
@@ -26,44 +26,48 @@ const AddAnimal: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
   const [toast, setToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [toastType, setToastType] = useState<"success" | "error" | "warning" | "info">("success");
+  const [toastType, setToastType] = useState<
+    "success" | "error" | "warning" | "info"
+  >("success");
 
   const defaultImage = "/images/profileAnimal.webp";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     // Validation de l'âge
     const ageError = age !== undefined ? validateAge(age) : null;
     if (ageError) {
       setToastMessage(ageError);
       setToastType("error");
       setToast(true);
+      setIsSubmitting(false);
       return;
     }
-  
+
     // Vérification des champs obligatoires
     if (!name || !species || (age ?? 0) <= 0 || !breed || !gender || !size) {
       setErrorMessage("Tous les champs doivent être remplis correctement.");
       setToastMessage("Veuillez remplir tous les champs !");
       setToastType("error");
       setToast(true);
+      setIsSubmitting(false);
       return;
     }
-  
+
     // Vérification de la photo de profil
     if (!profilePhoto) {
       setErrorMessage("Veuillez charger une photo de profil pour l'animal.");
       setToastMessage("Photo de profil obligatoire !");
       setToastType("error");
       setToast(true);
+      setIsSubmitting(false);
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -74,33 +78,42 @@ const AddAnimal: React.FC = () => {
       formData.append("size", size);
       formData.append("description", description);
       formData.append("id_association", associationId!);
-  
+
+      // Compression et ajout de la photo de profil
       if (profilePhoto) {
-        formData.append("image", profilePhoto); // La première photo est la photo de profil
+        const compressedProfilePhoto = await compressImage(profilePhoto);
+        formData.append(
+          "image",
+          compressedProfilePhoto,
+          compressedProfilePhoto.name
+        );
       }
-  
-      photos.forEach((photo) => {
-        formData.append("image", photo); // Les autres photos
-      });
-  
+
+      // Compression et ajout des autres photos
+      for (const photo of photos) {
+        const compressedPhoto = await compressImage(photo);
+        formData.append("image", compressedPhoto, compressedPhoto.name);
+      }
+
       await PostAnimal(formData, token!);
-  
+
       setToastMessage("Animal ajouté avec succès !");
       setToastType("success");
       setToast(true);
-  
+
       setTimeout(() => {
         navigate(`/espace-association/animaux-association/${associationId}`);
-        setIsSubmitting(false); 
+        setIsSubmitting(false);
       }, 3000);
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'animal :", error);
       setToastMessage("Erreur lors de l'ajout de l'animal.");
       setToastType("error");
       setToast(true);
+    } finally {
+      setIsSubmitting(false); // Toujours réactive le bouton, succès ou échec
     }
   };
-  
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -115,23 +128,22 @@ const AddAnimal: React.FC = () => {
   };
 
   return (
-    
     <div className="animal-container">
-      
-      {toast && <Toast setToast={setToast} message={toastMessage} type={toastType} />}
+      {toast && (
+        <Toast setToast={setToast} message={toastMessage} type={toastType} />
+      )}
 
-  {/* Bouton de retour */}
-  <div className="back-button-animal-container">
-  <Link
-    to={`/espace-association/animaux-association/${associationId}`}
-    className="add-animal-back-button"
-  >
-    <i className="fas fa-arrow-left"></i>
-    <span className="back-text">Retour à la liste</span>
-  </Link>
-  <h1 className="animal-title">Ajouter un animal</h1>
-</div>
-
+      {/* Bouton de retour */}
+      <div className="back-button-animal-container">
+        <Link
+          to={`/espace-association/animaux-association/${associationId}`}
+          className="add-animal-back-button"
+        >
+          <i className="fas fa-arrow-left"></i>
+          <span className="back-text">Retour à la liste</span>
+        </Link>
+        <h1 className="animal-title">Ajouter un animal</h1>
+      </div>
 
       <div className="animal-layout">
         <form onSubmit={handleSubmit} className="animal-form">
@@ -226,9 +238,13 @@ const AddAnimal: React.FC = () => {
 
           {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-          <button type="submit" className={`animal-button ${isSubmitting ? 'disabled' : ''}`} disabled={isSubmitting}>
-  Ajouter l'animal
-</button>
+          <button
+            type="submit"
+            className={`animal-button ${isSubmitting ? "disabled" : ""}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Envoi en cours..." : "Ajouter l'animal"}
+          </button>
         </form>
 
         <div className="image-section">
@@ -236,7 +252,11 @@ const AddAnimal: React.FC = () => {
             <label>Photo de profil (obligatoire)</label>
             <div className="profile-photo-wrapper">
               <ImageUpload
-                initialImageUrl={profilePhoto ? URL.createObjectURL(profilePhoto) : defaultImage}
+                initialImageUrl={
+                  profilePhoto
+                    ? URL.createObjectURL(profilePhoto)
+                    : defaultImage
+                }
                 onImageChange={(image) => setProfilePhoto(image)}
               />
               {profilePhoto && (
@@ -263,7 +283,10 @@ const AddAnimal: React.FC = () => {
             <div className="photo-preview-grid">
               {photos.map((photo, index) => (
                 <div key={index} className="photo-thumbnail">
-                  <img src={URL.createObjectURL(photo)} alt={`Photo ${index + 1}`} />
+                  <img
+                    src={URL.createObjectURL(photo)}
+                    alt={`Photo ${index + 1}`}
+                  />
                   <button
                     type="button"
                     className="remove-photo-btn"

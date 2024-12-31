@@ -33,7 +33,6 @@ const ModifyAnimal: React.FC = () => {
   const [newPhotos, setNewPhotos] = useState<File[]>([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
 
   const [toast, setToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
@@ -89,7 +88,7 @@ const ModifyAnimal: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     // Vérification des champs obligatoires
     if (!name || !species || !breed || !gender || (age ?? 0) <= 0 || !size) {
       setToastMessage("Veuillez remplir tous les champs requis !");
@@ -98,7 +97,7 @@ const ModifyAnimal: React.FC = () => {
       setIsSubmitting(false);
       return;
     }
-  
+
     // Vérification de la photo de profil
     if (!profilePhoto && !profilePhotoUrl) {
       setToastMessage("Veuillez charger une photo de profil pour l'animal !");
@@ -107,10 +106,10 @@ const ModifyAnimal: React.FC = () => {
       setIsSubmitting(false);
       return;
     }
-  
+
     try {
       const formData = new FormData();
-  
+
       // Ajouter les champs texte
       formData.append("name", name);
       formData.append("species", species);
@@ -119,13 +118,13 @@ const ModifyAnimal: React.FC = () => {
       formData.append("age", age?.toString() ?? "");
       formData.append("size", size);
       formData.append("description", description);
-  
+
       // Compresser et ajouter la photo de profil
       if (profilePhoto) {
         const compressedProfilePhoto = await compressImage(profilePhoto);
         formData.append("profile_photo", compressedProfilePhoto);
       }
-  
+
       // Compresser et ajouter les nouvelles photos
       const compressedPhotos = await Promise.all(
         newPhotos.map((photo) => compressImage(photo))
@@ -133,16 +132,16 @@ const ModifyAnimal: React.FC = () => {
       compressedPhotos.forEach((photo) => {
         formData.append("photos", photo);
       });
-  
+
       console.log("Données envoyées :", [...formData.entries()]);
-  
+
       // Envoyer les données au backend
       await PatchAnimal(animalId ?? "", formData, token!);
-  
+
       setToastMessage("Animal modifié avec succès !");
       setToastType("success");
       setToast(true);
-  
+
       // Récupérer les données mises à jour depuis le backend
       const updatedData = await GetAnimalById(Number(animalId));
       const updatedPhotos = [
@@ -150,10 +149,10 @@ const ModifyAnimal: React.FC = () => {
         updatedData.photo2,
         updatedData.photo3,
       ].filter(Boolean);
-  
+
       setExistingPhotos(updatedPhotos);
       setNewPhotos([]); // Réinitialiser les nouvelles photos après la soumission
-  
+
       setTimeout(() => {
         navigate(`/espace-association/animaux-association/${associationId}`);
         setIsSubmitting(false);
@@ -167,8 +166,6 @@ const ModifyAnimal: React.FC = () => {
       setIsSubmitting(false); // Toujours réactive le bouton, succès ou échec
     }
   };
-  
-  
 
   const deletePhoto = async (index: number) => {
     try {
@@ -217,19 +214,24 @@ const ModifyAnimal: React.FC = () => {
 
   return (
     <div className="animal-container">
-      {toast && ( <Toast setToast={setToast} message={toastMessage} type={toastType} />      )}
-      
-       {/* Bouton de retour */}
-       <div className="back-button-animal-container">
-       <Link
-         to={`/espace-association/animaux-association/${associationId}`}
-         className="add-animal-back-button"
-       >
-         <i className="fas fa-arrow-left"></i>
-         <span className="back-text">Retour à la liste</span>
-       </Link>
-       <h1 className="animal-title"> Modifier {name ? name : "votre animal"}</h1>
-     </div>
+      {toast && (
+        <Toast setToast={setToast} message={toastMessage} type={toastType} />
+      )}
+
+      {/* Bouton de retour */}
+      <div className="back-button-animal-container">
+        <Link
+          to={`/espace-association/animaux-association/${associationId}`}
+          className="add-animal-back-button"
+        >
+          <i className="fas fa-arrow-left"></i>
+          <span className="back-text">Retour à la liste</span>
+        </Link>
+        <h1 className="animal-title">
+          {" "}
+          Modifier {name ? name : "votre animal"}
+        </h1>
+      </div>
 
       <div className="animal-layout">
         <form onSubmit={handleSubmit} className="animal-form">
@@ -305,9 +307,13 @@ const ModifyAnimal: React.FC = () => {
               placeholder="Description de l'animal"
             />
           </div>
-          <button type="submit" className={`animal-button ${isSubmitting ? 'disabled' : ''}`} disabled={isSubmitting}>
-  Sauvegarder les modifications
-</button>
+          <button
+            type="submit"
+            className={`animal-button ${isSubmitting ? "disabled" : ""}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Envoi en cours..." : "Sauvegarder l'animal"}
+          </button>
         </form>
 
         {/* Section des photos */}
