@@ -94,6 +94,7 @@ const ModifyAnimal: React.FC = () => {
       setToastMessage("Veuillez remplir tous les champs requis !");
       setToastType("error");
       setToast(true);
+      setIsSubmitting(false); 
       return;
     }
   
@@ -102,6 +103,7 @@ const ModifyAnimal: React.FC = () => {
       setToastMessage("Veuillez charger une photo de profil pour l'animal !");
       setToastType("error");
       setToast(true);
+      setIsSubmitting(false); 
       return;
     }
   
@@ -154,6 +156,8 @@ const ModifyAnimal: React.FC = () => {
       setToastMessage("Erreur lors de la modification");
       setToastType("error");
       setToast(true);
+    } finally {
+      setIsSubmitting(false); // Toujours réactive le bouton, succès ou échec
     }
   };
   

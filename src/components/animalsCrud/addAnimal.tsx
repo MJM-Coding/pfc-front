@@ -43,6 +43,7 @@ const AddAnimal: React.FC = () => {
       setToastMessage(ageError);
       setToastType("error");
       setToast(true);
+      setIsSubmitting(false); 
       return;
     }
   
@@ -52,6 +53,7 @@ const AddAnimal: React.FC = () => {
       setToastMessage("Veuillez remplir tous les champs !");
       setToastType("error");
       setToast(true);
+      setIsSubmitting(false); 
       return;
     }
   
@@ -61,6 +63,7 @@ const AddAnimal: React.FC = () => {
       setToastMessage("Photo de profil obligatoire !");
       setToastType("error");
       setToast(true);
+      setIsSubmitting(false); 
       return;
     }
   
@@ -98,6 +101,8 @@ const AddAnimal: React.FC = () => {
       setToastMessage("Erreur lors de l'ajout de l'animal.");
       setToastType("error");
       setToast(true);
+    } finally {
+      setIsSubmitting(false); // Toujours réactive le bouton, succès ou échec
     }
   };
   

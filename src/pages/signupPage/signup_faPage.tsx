@@ -176,6 +176,8 @@ const Signup_faPage = () => {
       setToastMessage(`errorMessage : ${errorMessage}`);
       setToastType("error");
       setShowToast(true);
+    } finally {
+      setIsSubmitting(false); // Réactive le bouton après succès ou échec
     }
   };
 
