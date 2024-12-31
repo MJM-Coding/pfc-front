@@ -82,13 +82,13 @@ const AddAnimal: React.FC = () => {
       // Compression de la photo de profil
       if (profilePhoto) {
         const compressedProfilePhoto = await compressImage(profilePhoto);
-        formData.append("image", compressedProfilePhoto, compressedProfilePhoto.name);
+        formData.append("profile_photo", compressedProfilePhoto, compressedProfilePhoto.name);
       }
   
       // Compression des autres photos
       for (const photo of photos) {
         const compressedPhoto = await compressImage(photo);
-        formData.append("image", compressedPhoto, compressedPhoto.name);
+        formData.append("photos", compressedPhoto, compressedPhoto.name);
       }
   
       await PostAnimal(formData, token!);
