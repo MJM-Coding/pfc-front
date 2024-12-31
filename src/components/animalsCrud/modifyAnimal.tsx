@@ -10,6 +10,7 @@ import AuthContext from "../../contexts/authContext";
 import ImageUpload from "../imageUpload/imageUpload";
 import "./add&modifyAnimal.scss";
 import { Link } from "react-router-dom";
+import { compressImage } from "../../utils/compressImage";
 
 const ModifyAnimal: React.FC = () => {
   const navigate = useNavigate();
@@ -94,7 +95,7 @@ const ModifyAnimal: React.FC = () => {
       setToastMessage("Veuillez remplir tous les champs requis !");
       setToastType("error");
       setToast(true);
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
       return;
     }
   
@@ -103,12 +104,14 @@ const ModifyAnimal: React.FC = () => {
       setToastMessage("Veuillez charger une photo de profil pour l'animal !");
       setToastType("error");
       setToast(true);
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
       return;
     }
   
     try {
       const formData = new FormData();
+  
+      // Ajouter les champs texte
       formData.append("name", name);
       formData.append("species", species);
       formData.append("breed", breed);
@@ -117,13 +120,17 @@ const ModifyAnimal: React.FC = () => {
       formData.append("size", size);
       formData.append("description", description);
   
-      // Ajouter la photo de profil si une nouvelle est sélectionnée
+      // Compresser et ajouter la photo de profil
       if (profilePhoto) {
-        formData.append("profile_photo", profilePhoto);
+        const compressedProfilePhoto = await compressImage(profilePhoto);
+        formData.append("profile_photo", compressedProfilePhoto);
       }
   
-      // Ajouter les nouvelles photos optionnelles
-      newPhotos.forEach((photo) => {
+      // Compresser et ajouter les nouvelles photos
+      const compressedPhotos = await Promise.all(
+        newPhotos.map((photo) => compressImage(photo))
+      );
+      compressedPhotos.forEach((photo) => {
         formData.append("photos", photo);
       });
   
@@ -149,7 +156,7 @@ const ModifyAnimal: React.FC = () => {
   
       setTimeout(() => {
         navigate(`/espace-association/animaux-association/${associationId}`);
-        setIsSubmitting(false); 
+        setIsSubmitting(false);
       }, 3000);
     } catch (error) {
       console.error("Erreur lors de la modification :", error);
@@ -160,6 +167,7 @@ const ModifyAnimal: React.FC = () => {
       setIsSubmitting(false); // Toujours réactive le bouton, succès ou échec
     }
   };
+  
   
 
   const deletePhoto = async (index: number) => {
