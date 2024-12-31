@@ -7,6 +7,7 @@ import ImageUpload from "../imageUpload/imageUpload";
 import "./add&modifyAnimal.scss";
 import { validateAge } from "../validateForm/validateForm";
 import { Link } from 'react-router-dom';
+import { compressImage } from "../../utils/compressImage";
 
 
 const AddAnimal: React.FC = () => {
@@ -43,7 +44,7 @@ const AddAnimal: React.FC = () => {
       setToastMessage(ageError);
       setToastType("error");
       setToast(true);
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
       return;
     }
   
@@ -53,7 +54,7 @@ const AddAnimal: React.FC = () => {
       setToastMessage("Veuillez remplir tous les champs !");
       setToastType("error");
       setToast(true);
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
       return;
     }
   
@@ -63,7 +64,7 @@ const AddAnimal: React.FC = () => {
       setToastMessage("Photo de profil obligatoire !");
       setToastType("error");
       setToast(true);
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
       return;
     }
   
@@ -78,13 +79,17 @@ const AddAnimal: React.FC = () => {
       formData.append("description", description);
       formData.append("id_association", associationId!);
   
+      // Compression de la photo de profil
       if (profilePhoto) {
-        formData.append("image", profilePhoto); // La première photo est la photo de profil
+        const compressedProfilePhoto = await compressImage(profilePhoto);
+        formData.append("image", compressedProfilePhoto, compressedProfilePhoto.name);
       }
   
-      photos.forEach((photo) => {
-        formData.append("image", photo); // Les autres photos
-      });
+      // Compression des autres photos
+      for (const photo of photos) {
+        const compressedPhoto = await compressImage(photo);
+        formData.append("image", compressedPhoto, compressedPhoto.name);
+      }
   
       await PostAnimal(formData, token!);
   
@@ -94,7 +99,7 @@ const AddAnimal: React.FC = () => {
   
       setTimeout(() => {
         navigate(`/espace-association/animaux-association/${associationId}`);
-        setIsSubmitting(false); 
+        setIsSubmitting(false);
       }, 3000);
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'animal :", error);
@@ -102,9 +107,10 @@ const AddAnimal: React.FC = () => {
       setToastType("error");
       setToast(true);
     } finally {
-      setIsSubmitting(false); // Toujours réactive le bouton, succès ou échec
+      setIsSubmitting(false);
     }
   };
+  
   
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
