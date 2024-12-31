@@ -14,6 +14,7 @@ import { validateForm } from "../../components/validateForm/validateForm";
 import "../../components/validateForm/validateForm.scss";
 import "../../styles/commun/commun.scss"
 import Swal from "sweetalert2";
+import { compressImage } from "../../utils/compressImage";
 
 function FamilyProfile() {
   const { user, token } = useContext(AuthContext) || {}; // Récupération des informations de l'utilisateur et du token depuis le contexte
@@ -130,14 +131,23 @@ function FamilyProfile() {
     }
   };
 
-  //! Gérer le changement d'image
-  const handleImageChange = (image: File | null) => {
-    if (image) {
-      updateProfilePhoto(image); // Appeler la fonction d'envoi immédiatement
-    } else {
-      setImage(null);
+ //! Gérer le changement d'image avec compression
+ const handleImageChange = async (image: File | null) => {
+  if (image) {
+    try {
+      // Compresser l'image avant de l'envoyer
+      const compressedImage = await compressImage(image);
+      updateProfilePhoto(compressedImage);
+    } catch (error) {
+      console.error("Erreur lors de la compression de l'image :", error);
+      setToastMessage("Erreur lors de la compression de l'image.");
+      setToastType("error");
+      setShowToast(true);
     }
-  };
+  } else {
+    setImage(null);
+  }
+};
 
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {

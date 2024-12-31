@@ -18,6 +18,8 @@ import Toast from "../../components/toast/toast";
 import { validateForm } from "../../components/validateForm/validateForm";
 import "../../components/validateForm/validateForm.scss";
 import Swal from "sweetalert2";
+import { compressImage } from "../../utils/compressImage";
+
 
 function AssociationProfile() {
   const { user, token } = useContext(AuthContext) || {};
@@ -132,13 +134,23 @@ function AssociationProfile() {
   };
 
   //! Fonction pour gérer le changement d'image
-  const handleImageChange = (image: File | null) => {
+  const handleImageChange = async (image: File | null) => {
     if (image) {
-      updateProfilePhoto(image);
+      try {
+        // Compresser l'image avant de l'envoyer
+        const compressedImage = await compressImage(image);
+        updateProfilePhoto(compressedImage);
+      } catch (error) {
+        console.error("Erreur lors de la compression de l'image :", error);
+        setToastMessage("Erreur lors de la compression de l'image.");
+        setToastType("error");
+        setShowToast(true);
+      }
     } else {
       setImage(null);
     }
   };
+  
 
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {
