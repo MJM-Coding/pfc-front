@@ -32,7 +32,7 @@ const Signup_faPage = () => {
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
   const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [_passwordError, setPasswordError] = useState("");
   const [passwordConfirmationError, setPasswordConfirmationError] =
     useState("");
 
@@ -330,9 +330,7 @@ const Signup_faPage = () => {
                     onChange={handleChange}
                     required
                   />
-                  {passwordError && (
-                    <p className="errorMessage">{passwordError}</p>
-                  )}
+                 
                 </div>
                 {/* Confirmation du mot de passe */}
                 <div className="fieldContainer">

@@ -35,7 +35,7 @@ const ConfirmEmailPage: React.FC = () => {
     if (status === "success") {
       const timer = setTimeout(() => {
         navigate("/"); // Redirige vers la page d'accueil
-      }, 4000);
+      }, 3000);
 
       return () => clearTimeout(timer); // Nettoie le timeout pour éviter des fuites de mémoire
     }

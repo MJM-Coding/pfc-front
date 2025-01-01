@@ -18,6 +18,8 @@ $animalsList-pause-text: #555;
 $animalsList-pause-text-paused: rgb(31, 141, 16);
 $animalsList-pause-text-hover: #000;
 
+
+
 /* ============================= */
 /* Styles de base (Mobile First) */
 /* ============================= */
@@ -137,6 +139,28 @@ $animalsList-pause-text-hover: #000;
     }
   }
 }
+
+/* ============================= */
+/* Icone de statut disponible ou recueilli*/
+/* ============================= */
+.status-icon.available {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-color: green;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.status-icon.adopted {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
 
 /* ============================= */
 /* Styles pour Tablette          */

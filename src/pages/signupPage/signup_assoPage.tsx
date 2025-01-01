@@ -38,7 +38,7 @@ const signup_assoPage = () => {
   const [postalCodeError, setPostalCodeError] = useState<string>("");
   const [rnaNumberError, setRnaNumberError] = useState<string>("");
   const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [_passwordError, setPasswordError] = useState("");
   const [passwordConfirmationError, setPasswordConfirmationError] =
     useState("");
 
@@ -418,9 +418,7 @@ const signup_assoPage = () => {
                     onChange={handleChange}
                     required
                   />
-                  {passwordError && (
-                    <p className="errorMessage">{passwordError}</p>
-                  )}
+                
                 </div>
 
                 {/* Confirmation du mot de passe */}

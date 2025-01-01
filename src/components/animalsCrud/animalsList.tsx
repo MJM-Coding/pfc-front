@@ -117,8 +117,33 @@ const AnimalList: React.FC<AnimalListProps> = ({
     setSearchQuery(query);
   };
 
-  //! Trier les animaux par date de création
+  //! Fonction pour retourner une icône selon le statut
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "en attente":
+      case "rejetée":
+        return <span className="status-icon available" title="Disponible"></span>;
+      case "validée":
+        return <span className="status-icon adopted" title="Adopté"></span>;
+      default:
+        return null;
+    }
+  };
+
+  //! Trier les animaux par statut et date de création
   const sortedAnimals = [...animals].sort((a, b) => {
+    const statusOrder = (status: string) => {
+      if (status === "validée") return 1; // Les animaux adoptés à la fin
+      return 0; // Les animaux disponibles en premier
+    };
+
+    const statusA = statusOrder(a.asks?.[0]?.status || "en attente");
+    const statusB = statusOrder(b.asks?.[0]?.status || "en attente");
+
+    if (statusA !== statusB) {
+      return statusA - statusB;
+    }
+
     const dateA = new Date(a.created_at).getTime();
     const dateB = new Date(b.created_at).getTime();
     return dateB - dateA;
@@ -131,49 +156,51 @@ const AnimalList: React.FC<AnimalListProps> = ({
 
   //! Fonction pour rendre chaque animal
 
-  const renderAnimalItem = (animal: IAnimal) => (
-    <ItemCard
-      key={animal.id}
-      title={
-        <>
-          {animal.name}
-        </>
-      }
-      imageUrl={
-        animal.profile_photo
-          ? animal.profile_photo.startsWith("http")
-            ? animal.profile_photo
-            : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
-          : "/images/default-animal.jpg"
-      }
-      link="#"
-    >
-      {/* Ajoute uniquement des informations complémentaires */}
-      <p>Ajouté le : {new Date(animal.created_at).toLocaleDateString("fr-FR")}</p>
-      <div className="custom-animal-actions">
-        <Link
-          to={`/espace-association/animaux-association/${associationId}/modifier-animal/${animal.id}`}
-          className="custom-edit-button"
-        >
-          <i className="fas fa-edit"></i>
-        </Link>
-        {token && (
-          <DeleteAnimal
-            animalId={String(animal.id)}
-            onDeleteSuccess={onDelete}
-          />
-        )}
-        <button
-          onClick={() => handleTogglePause(animal.id, !animal.is_paused)}
-          className={`pause-button ${animal.is_paused ? "paused" : ""}`}
-          title={animal.is_paused ? "Remettre l'animal en ligne" : "Mettre en pause l'animal"}
-        >
-          <i className={`fa-solid ${animal.is_paused ? "fa-play" : "fa-pause"}`}></i>
-        </button>
-      </div>
-    </ItemCard>
-  );
-  
+  const renderAnimalItem = (animal: IAnimal) => {
+    const primaryStatus = animal.asks?.[0]?.status || "en attente"; // Prend le statut principal (premier)
+
+    return (
+      <ItemCard
+        key={animal.id}
+        title={
+          <>
+            {getStatusIcon(primaryStatus)} {animal.name}
+          </>
+        }
+        imageUrl={
+          animal.profile_photo
+            ? animal.profile_photo.startsWith("http")
+              ? animal.profile_photo
+              : `${import.meta.env.VITE_STATIC_URL}${animal.profile_photo}`
+            : "/images/default-animal.jpg"
+        }
+        link="#"
+      >
+        <p>Ajouté le : {new Date(animal.created_at).toLocaleDateString("fr-FR")}</p>
+        <div className="custom-animal-actions">
+          <Link
+            to={`/espace-association/animaux-association/${associationId}/modifier-animal/${animal.id}`}
+            className="custom-edit-button"
+          >
+            <i className="fas fa-edit"></i>
+          </Link>
+          {token && (
+            <DeleteAnimal
+              animalId={String(animal.id)}
+              onDeleteSuccess={onDelete}
+            />
+          )}
+          <button
+            onClick={() => handleTogglePause(animal.id, !animal.is_paused)}
+            className={`pause-button ${animal.is_paused ? "paused" : ""}`}
+            title={animal.is_paused ? "Remettre l'animal en ligne" : "Mettre en pause l'animal"}
+          >
+            <i className={`fa-solid ${animal.is_paused ? "fa-play" : "fa-pause"}`}></i>
+          </button>
+        </div>
+      </ItemCard>
+    );
+  };
 
   return (
     <div className="custom-animal-list-container">
