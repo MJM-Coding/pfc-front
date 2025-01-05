@@ -85,7 +85,7 @@ const AssociationAnimalAsk: React.FC = () => {
       // Affiche la confirmation SweetAlert2
       const confirmReject = await Swal.fire({
         title: "Confirmer cette action",
-        text:  "Si vous rejetez cette demande, l'animal sera à nouveau visible et disponible pour les accueillants sur le site. Voulez-vous continuer ?",
+        text: "Si vous rejetez cette demande, l'animal sera à nouveau visible et disponible pour les accueillants sur le site. Voulez-vous continuer ?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33", // Couleur du bouton "confirmer"
@@ -93,7 +93,7 @@ const AssociationAnimalAsk: React.FC = () => {
         confirmButtonText: "Oui, rejeter",
         cancelButtonText: "Non, annuler",
       });
-  
+
       if (!confirmReject.isConfirmed) {
         // L'utilisateur a annulé l'action
         return;
@@ -185,7 +185,7 @@ const AssociationAnimalAsk: React.FC = () => {
               : "Rejetée le"}
           </th>
           {/* Ne pas afficher la colonne Actions pour les demandes rejetées */}
-        {statusLabel !== "rejetée" && <th>Actions</th>}
+          {statusLabel !== "rejetée" && <th>Actions</th>}
         </tr>
       </thead>
       <tbody>
@@ -216,15 +216,15 @@ const AssociationAnimalAsk: React.FC = () => {
               {ask.animal?.name}
             </td>
             <td>
-            {ask.family && ask.family.user && (
-              <span
-                onClick={() => setSelectedFamily(ask.family)} // Ouvre la modale de la famille au clic
-                style={{ cursor: "pointer", color: "#0044cc" }}
-              >
-                {ask.family.user.firstname} {ask.family.user.lastname}
-              </span>
-            )}
-          </td>
+              {ask.family && ask.family.user && (
+                <span
+                  onClick={() => setSelectedFamily(ask.family)} // Ouvre la modale de la famille au clic
+                  style={{ cursor: "pointer", color: "#0044cc" }}
+                >
+                  {ask.family.user.firstname} {ask.family.user.lastname}
+                </span>
+              )}
+            </td>
             {statusLabel === "rejetée" && (
               <td>
                 {isMobile()
@@ -255,32 +255,36 @@ const AssociationAnimalAsk: React.FC = () => {
                     onClick={() =>
                       handleUpdateStatus(ask.id.toString(), "validée")
                     }
+                    aria-label="Valider la demande"
                     title="Valider"
                   >
-                    <i className="fas fa-check"></i>
+                    <i className="fas fa-check" aria-hidden="true"></i>
                   </button>
+
                   {/* Bouton pour rejeter */}
                   <button
                     className="reject-button"
                     onClick={() =>
                       handleUpdateStatus(ask.id.toString(), "rejetée")
                     }
+                    aria-label="Rejeter la demande"
                     title="Rejeter"
                   >
-                    <i className="fas fa-times"></i>
+                    <i className="fas fa-times" aria-hidden="true"></i>
                   </button>
                 </>
               )}
+
               {statusLabel === "validée" && (
                 <button
                   className="make-available-button"
                   onClick={() => handleDeleteAsk(ask.id.toString(), "validée")}
+                  aria-label="Rendre l'animal disponible"
                   title="Rendre l'animal disponible"
                 >
-                  <i className="fas fa-sync-alt"></i>
+                  <i className="fas fa-sync-alt" aria-hidden="true"></i>
                 </button>
               )}
-            
             </td>
           </tr>
         ))}
@@ -302,9 +306,12 @@ const AssociationAnimalAsk: React.FC = () => {
           <button
             className="close-modal"
             onClick={() => setSelectedAnimal(null)}
+            aria-label="Fermer la fenêtre modale"
+            title="Fermer"
           >
             ×
           </button>
+
           {selectedAnimal && (
             <div>
               <h3 className="title-Animal">{selectedAnimal.name}</h3>
@@ -395,7 +402,7 @@ const AssociationAnimalAsk: React.FC = () => {
   return (
     <div className="association-asks-container">
       <h1 data-title="Demandes d'accueil">Demandes d'accueil</h1>
-   
+
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
         <>

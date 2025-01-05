@@ -8,10 +8,7 @@ import {
   DeleteProfilePhoto,
 } from "../../api/association.api";
 import AuthContext from "../../contexts/authContext";
-import type {
-  IAssociation,
-  IAssociationForm,
-} from "../../@types/association";
+import type { IAssociation, IAssociationForm } from "../../@types/association";
 import ImageUpload from "../../components/imageUpload/imageUpload";
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage";
 import Toast from "../../components/toast/toast";
@@ -20,14 +17,12 @@ import "../../components/validateForm/validateForm.scss";
 import Swal from "sweetalert2";
 import { compressImage } from "../../utils/compressImage";
 
-
 function AssociationProfile() {
   const { user, token } = useContext(AuthContext) || {};
   const associationId = user?.id_association;
 
-  const [initialFormData, setInitialFormData] = useState<IAssociationForm | null>(
-    null
-  );  
+  const [initialFormData, setInitialFormData] =
+    useState<IAssociationForm | null>(null);
   const [associationData, setAssociationData] = useState<IAssociation | null>(
     null
   );
@@ -88,7 +83,7 @@ function AssociationProfile() {
 
         setAssociationData(associationData);
         setFormData(associationData);
-        setInitialFormData(associationData); 
+        setInitialFormData(associationData);
 
         const baseUrl = import.meta.env.VITE_STATIC_URL || "";
         setImageUrl(
@@ -150,7 +145,6 @@ function AssociationProfile() {
       setImage(null);
     }
   };
-  
 
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {
@@ -164,14 +158,14 @@ function AssociationProfile() {
       confirmButtonText: "Oui, supprimer",
       cancelButtonText: "Non, revenir",
     });
-  
+
     if (!result.isConfirmed) {
       return; // L'utilisateur a annulé l'action
     }
-  
+
     try {
       await DeleteProfilePhoto(associationId as number, token as string);
-  
+
       // Mettre à jour l'état local après la suppression
       setImageUrl(defaultImage);
       setToastMessage("Photo supprimée avec succès !");
@@ -179,14 +173,16 @@ function AssociationProfile() {
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message || error.message || "Erreur inconnue.";
-      console.error("Erreur lors de la suppression de la photo :", errorMessage);
+      console.error(
+        "Erreur lors de la suppression de la photo :",
+        errorMessage
+      );
       setToastMessage(`Erreur : ${errorMessage}`);
       setToastType("error");
     } finally {
       setShowToast(true);
     }
   };
-  
 
   //! Gérer la soumission du formulaire sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -294,6 +290,8 @@ function AssociationProfile() {
                   type="button"
                   className="deletePhotoBtn"
                   onClick={deleteProfilePhoto}
+                  aria-label="Supprimer la photo de profil"
+                  title="Supprimer la photo"
                 >
                   Supprimer la photo
                 </button>
@@ -374,8 +372,6 @@ function AssociationProfile() {
               />
             </div>
 
-            
-
             {/* Code postal */}
             <div className="infoFieldContainer row">
               <label className="infoLabel" htmlFor="postal_code">
@@ -395,7 +391,7 @@ function AssociationProfile() {
                 <Message message={postalCodeError} type="error" />
               )}
             </div>
-            
+
             {/* Ville */}
             <div className="infoFieldContainer row">
               <label className="infoLabel" htmlFor="city">
@@ -434,12 +430,35 @@ function AssociationProfile() {
                 type="submit"
                 className="submitBtnProfile"
                 disabled={!isEditable}
+                aria-label={
+                  !isEditable
+                    ? "Modification non disponible"
+                    : "Enregistrer les modifications du profil"
+                }
+                title={
+                  !isEditable
+                    ? "Modification non disponible"
+                    : "Enregistrer les modifications"
+                }
               >
                 Enregistrer
               </button>
-              <button type="button" className="editBtn" onClick={toggleEdit}>
+
+              <button
+                type="button"
+                className="editBtn"
+                onClick={toggleEdit}
+                aria-label={
+                  isEditable
+                    ? "Annuler la modification"
+                    : "Activer la modification du profil"
+                }
+                title={isEditable ? "Annuler" : "Modifier"}
+              >
                 {isEditable ? "Annuler" : "Modifier"}
               </button>
+
+              
             </div>
           </form>
         </div>

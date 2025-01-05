@@ -9,7 +9,7 @@ import "./resetPasswordPage.scss";
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate(); // Initialiser la fonction de navigation
-const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const token = searchParams.get("token"); // Récupérer le token depuis l'URL
 
   const [newPassword, setNewPassword] = useState("");
@@ -51,7 +51,11 @@ const [searchParams] = useSearchParams();
     e.preventDefault();
 
     // Valider les champs avant l'envoi
-    if (passwordError || confirmPasswordError || newPassword !== confirmPassword) {
+    if (
+      passwordError ||
+      confirmPasswordError ||
+      newPassword !== confirmPassword
+    ) {
       setToastMessage("Veuillez corriger les erreurs avant de soumettre.");
       setToastType("error");
       setShowToast(true);
@@ -69,7 +73,9 @@ const [searchParams] = useSearchParams();
 
     try {
       await resetPassword(token, newPassword);
-      setToastMessage("Mot de passe modifié avec succès! Vous pouvez dès à présent vous connecter.");
+      setToastMessage(
+        "Mot de passe modifié avec succès! Vous pouvez dès à présent vous connecter."
+      );
       setToastType("success");
       setShowToast(true);
 
@@ -150,6 +156,17 @@ const [searchParams] = useSearchParams();
             type="submit"
             className="submit-button"
             disabled={isSubmitting} // Désactiver le bouton pendant l'envoi
+            aria-label={
+              isSubmitting
+                ? "Envoi en cours, veuillez patienter"
+                : "Réinitialiser le mot de passe"
+            }
+            aria-busy={isSubmitting} // Indique que le bouton est en cours d'utilisation
+            title={
+              isSubmitting
+                ? "Le formulaire est en cours d'envoi"
+                : "Réinitialiser votre mot de passe"
+            }
           >
             {isSubmitting ? "Envoi en cours..." : "Réinitialiser"}
           </button>

@@ -11,12 +11,23 @@ interface FiltersProps {
 }
 
 //! Composant Filters
-const Filters: React.FC<FiltersProps> = ({ filters, options, onChange, onReset }) => {
+const Filters: React.FC<FiltersProps> = ({
+  filters,
+  options,
+  onChange,
+  onReset,
+}) => {
   const [showFilters, setShowFilters] = useState(false); // État pour gérer la visibilité
 
   return (
     <div className="filters-container">
-      <button className="toggle-filters-btn" onClick={() => setShowFilters(!showFilters)}>
+      <button
+        className="toggle-filters-btn"
+        onClick={() => setShowFilters(!showFilters)}
+        aria-expanded={showFilters} // Indique dynamiquement si les filtres sont affichés ou non
+        aria-controls="filters-section" // Associe le bouton à la section des filtres
+        title={showFilters ? "Masquer les filtres" : "Afficher les filtres"} // Ajoute une infobulle au survol
+      >
         {showFilters ? "Masquer les filtres" : "Filtrer"}
       </button>
 
@@ -38,8 +49,13 @@ const Filters: React.FC<FiltersProps> = ({ filters, options, onChange, onReset }
               ))}
             </select>
           ))}
-          <button className="reset-btn" onClick={onReset}>
-            <i className="fa-solid fa-eraser"></i>
+          <button
+            className="reset-btn"
+            onClick={onReset}
+            aria-label="Réinitialiser les filtres"
+            title="Réinitialiser les filtres"
+          >
+            <i className="fa-solid fa-eraser" aria-hidden="true"></i>
           </button>
         </div>
       )}

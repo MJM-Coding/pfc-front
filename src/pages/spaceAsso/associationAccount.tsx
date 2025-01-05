@@ -260,7 +260,12 @@ const associationAccount = () => {
               />
             </div>
 
-            <button onClick={handleSubmitEmail} className="submit-btn">
+            <button
+              onClick={handleSubmitEmail}
+              className="submit-btn"
+              aria-label="Sauvegarder l'adresse email"
+              title="Sauvegarder l'email"
+            >
               Sauvegarder l'email
             </button>
           </div>
@@ -315,7 +320,12 @@ const associationAccount = () => {
               />
             </div>
 
-            <button onClick={handleSubmitPassword} className="submit-btn">
+            <button
+              onClick={handleSubmitPassword}
+              className="submit-btn"
+              aria-label="Sauvegarder le mot de passe"
+              title="Sauvegarder le mot de passe"
+            >
               Sauvegarder le mot de passe
             </button>
           </div>
@@ -324,7 +334,12 @@ const associationAccount = () => {
           <div className="delete-container">
             <h3>Supprimer le compte</h3>
             <p>Attention : Cette action est irréversible.</p>
-            <button onClick={handleDeleteAccount} className="delete-btn">
+            <button
+              onClick={handleDeleteAccount}
+              className="delete-btn"
+              aria-label="Supprimer définitivement votre compte"
+              title="Supprimer mon compte"
+            >
               Supprimer mon compte
             </button>
           </div>

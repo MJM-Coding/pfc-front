@@ -51,7 +51,12 @@ const ModalLogin: React.FC<IModalLogin> = ({ show, onClose, login }) => {
             <LoginForm login={login} onClose={onClose} />
             <div className="switch-form">
               <p>Pas encore de compte ? </p>
-              <button type="button" onClick={() => setIsChoosingType(true)}>
+              <button
+                type="button"
+                onClick={() => setIsChoosingType(true)}
+                aria-label="Ouvrir les options pour choisir le type d'inscription"
+                title="S'inscrire"
+              >
                 S'inscrire
               </button>
             </div>
@@ -92,7 +97,12 @@ const ModalLogin: React.FC<IModalLogin> = ({ show, onClose, login }) => {
 
             <div className="switch-form">
               <p>Vous avez déjà un compte ? </p>
-              <button type="button" onClick={() => setIsChoosingType(false)}>
+              <button
+                type="button"
+                onClick={() => setIsChoosingType(false)}
+                aria-label="Ouvrir la fenêtre de connexion"
+                title="Se connecter"
+              >
                 Se connecter
               </button>
             </div>

@@ -242,6 +242,13 @@ const AddAnimal: React.FC = () => {
             type="submit"
             className={`animal-button ${isSubmitting ? "disabled" : ""}`}
             disabled={isSubmitting}
+            aria-disabled={isSubmitting} // Indique que le bouton est désactivé
+            aria-busy={isSubmitting} // Indique que le bouton est en cours d'utilisation
+            aria-label={
+              isSubmitting
+                ? "Le formulaire est en cours d'envoi, veuillez patienter."
+                : "Ajouter un nouvel animal"
+            }
           >
             {isSubmitting ? "Envoi en cours..." : "Ajouter l'animal"}
           </button>
@@ -264,6 +271,8 @@ const AddAnimal: React.FC = () => {
                   type="button"
                   className="remove-photo-btn"
                   onClick={() => setProfilePhoto(null)}
+                  aria-label="Supprimer la photo de profil"
+                  title="Supprimer la photo de profil"
                 >
                   ×
                 </button>
@@ -291,6 +300,8 @@ const AddAnimal: React.FC = () => {
                     type="button"
                     className="remove-photo-btn"
                     onClick={() => removePhoto(index)}
+                    aria-label={`Supprimer la photo ${index + 1}`}
+                    title={`Supprimer la photo ${index + 1}`}
                   >
                     ×
                   </button>

@@ -194,6 +194,8 @@ const AnimalList: React.FC<AnimalListProps> = ({
             onClick={() => handleTogglePause(animal.id, !animal.is_paused)}
             className={`pause-button ${animal.is_paused ? "paused" : ""}`}
             title={animal.is_paused ? "Remettre l'animal en ligne" : "Mettre en pause l'animal"}
+            aria-label={animal.is_paused ? "Remettre l'animal en ligne" : "Mettre en pause l'animal"}
+            aria-pressed={animal.is_paused} // Indique l'état (pause ou en ligne)
           >
             <i className={`fa-solid ${animal.is_paused ? "fa-play" : "fa-pause"}`}></i>
           </button>

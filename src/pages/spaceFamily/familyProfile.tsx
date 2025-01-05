@@ -12,7 +12,7 @@ import Toast from "../../components/toast/toast"; // Importation du composant To
 import Message from "../../components/errorSuccessMessage/errorSuccessMessage"; // Importation du composant Message pour les messages d'erreur et de succès
 import { validateForm } from "../../components/validateForm/validateForm";
 import "../../components/validateForm/validateForm.scss";
-import "../../styles/commun/commun.scss"
+import "../../styles/commun/commun.scss";
 import Swal from "sweetalert2";
 import { compressImage } from "../../utils/compressImage";
 
@@ -29,7 +29,7 @@ function FamilyProfile() {
   const [initialFormData, setInitialFormData] = useState<IFamilyForm | null>(
     null
   );
-  
+
   // State pour les messages d'erreur et de succès
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
@@ -99,7 +99,7 @@ function FamilyProfile() {
       }
     };
     setFormData(familyData);
-    
+
     fetchFamilyData();
   }, [familyId, token]);
 
@@ -131,23 +131,23 @@ function FamilyProfile() {
     }
   };
 
- //! Gérer le changement d'image avec compression
- const handleImageChange = async (image: File | null) => {
-  if (image) {
-    try {
-      // Compresser l'image avant de l'envoyer
-      const compressedImage = await compressImage(image);
-      updateProfilePhoto(compressedImage);
-    } catch (error) {
-      console.error("Erreur lors de la compression de l'image :", error);
-      setToastMessage("Erreur lors de la compression de l'image.");
-      setToastType("error");
-      setShowToast(true);
+  //! Gérer le changement d'image avec compression
+  const handleImageChange = async (image: File | null) => {
+    if (image) {
+      try {
+        // Compresser l'image avant de l'envoyer
+        const compressedImage = await compressImage(image);
+        updateProfilePhoto(compressedImage);
+      } catch (error) {
+        console.error("Erreur lors de la compression de l'image :", error);
+        setToastMessage("Erreur lors de la compression de l'image.");
+        setToastType("error");
+        setShowToast(true);
+      }
+    } else {
+      setImage(null);
     }
-  } else {
-    setImage(null);
-  }
-};
+  };
 
   //! Fonction pour supprimer la photo
   const deleteProfilePhoto = async () => {
@@ -161,14 +161,14 @@ function FamilyProfile() {
       confirmButtonText: "Oui, supprimer",
       cancelButtonText: "Non, revenir",
     });
-  
+
     if (!result.isConfirmed) {
       return; // L'utilisateur a annulé l'action
     }
-  
+
     try {
       await DeleteProfilePhoto(familyId as number, token as string);
-  
+
       // Mettre à jour l'état local après la suppression
       setImageUrl(defaultImage);
       setToastMessage("Photo supprimée avec succès !");
@@ -186,7 +186,6 @@ function FamilyProfile() {
       setShowToast(true);
     }
   };
-  
 
   //! Gérer la soumission des champs sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -261,19 +260,17 @@ function FamilyProfile() {
     }
   };
 
-
-//! Basculer le mode édition
-const toggleEdit = () => {
-  if (isEditable) {
-    // Restaurer les données initiales si on annule l'édition
-    setFormData({ ...initialFormData });
-  } else {
-    // Sauvegarder les données actuelles comme données initiales si on active l'édition
-    setInitialFormData({ ...formData });
-  }
-  setIsEditable(!isEditable);
-};
-
+  //! Basculer le mode édition
+  const toggleEdit = () => {
+    if (isEditable) {
+      // Restaurer les données initiales si on annule l'édition
+      setFormData({ ...initialFormData });
+    } else {
+      // Sauvegarder les données actuelles comme données initiales si on active l'édition
+      setInitialFormData({ ...formData });
+    }
+    setIsEditable(!isEditable);
+  };
 
   if (!user)
     return <div>Veuillez vous connecter pour accéder à cette page.</div>;
@@ -304,6 +301,8 @@ const toggleEdit = () => {
                   type="button"
                   className="deletePhotoBtn"
                   onClick={deleteProfilePhoto}
+                  aria-label="Supprimer la photo de profil"
+                  title="Supprimer la photo"
                 >
                   Supprimer la photo
                 </button>
@@ -403,8 +402,6 @@ const toggleEdit = () => {
                 />
               </div>
 
-          
-
               {/* postal_code */}
               <div className="infoFieldContainer row">
                 <label className="infoLabel" htmlFor="postal_code">
@@ -429,8 +426,8 @@ const toggleEdit = () => {
                 )}
               </div>
 
-                  {/* city */}
-                  <div className="infoFieldContainer row">
+              {/* city */}
+              <div className="infoFieldContainer row">
                 <label className="infoLabel" htmlFor="city">
                   Ville
                 </label>
@@ -597,10 +594,31 @@ const toggleEdit = () => {
                 type="submit"
                 className="submitBtnProfile"
                 disabled={!isEditable}
+                aria-label={
+                  !isEditable
+                    ? "Le bouton est désactivé car les modifications ne sont pas autorisées"
+                    : "Enregistrer les modifications du profil"
+                }
+                title={
+                  !isEditable
+                    ? "Modification désactivée"
+                    : "Enregistrer les modifications"
+                }
               >
                 Enregistrer
               </button>
-              <button type="button" className="editBtn" onClick={toggleEdit}>
+
+              <button
+                type="button"
+                className="editBtn"
+                onClick={toggleEdit}
+                aria-label={
+                  isEditable
+                    ? "Annuler la modification"
+                    : "Activer la modification"
+                }
+                title={isEditable ? "Annuler" : "Modifier"}
+              >
                 {isEditable ? "Annuler" : "Modifier"}
               </button>
             </div>

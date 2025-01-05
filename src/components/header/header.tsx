@@ -115,7 +115,7 @@ const Header: React.FC = () => {
           <h1>Pet Foster Connect</h1>
         </div>
       </div>
-  
+
       {/* Div séparée pour centrer les liens */}
       <div className="header-center">
         <div className="header-links">
@@ -137,44 +137,52 @@ const Header: React.FC = () => {
           </NavLink>
         </div>
       </div>
-  
+
       <div className="header-right">
-  <div className="auth-container">
-    {isAuthenticated && user ? (
-      <div className="user-info">
-        <DropdownMenu
-          label={
-            <div className="user-label">
-              <i className="fa-solid fa-user"></i>
-              <span className="user-firstname">
-                {(user?.role === "association" &&
-                  (user as unknown as IAssociation).representative) ||
-                  user.firstname}
-              </span>
+        <div className="auth-container">
+          {isAuthenticated && user ? (
+            <div className="user-info">
+              <DropdownMenu
+                label={
+                  <div className="user-label">
+                    <i className="fa-solid fa-user"></i>
+                    <span className="user-firstname">
+                      {(user?.role === "association" &&
+                        (user as unknown as IAssociation).representative) ||
+                        user.firstname}
+                    </span>
+                  </div>
+                }
+                links={getUserLinks(user?.role, user?.id?.toString())}
+                onLogout={handleLogout}
+              />
             </div>
-          }
-          links={getUserLinks(user?.role, user?.id?.toString())}
-          onLogout={handleLogout}
-        />
+          ) : (
+            <>
+              <button
+                className="auth-button"
+                onClick={openModal}
+                aria-label="Ouvrir la fenêtre de connexion ou d'inscription"
+                title="Connexion ou Inscription"
+              >
+                Connexion / Inscription
+              </button>
+
+              <button
+                className="auth-button-mobile"
+                onClick={openModal}
+                aria-label="Ouvrir la fenêtre de connexion ou d'inscription"
+                title="Connexion ou Inscription"
+              >
+                <i className="fas fa-sign-in-alt" aria-hidden="true"></i>
+              </button>
+            </>
+          )}
+        </div>
       </div>
-    ) : (
-      <>
-        <button className="auth-button" onClick={openModal}>
-          Connexion / Inscription
-        </button>
 
-        <button className="auth-button-mobile" onClick={openModal}>
-          <i className="fas fa-sign-in-alt"></i>
-        </button>
-      </>
-    )}
-  </div>
-</div>
-
-  
       <ModalLogin show={isModalOpen} onClose={closeModal} login={safeLogin} />
     </header>
   );
-  
 };
-  export default Header;
+export default Header;

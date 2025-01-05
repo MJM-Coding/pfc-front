@@ -311,6 +311,17 @@ const ModifyAnimal: React.FC = () => {
             type="submit"
             className={`animal-button ${isSubmitting ? "disabled" : ""}`}
             disabled={isSubmitting}
+            aria-label={
+              isSubmitting
+                ? "Envoi des données en cours"
+                : "Sauvegarder les informations de l'animal"
+            }
+            aria-busy={isSubmitting} // Indique que le processus est en cours
+            title={
+              isSubmitting
+                ? "Veuillez patienter, l'envoi est en cours"
+                : "Sauvegarder les informations de l'animal"
+            }
           >
             {isSubmitting ? "Envoi en cours..." : "Sauvegarder l'animal"}
           </button>
@@ -334,6 +345,8 @@ const ModifyAnimal: React.FC = () => {
                 type="button"
                 className="remove-photo-btn"
                 onClick={removeProfilePhoto}
+                aria-label="Supprimer la photo de profil"
+                title="Supprimer la photo de profil"
               >
                 ×
               </button>
@@ -357,6 +370,10 @@ const ModifyAnimal: React.FC = () => {
                     type="button"
                     className="remove-photo-btn"
                     onClick={() => deletePhoto(index)} // Index correspond à l'ordre des photos supplémentaires
+                    aria-label={`Supprimer la photo supplémentaire ${
+                      index + 1
+                    }`}
+                    title={`Supprimer la photo supplémentaire ${index + 1}`}
                   >
                     ×
                   </button>
@@ -396,6 +413,8 @@ const ModifyAnimal: React.FC = () => {
                     onClick={() =>
                       setNewPhotos((prev) => prev.filter((_, i) => i !== index))
                     }
+                    aria-label={`Supprimer la photo ${index + 1}`}
+                    title={`Supprimer la photo ${index + 1}`}
                   >
                     ×
                   </button>

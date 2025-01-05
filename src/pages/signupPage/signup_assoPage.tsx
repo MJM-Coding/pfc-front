@@ -418,7 +418,6 @@ const signup_assoPage = () => {
                     onChange={handleChange}
                     required
                   />
-                
                 </div>
 
                 {/* Confirmation du mot de passe */}
@@ -442,11 +441,23 @@ const signup_assoPage = () => {
                     <p className="errorMessage">{passwordConfirmationError}</p>
                   )}
                 </div>
+                
                 {/* Bouton de validation */}
                 <button
                   type="submit"
                   className="buttonConnexionPage"
                   disabled={isSubmitting}
+                  aria-label={
+                    isSubmitting
+                      ? "Inscription en cours, veuillez patienter"
+                      : "Créer un compte pour accéder à la plateforme"
+                  }
+                  aria-busy={isSubmitting}
+                  title={
+                    isSubmitting
+                      ? "Le processus d'inscription est en cours"
+                      : "Créer un compte"
+                  }
                   style={{
                     backgroundColor: isSubmitting ? "#ccc" : undefined,
                     color: isSubmitting ? "#666" : undefined,

@@ -47,7 +47,18 @@ const RequestResetPage = () => {
           <button
             type="submit"
             className="submit-button"
-            disabled={isSubmitting} // Désactiver le bouton pendant l'envoi
+            disabled={isSubmitting}
+            aria-label={
+              isSubmitting
+                ? "Envoi en cours, veuillez patienter"
+                : "Envoyer le formulaire"
+            }
+            aria-busy={isSubmitting}
+            title={
+              isSubmitting
+                ? "Le formulaire est en cours d'envoi"
+                : "Envoyer le formulaire"
+            }
             style={{
               backgroundColor: isSubmitting ? "#ccc" : undefined,
               cursor: isSubmitting ? "not-allowed" : "pointer",
@@ -57,7 +68,11 @@ const RequestResetPage = () => {
           </button>
         </form>
         {message && (
-          <p className={`message ${message.includes("erreur") ? "error" : "success"}`}>
+          <p
+            className={`message ${
+              message.includes("erreur") ? "error" : "success"
+            }`}
+          >
             {message}
           </p>
         )}

@@ -127,7 +127,7 @@ const Signup_faPage = () => {
         setPasswordError(errors.password);
         setPasswordConfirmationError(errors.password);
       }
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
       return;
     }
 
@@ -330,7 +330,6 @@ const Signup_faPage = () => {
                     onChange={handleChange}
                     required
                   />
-                 
                 </div>
                 {/* Confirmation du mot de passe */}
                 <div className="fieldContainer">
@@ -355,18 +354,31 @@ const Signup_faPage = () => {
                 </div>
                 {/* Bouton de validation */}
                 <div className="submitContainer">
-                <button
-                  type="submit"
-                  className="buttonConnexionPage"
-                  disabled={isSubmitting}
-                  style={{
-                    backgroundColor: isSubmitting ? "#ccc" : undefined,
-                    color: isSubmitting ? "#666" : undefined,
-                    cursor: isSubmitting ? "not-allowed" : undefined,
-                  }}
-                >
-                  {isSubmitting ? "Inscription en cours..." : "Créer un compte"}
-                </button>
+                  <button
+                    type="submit"
+                    className="buttonConnexionPage"
+                    disabled={isSubmitting}
+                    aria-label={
+                      isSubmitting
+                        ? "Inscription en cours, veuillez patienter"
+                        : "Créer un compte pour accéder à la plateforme"
+                    }
+                    aria-busy={isSubmitting} // Indique un état actif pour les technologies d’assistance
+                    title={
+                      isSubmitting
+                        ? "Le processus d'inscription est en cours"
+                        : "Créer un compte"
+                    }
+                    style={{
+                      backgroundColor: isSubmitting ? "#ccc" : undefined,
+                      color: isSubmitting ? "#666" : undefined,
+                      cursor: isSubmitting ? "not-allowed" : undefined,
+                    }}
+                  >
+                    {isSubmitting
+                      ? "Inscription en cours..."
+                      : "Créer un compte"}
+                  </button>
                 </div>
               </div>
             </div>

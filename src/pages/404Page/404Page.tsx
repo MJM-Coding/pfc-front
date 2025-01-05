@@ -8,7 +8,7 @@ const NotFoundPage: React.FC = () => {
       <h1>404 </h1>
       <p className="page-introuvable"> Page introuvable  🐾</p>
       <p>
-      Mais ne vous inquiétez pas, d’autres pages et animaux vous attendent juste ici. Retournez à l’accueil pour continuer votre visite."</p>
+      Mais ne vous inquiétez pas, d’autres pages et animaux vous attendent juste ici. Retournez à l’accueil pour continuer votre visite.</p>
       <Link to="/" className="back-to-home">
         Retour à la page d'accueil
       </Link>

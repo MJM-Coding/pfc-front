@@ -10,7 +10,10 @@ interface DeleteAnimalProps {
   onDeleteSuccess: () => void; // Fonction appelée après une suppression réussie
 }
 
-const DeleteAnimal: React.FC<DeleteAnimalProps> = ({ animalId, onDeleteSuccess }) => {
+const DeleteAnimal: React.FC<DeleteAnimalProps> = ({
+  animalId,
+  onDeleteSuccess,
+}) => {
   //! Récupération du token via le contexte d'authentification
   const authContext = useContext(AuthContext);
 
@@ -65,9 +68,16 @@ const DeleteAnimal: React.FC<DeleteAnimalProps> = ({ animalId, onDeleteSuccess }
 
   return (
     <div>
-      {toast && <Toast setToast={setToast} message={toastMessage} type={toastType} />}
-      <button onClick={handleDelete} className="delete-animal-button">
-        <i className="fas fa-trash"></i> 
+      {toast && (
+        <Toast setToast={setToast} message={toastMessage} type={toastType} />
+      )}
+      <button
+        onClick={handleDelete}
+        className="delete-animal-button"
+        aria-label="Supprimer cet animal"
+        title="Supprimer cet animal"
+      >
+        <i className="fas fa-trash" aria-hidden="true"></i>
       </button>
     </div>
   );

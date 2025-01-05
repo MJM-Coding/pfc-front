@@ -276,6 +276,17 @@ const AnimalInfoPage: React.FC = () => {
             className="adopt-button"
             onClick={handleAdoptClick}
             disabled={isRequesting}
+            aria-label={
+              isRequesting
+                ? "Demande d'accueil en cours, veuillez patienter"
+                : "Faire une demande d'accueil pour cet animal"
+            }
+            aria-busy={isRequesting} // Indique que l'action est en cours
+            title={
+              isRequesting
+                ? "Envoi en cours, veuillez patienter"
+                : "Faire une demande d'accueil pour cet animal"
+            }
           >
             <span className="desktop-text">
               {isRequesting

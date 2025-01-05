@@ -4,7 +4,7 @@ import { GetFamilyAsks, DeleteAsk } from "../../api/ask.api";
 import type { IAsk } from "../../@types/ask";
 import AuthContext from "../../contexts/authContext";
 import Toast from "../../components/toast/toast";
-import '../../styles/spaceFamily/familyAnimalsAsk.scss';
+import "../../styles/spaceFamily/familyAnimalsAsk.scss";
 import Swal from "sweetalert2";
 
 const FamilyAnimalAsk: React.FC = () => {
@@ -164,9 +164,10 @@ const FamilyAnimalAsk: React.FC = () => {
               <button
                 className="delete-button"
                 onClick={() => handleDelete(ask.id.toString())}
+                aria-label="Annuler la demande"
                 title="Annuler la demande"
               >
-                <i className="fa-solid fa-trash"></i>
+                <i className="fa-solid fa-trash" aria-hidden="true"></i>
               </button>
             )}
         </li>
@@ -190,9 +191,15 @@ const FamilyAnimalAsk: React.FC = () => {
       }}
     >
       <div className="modal-content">
-        <button className="close-modal" onClick={() => setSelectedAnimal(null)}>
+        <button
+          className="close-modal"
+          onClick={() => setSelectedAnimal(null)}
+          aria-label="Fermer la fenêtre modale"
+          title="Fermer"
+        >
           ×
         </button>
+
         {selectedAnimal && (
           <div>
             <h3>

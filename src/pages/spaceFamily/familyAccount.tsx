@@ -1,21 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  IPasswordEditForm,
-  IEmailEditForm,
-} from "../../@types/emailPassword";
-import {
-  GetFamilyById,
-  PatchFamily,
-  DeleteFamily,
-} from "../../api/family.api";
+import { IPasswordEditForm, IEmailEditForm } from "../../@types/emailPassword";
+import { GetFamilyById, PatchFamily, DeleteFamily } from "../../api/family.api";
 import AuthContext from "../../contexts/authContext";
 import { validateEmail } from "../../components/validateForm/validateForm"; // Assure-toi que cette fonction est importée
 import "../../styles/asso-fa/commun.accountPage.scss";
-import "../../styles/commun/commun.scss"
+import "../../styles/commun/commun.scss";
 import Toast from "../../components/toast/toast";
 import Swal from "sweetalert2";
-
-
 
 const familyAccount = () => {
   const { user, token } = useContext(AuthContext) || {}; // On récupère l'utilisateur et le token du contexte d'authentification
@@ -75,35 +66,35 @@ const familyAccount = () => {
   //! Mise à jour de l'email
   const handleSubmitEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const emailValidationError = validateEmail(emailFormData.newEmail);
     if (emailValidationError) {
       alert(emailValidationError);
       return;
     }
-  
+
     if (emailFormData.newEmail !== emailFormData.confirmNewEmail) {
       alert("Les nouveaux emails ne correspondent pas");
       return;
     }
-  
+
     // Créez un FormData et ajoutez l'email
     const formDataToSend = new FormData();
     formDataToSend.append("email", emailFormData.newEmail);
-  
+
     try {
       if (!familyId || !token) {
         throw new Error("Identifiant ou token manquant");
       }
-  
+
       await PatchFamily(familyId, formDataToSend, token);
-  
+
       setToastMessage(
         "Email mis à jour avec succès ! Veuillez vous reconnecter."
       );
       setToastType("success");
       setShowToast(true);
-  
+
       // Déconnexion après mise à jour de l'email
       localStorage.removeItem("sessionToken");
       localStorage.removeItem("authUser");
@@ -116,35 +107,35 @@ const familyAccount = () => {
       setShowToast(true);
     }
   };
-  
+
   //! Mise à jour du mot de passe
   const handleSubmitPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
       alert("Les nouveaux mots de passe ne correspondent pas");
       return;
     }
-  
+
     // Créez un FormData et ajoutez les mots de passe
     const formDataToSend = new FormData();
     formDataToSend.append("currentPassword", passwordFormData.currentPassword);
     formDataToSend.append("newPassword", passwordFormData.newPassword);
     formDataToSend.append("confirmPassword", passwordFormData.confirmPassword);
-  
+
     try {
       if (!familyId || !token) {
         throw new Error("Identifiant ou token manquant");
       }
-  
+
       await PatchFamily(familyId, formDataToSend, token);
-  
+
       setToastMessage(
         "Mot de passe mis à jour avec succès ! Veuillez vous reconnecter."
       );
       setToastType("success");
       setShowToast(true);
-  
+
       // Déconnexion après mise à jour du mot de passe
       localStorage.removeItem("sessionToken");
       localStorage.removeItem("authUser");
@@ -157,63 +148,60 @@ const familyAccount = () => {
       setShowToast(true);
     }
   };
-  
+
   if (!familyId) {
     return <p>Erreur : Aucun ID d'family disponible.</p>;
   }
 
   //! Suppression du compte avec confirmation
-//! Suppression du compte avec confirmation via SweetAlert2
-const handleDeleteAccount = async (e: React.FormEvent) => {
-  e.preventDefault();
+  //! Suppression du compte avec confirmation via SweetAlert2
+  const handleDeleteAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  //! Utilisation de SweetAlert2 pour la confirmation
-  const result = await Swal.fire({
-    title: "Confirmer la suppression",
-    text: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
-    cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
-    confirmButtonText: "Oui, supprimer",
-    cancelButtonText: "Non, revenir",
-  });
+    //! Utilisation de SweetAlert2 pour la confirmation
+    const result = await Swal.fire({
+      title: "Confirmer la suppression",
+      text: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // Rouge pour le bouton de confirmation
+      cancelButtonColor: "#3085d6", // Bleu pour le bouton d'annulation
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Non, revenir",
+    });
 
-  //! Si l'utilisateur annule la suppression
-  if (!result.isConfirmed) {
-    return;
-  }
-
-  //! Si l'utilisateur confirme, on procède à la suppression
-  try {
-    if (!familyId || !token) {
-      setError("Erreur : Identifiant ou token manquant");
+    //! Si l'utilisateur annule la suppression
+    if (!result.isConfirmed) {
       return;
     }
 
-    // Appel API pour supprimer la famille
-    await DeleteFamily(familyId, token);
-    setToastMessage("Compte supprimé avec succès");
-    setToastType("success");
-    setShowToast(true);
+    //! Si l'utilisateur confirme, on procède à la suppression
+    try {
+      if (!familyId || !token) {
+        setError("Erreur : Identifiant ou token manquant");
+        return;
+      }
 
-    // Déconnexion de l'utilisateur après suppression du compte
-    localStorage.removeItem("sessionToken");
-    localStorage.removeItem("authUser");
+      // Appel API pour supprimer la famille
+      await DeleteFamily(familyId, token);
+      setToastMessage("Compte supprimé avec succès");
+      setToastType("success");
+      setShowToast(true);
 
-    // Redirection après un délai
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 2000);
-  } catch (err) {
-    setToastMessage("Erreur lors de la suppression du compte.");
-    setToastType("error");
-    setShowToast(true);
-  }
-};
+      // Déconnexion de l'utilisateur après suppression du compte
+      localStorage.removeItem("sessionToken");
+      localStorage.removeItem("authUser");
 
-  
-  
+      // Redirection après un délai
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    } catch (err) {
+      setToastMessage("Erreur lors de la suppression du compte.");
+      setToastType("error");
+      setShowToast(true);
+    }
+  };
 
   return (
     <div className="containerAccount">
@@ -267,7 +255,12 @@ const handleDeleteAccount = async (e: React.FormEvent) => {
               />
             </div>
 
-            <button onClick={handleSubmitEmail} className="submit-btn">
+            <button
+              onClick={handleSubmitEmail}
+              className="submit-btn"
+              aria-label="Sauvegarder l'adresse email"
+              title="Sauvegarder l'email"
+            >
               Sauvegarder l'email
             </button>
           </div>
@@ -322,7 +315,12 @@ const handleDeleteAccount = async (e: React.FormEvent) => {
               />
             </div>
 
-            <button onClick={handleSubmitPassword} className="submit-btn">
+            <button
+              onClick={handleSubmitPassword}
+              className="submit-btn"
+              aria-label="Sauvegarder le mot de passe"
+              title="Sauvegarder le mot de passe"
+            >
               Sauvegarder le mot de passe
             </button>
           </div>
@@ -334,19 +332,32 @@ const handleDeleteAccount = async (e: React.FormEvent) => {
 
             {!isConfirmed ? (
               // Si la confirmation n'est pas encore faite, afficher le bouton de suppression
-              <button onClick={handleDeleteAccount} className="delete-btn">
+              <button
+                onClick={handleDeleteAccount}
+                className="delete-btn"
+                aria-label="Supprimer définitivement votre compte"
+                title="Supprimer mon compte"
+              >
                 Supprimer mon compte
               </button>
             ) : (
               // Si l'utilisateur a cliqué pour confirmer la suppression, afficher la confirmation
               <div>
                 <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
-                <button onClick={handleDeleteAccount} className="delete-btn">
+                <button
+                  onClick={handleDeleteAccount}
+                  className="delete-btn"
+                  aria-label="Confirmer définitivement la suppression de votre compte"
+                  title="Confirmer la suppression"
+                >
                   Confirmer la suppression
                 </button>
+
                 <button
                   onClick={() => setIsConfirmed(false)}
                   className="cancel-btn"
+                  aria-label="Annuler l'action en cours"
+                  title="Annuler"
                 >
                   Annuler
                 </button>
