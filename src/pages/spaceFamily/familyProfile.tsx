@@ -403,26 +403,7 @@ const toggleEdit = () => {
                 />
               </div>
 
-              {/* city */}
-              <div className="infoFieldContainer row">
-                <label className="infoLabel" htmlFor="city">
-                  Ville
-                </label>
-                <input
-                  className="infoInput"
-                  type="text"
-                  id="city"
-                  value={formData?.city || ""}
-                  required
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      city: e.target.value,
-                    })
-                  }
-                  disabled={!isEditable}
-                />
-              </div>
+          
 
               {/* postal_code */}
               <div className="infoFieldContainer row">
@@ -446,6 +427,27 @@ const toggleEdit = () => {
                 {postalCodeError && (
                   <Message message={postalCodeError} type="error" />
                 )}
+              </div>
+
+                  {/* city */}
+                  <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="city">
+                  Ville
+                </label>
+                <input
+                  className="infoInput"
+                  type="text"
+                  id="city"
+                  value={formData?.city || ""}
+                  required
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      city: e.target.value,
+                    })
+                  }
+                  disabled={!isEditable}
+                />
               </div>
 
               {/* number_of_children */}

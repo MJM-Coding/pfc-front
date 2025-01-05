@@ -31,14 +31,7 @@ const Footer: React.FC = () => {
 
         {/* Liens */}
         <div className="footer-links">
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            Contact
-          </NavLink>
+     
           <NavLink
             to="/a-propos"
             className={({ isActive }) =>

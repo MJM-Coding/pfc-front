@@ -374,22 +374,7 @@ function AssociationProfile() {
               />
             </div>
 
-            {/* Ville */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="city">
-                Ville
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="city"
-                value={formData?.city || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
-                }
-                disabled={!isEditable}
-              />
-            </div>
+            
 
             {/* Code postal */}
             <div className="infoFieldContainer row">
@@ -409,6 +394,23 @@ function AssociationProfile() {
               {postalCodeError && (
                 <Message message={postalCodeError} type="error" />
               )}
+            </div>
+            
+            {/* Ville */}
+            <div className="infoFieldContainer row">
+              <label className="infoLabel" htmlFor="city">
+                Ville
+              </label>
+              <input
+                className="infoInput"
+                type="text"
+                id="city"
+                value={formData?.city || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                disabled={!isEditable}
+              />
             </div>
 
             {/* Description */}

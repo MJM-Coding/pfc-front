@@ -28,7 +28,7 @@ const AnimalsListPage: React.FC = () => {
     Taille: [],
     Localisation: [],
     Age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"],
-    Sexe: ["Mâle", "Femelle"],
+    Genre: ["Mâle", "Femelle"],
     "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
   });
 
@@ -56,7 +56,7 @@ const AnimalsListPage: React.FC = () => {
             )
           ).filter(Boolean),
           Age: ["Moins de 2 ans", "Entre 2 et 7 ans", "Plus de 7 ans"],
-          Sexe: ["Mâle", "Femelle"],
+          Genre: ["Mâle", "Femelle"],
           "Date de publication": ["Moins de 1 mois", "Entre 1 et 3 mois", "Plus de 3 mois"],
         });
       } catch (error) {
@@ -100,11 +100,31 @@ const AnimalsListPage: React.FC = () => {
         filtered = filtered.filter((a) => a.age > 7);
       }
     }
-    if (filters.Sexe) {
+    if (filters.Genre) {
       filtered = filtered.filter((a) =>
-        filters.Sexe === "Mâle" ? a.gender === "M" : a.gender === "F"
+        filters.Genre === "Mâle" ? a.gender === "M" : a.gender === "F"
       );
     }
+     // Filtrer par date de création (created_at)
+  if (filters["Date de publication"]) {
+    const now = new Date();
+    filtered = filtered.filter((a) => {
+      const creationDate = new Date(a.created_at); // Utilise created_at pour le filtrage
+      const diffInMonths =
+        (now.getFullYear() - creationDate.getFullYear()) * 12 +
+        (now.getMonth() - creationDate.getMonth());
+
+      if (filters["Date de publication"] === "Moins de 1 mois") {
+        return diffInMonths < 1;
+      } else if (filters["Date de publication"] === "Entre 1 et 3 mois") {
+        return diffInMonths >= 1 && diffInMonths <= 3;
+      } else if (filters["Date de publication"] === "Plus de 3 mois") {
+        return diffInMonths > 3;
+      }
+
+      return true;
+    });
+  }
 
     if (searchQuery) {
       filtered = filtered.filter((animal) =>
