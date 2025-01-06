@@ -16,6 +16,7 @@ import { validateForm } from "../../components/validateForm/validateForm";
 import "../../components/validateForm/validateForm.scss";
 import Swal from "sweetalert2";
 import { compressImage } from "../../utils/compressImage";
+import { validateRNAapi } from "../../api/validateRNA.api";
 
 function AssociationProfile() {
   const { user, token } = useContext(AuthContext) || {};
@@ -41,6 +42,7 @@ function AssociationProfile() {
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
   const defaultImage = "/images/profileAssociation.jpeg";
+  const [isRNAValid, setIsRNAValid] = useState<boolean | null>(null); // `null` = non vérifié, `true` = valide, `false` = invalide
 
   //! Charger les données de l'association
   useEffect(() => {
@@ -187,11 +189,8 @@ function AssociationProfile() {
   //! Gérer la soumission du formulaire sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    setPhoneError("");
-    setPostalCodeError("");
-    setRnaNumberError("");
-
+  
+    // Valider tous les champs
     const errors = validateForm(
       {
         ...formData,
@@ -201,58 +200,50 @@ function AssociationProfile() {
       },
       ["postal_code", "phone", "rna_number"]
     );
-
-    if (Object.keys(errors).length > 0) {
-      if (errors.postal_code) setPostalCodeError(errors.postal_code);
-      if (errors.phone) setPhoneError(errors.phone);
-      if (errors.rna_number) setRnaNumberError(errors.rna_number);
-      return;
+  
+    // Mettre à jour les erreurs pour chaque champ
+    setPostalCodeError(errors.postal_code || "");
+    setPhoneError(errors.phone || "");
+    setRnaNumberError(errors.rna_number || "");
+  
+    // Bloquer la soumission si une erreur existe
+    if (Object.keys(errors).length > 0 || isRNAValid === false) {
+      setToastMessage("Veuillez corriger toutes les erreurs avant de soumettre.");
+      setToastType("error");
+      setShowToast(true);
+      return; // Bloque la soumission
     }
-
-    const formDataToSend = new FormData();
-
-    formDataToSend.append("address", formData?.address || "");
-    formDataToSend.append("city", formData?.city || "");
-    formDataToSend.append("description", formData?.description || "");
-    formDataToSend.append("representative", formData?.representative || "");
-    formDataToSend.append("rna_number", formData?.rna_number || "");
-    formDataToSend.append("phone", formData?.phone || "");
-    formDataToSend.append("postal_code", formData?.postal_code || "");
-
-    // Ajouter les champs user dans le FormData
-    formDataToSend.append("firstname", formData?.user?.firstname || "");
-    formDataToSend.append("lastname", formData?.user?.lastname || "");
-
+  
     try {
-      // Appel API pour mettre à jour l'association
-      await PatchAssociation(
-        associationId as number,
-        formDataToSend,
-        token as string
-      );
-
-      const refreshAssociation = await GetAssociationById(
-        Number(associationId),
-        token as string
-      );
-
-      // Mise à jour des données locales
+      const formDataToSend = new FormData();
+      formDataToSend.append("address", formData?.address || "");
+      formDataToSend.append("city", formData?.city || "");
+      formDataToSend.append("description", formData?.description || "");
+      formDataToSend.append("representative", formData?.representative || "");
+      formDataToSend.append("rna_number", formData?.rna_number || "");
+      formDataToSend.append("phone", formData?.phone || "");
+      formDataToSend.append("postal_code", formData?.postal_code || "");
+      formDataToSend.append("firstname", formData?.user?.firstname || "");
+      formDataToSend.append("lastname", formData?.user?.lastname || "");
+  
+      await PatchAssociation(associationId as number, formDataToSend, token as string);
+  
+      const refreshAssociation = await GetAssociationById(Number(associationId), token as string);
       setAssociationData(refreshAssociation);
       setFormData(refreshAssociation);
-
-      // Notification de succès
+  
       setToastMessage("Mise à jour réussie !");
       setToastType("success");
       setShowToast(true);
       setIsEditable(false);
     } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.message || error.message || "Erreur inconnue.";
+      const errorMessage = error?.response?.data?.message || error.message || "Erreur inconnue.";
       setToastMessage(errorMessage);
       setToastType("error");
       setShowToast(true);
     }
   };
+  
 
   //! Basculer le mode édition
   const toggleEdit = () => {
@@ -317,18 +308,56 @@ function AssociationProfile() {
               </div>
 
               {/* Numéro RNA */}
+
               <div className="infoFieldContainer row">
                 <label className="infoLabel" htmlFor="rna_number">
                   Numéro RNA
                 </label>
                 <input
-                  className="infoInput"
+                  className={`infoInput ${
+                    rnaNumberError || isRNAValid === false ? "inputError" : ""
+                  }`}
                   type="text"
                   id="rna_number"
                   value={formData?.rna_number || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, rna_number: e.target.value })
-                  }
+                  onChange={(e) => {
+                    const newRnaNumber = e.target.value.toUpperCase(); // Normaliser en majuscule
+                    setFormData({ ...formData, rna_number: newRnaNumber });
+
+                    // Valider le format RNA localement
+                    const errors = validateForm(
+                      { ...formData, rna_number: newRnaNumber },
+                      ["rna_number"]
+                    );
+                    setRnaNumberError(errors.rna_number || "");
+
+                    // Si le format est valide, vérifier via l'API
+                    if (!errors.rna_number) {
+                      validateRNAapi(newRnaNumber)
+                        .then((validationResult) => {
+                          if (!validationResult.valid) {
+                            setIsRNAValid(false); // Le RNA n'est pas valide selon l'API
+                            setRnaNumberError(
+                              validationResult.error ||
+                                "Ce numéro RNA n'est pas répertorié dans le registre des associations."
+                            );
+                          } else {
+                            setIsRNAValid(true); // Le RNA est valide
+                            setRnaNumberError(""); // Pas d'erreur si valide
+                          }
+                        })
+                        .catch((error) => {
+                          console.error(
+                            "Erreur de validation du numéro RNA :",
+                            error
+                          );
+                          setIsRNAValid(false); // Considérer comme invalide en cas d'erreur
+                          setRnaNumberError(
+                            "Erreur lors de la vérification du numéro RNA."
+                          );
+                        });
+                    }
+                  }}
                   disabled={!isEditable}
                 />
                 {rnaNumberError && (
@@ -342,54 +371,68 @@ function AssociationProfile() {
                   Téléphone
                 </label>
                 <input
-                  className="infoInput"
+                  className={`infoInput ${phoneError ? "inputError" : ""}`}
                   type="tel"
                   id="phone"
                   value={formData?.phone || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
+                  onChange={(e) => {
+                    const newPhone = e.target.value;
+                    setFormData({ ...formData, phone: newPhone });
+
+                    const errors = validateForm(
+                      { ...formData, phone: newPhone },
+                      ["phone"]
+                    );
+                    setPhoneError(errors.phone || "");
+                  }}
                   disabled={!isEditable}
                 />
                 {phoneError && <Message message={phoneError} type="error" />}
               </div>
-            </div>
 
-            {/* Adresse */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="address">
-                Adresse
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="address"
-                value={formData?.address || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
-                disabled={!isEditable}
-              />
-            </div>
+              {/* Adresse */}
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="address">
+                  Adresse
+                </label>
+                <input
+                  className="infoInput"
+                  type="text"
+                  id="address"
+                  value={formData?.address || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
+                  disabled={!isEditable}
+                />
+              </div>
 
-            {/* Code postal */}
-            <div className="infoFieldContainer row">
-              <label className="infoLabel" htmlFor="postal_code">
-                Code postal
-              </label>
-              <input
-                className="infoInput"
-                type="text"
-                id="postal_code"
-                value={formData?.postal_code || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, postal_code: e.target.value })
-                }
-                disabled={!isEditable}
-              />
-              {postalCodeError && (
-                <Message message={postalCodeError} type="error" />
-              )}
+              {/* Code postal */}
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="postal_code">
+                  Code postal
+                </label>
+                <input
+                  className={`infoInput ${postalCodeError ? "inputError" : ""}`}
+                  type="text"
+                  id="postal_code"
+                  value={formData?.postal_code || ""}
+                  onChange={(e) => {
+                    const newPostalCode = e.target.value;
+                    setFormData({ ...formData, postal_code: newPostalCode });
+
+                    const errors = validateForm(
+                      { ...formData, postal_code: newPostalCode },
+                      ["postal_code"]
+                    );
+                    setPostalCodeError(errors.postal_code || "");
+                  }}
+                  disabled={!isEditable}
+                />
+                {postalCodeError && (
+                  <Message message={postalCodeError} type="error" />
+                )}
+              </div>
             </div>
 
             {/* Ville */}
@@ -457,8 +500,6 @@ function AssociationProfile() {
               >
                 {isEditable ? "Annuler" : "Modifier"}
               </button>
-
-              
             </div>
           </form>
         </div>

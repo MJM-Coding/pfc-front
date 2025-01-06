@@ -29,6 +29,7 @@ import FamilyAccount from "./pages/spaceFamily/familyAccount"; // page du compte
 import FamilyAnimalsAsk from "./pages/spaceFamily/familyAnimalsAsk"; // page de la liste des demandes d'accueil
 
 import Footer from "./components/footer/footer";
+import AboutPage from "./pages/aboutPage/aboutPage";
 
 const App: React.FC = () => {
   return (
@@ -62,6 +63,7 @@ const App: React.FC = () => {
         <Route path="/espace-famille/mon-compte/:familyId" element={<FamilyAccount />} /> {/* page du compte de la famille*/}
         <Route path="/espace-famille/demandes-famille/:familyId" element={<FamilyAnimalsAsk />} /> {/* page récapitulatif des demandes accueil famille*/}
 
+        <Route path="/a-propos" element={<AboutPage />} /> {/* Page à propos*/}
         <Route path="*" element={<NotFoundPage />} />   {/* Route pour la page 404 */}
 
       </Routes>

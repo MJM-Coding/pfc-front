@@ -191,9 +191,11 @@ function FamilyProfile() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    // Réinitialiser les erreurs actuelles
     setPhoneError("");
     setPostalCodeError("");
 
+    // Valider tous les champs nécessaires
     const errors = validateForm(
       {
         ...formData,
@@ -203,15 +205,21 @@ function FamilyProfile() {
       ["postal_code", "phone"]
     );
 
+    // Mettre à jour les erreurs pour chaque champ
+    setPostalCodeError(errors.postal_code || "");
+    setPhoneError(errors.phone || "");
+
+    // Bloquer la soumission si des erreurs existent
     if (Object.keys(errors).length > 0) {
-      if (errors.postal_code) setPostalCodeError(errors.postal_code);
-      if (errors.phone) setPhoneError(errors.phone);
+      setToastMessage("Veuillez corriger les erreurs avant de soumettre.");
+      setToastType("error");
+      setShowToast(true);
       return;
     }
 
+    // Soumettre les données si tout est valide
     const formDataToSend = new FormData();
 
-    // Ajouter les champs simples
     formDataToSend.append("address", formData?.address || "");
     formDataToSend.append("city", formData?.city || "");
     formDataToSend.append("description", formData?.description || "");
@@ -226,8 +234,6 @@ function FamilyProfile() {
     );
     formDataToSend.append("phone", formData?.phone || "");
     formDataToSend.append("postal_code", formData?.postal_code || "");
-
-    // Ajouter les champs user dans le FormData
     formDataToSend.append("firstname", formData?.user?.firstname || "");
     formDataToSend.append("lastname", formData?.user?.lastname || "");
 
@@ -365,17 +371,21 @@ function FamilyProfile() {
                   Téléphone
                 </label>
                 <input
-                  className="infoInput"
+                  className={`infoInput ${phoneError ? "inputError" : ""}`}
                   type="tel"
                   id="phone"
                   value={formData?.phone || ""}
                   required
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      phone: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const newPhone = e.target.value;
+                    setFormData({ ...formData, phone: newPhone });
+
+                    const errors = validateForm(
+                      { ...formData, phone: newPhone },
+                      ["phone"]
+                    );
+                    setPhoneError(errors.phone || "");
+                  }}
                   disabled={!isEditable}
                 />
                 {phoneError && <Message message={phoneError} type="error" />}
@@ -408,17 +418,21 @@ function FamilyProfile() {
                   Code postal
                 </label>
                 <input
-                  className="infoInput"
+                  className={`infoInput ${postalCodeError ? "inputError" : ""}`}
                   type="text"
                   id="postal_code"
                   value={formData?.postal_code || ""}
                   required
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      postal_code: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const newPostalCode = e.target.value;
+                    setFormData({ ...formData, postal_code: newPostalCode });
+
+                    const errors = validateForm(
+                      { ...formData, postal_code: newPostalCode },
+                      ["postal_code"]
+                    );
+                    setPostalCodeError(errors.postal_code || "");
+                  }}
                   disabled={!isEditable}
                 />
                 {postalCodeError && (

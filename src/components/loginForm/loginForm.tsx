@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { SigninUser } from "../../api/signin.api"; // Import de la fonction pour l'authentification
 import { IAuthContext } from "../../@types/auth"; // Import du type pour le contexte d'authentification
 import "./loginForm.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Défini le type des props pour LoginForm
 interface ILoginFormProps {
@@ -16,6 +16,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ login, onClose }) => {
   const [password, setPassword] = useState(""); // Stocke le mot de passe saisi par l'utilisateur
   const [errorMessage, setErrorMessage] = useState(""); // Message d'erreur à afficher en cas d'échec
   const [isLoading, setIsLoading] = useState(false); // Indique si une action est en cours
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Empêche le rechargement de la page
@@ -26,6 +27,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ login, onClose }) => {
 
       console.log(userData); // Debug : Affiche les données de l'utilisateur connecté
       login(userData.token ?? "", userData.user); // Appelle la fonction login passée en prop
+      navigate("/"); // Redirige vers la page d'accueil
       onClose(); // Ferme la modal après la connexion réussie
       setIsLoading(false); // Désactive l'état de chargement
     } catch (error: any) {

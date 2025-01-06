@@ -197,6 +197,20 @@
   }
 }
 
+/* ==========================================================
+        CHMAP RNA INVALIDE
+    ========================================================== */
+  .inputError {
+      border: 2px solid red;
+      border-radius: 4px; /* Ajout d'un arrondi pour un style harmonieux */
+      box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Optionnel : ombre rouge */
+    }
+    
+    .errorMessage {
+      color: red;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
 
 .uploadMessage {
   margin-top: 8px;

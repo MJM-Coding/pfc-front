@@ -1,0 +1,167 @@
+@use "../../styles/commun/commun.scss";
+@use "../../styles/commun/variable.scss";
+
+
+// Variables
+$about-color-primary: #ff6f61; // Couleur d'accent
+$about-color-secondary: #444; // Couleur secondaire
+$about-color-background: #ffffff; // Couleur de fond
+$about-color-text: #333; // Couleur du texte principal
+$about-color-muted: #666; // Couleur du texte secondaire
+
+
+
+.about-page {
+  height: auto;
+  color: $about-color-text;
+
+  // Image de couverture
+  .hero-image {
+    position: relative;
+    width: 100%;
+    height: 200px; // Taille par défaut pour mobile
+    background-image: url('/images/about3.webp');
+    background-size: cover;
+    background-position: center;
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3); // Transparence ajustée pour le contraste
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .hero-title {
+        color: white;
+        font-size: 2rem; // Taille adaptée pour mobile
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); // Ombre légère
+      }
+    }
+  }
+
+  // Conteneur principal
+  .container {
+    max-width: 100%; // S'adapte à l'écran mobile
+    margin: 20px auto;
+    padding: 20px 10px;
+    background-color: $about-color-background;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Ombre plus subtile pour mobile
+
+    .about-section {
+      margin-bottom: 30px;
+
+      h2 {
+        font-size: 1.5rem; // Taille ajustée pour mobile
+        color: $about-color-secondary;
+        margin-bottom: 10px;
+        position: relative;
+        font-weight: 600;
+
+        &::after {
+          content: "";
+          display: block;
+          width: 50px;
+          height: 3px;
+          background-color: $about-color-primary;
+          margin-top: 8px;
+        }
+      }
+
+      p {
+        font-size: 1rem; // Taille plus petite pour mobile
+        color: $about-color-muted;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      ul {
+        margin: 10px 0;
+        padding-left: 20px;
+
+        li {
+          font-size: 1rem;
+          color: $about-color-text;
+          margin-bottom: 10px;
+
+          &::before {
+            content: "✔";
+            color: $about-color-primary;
+            font-size: 1.2rem;
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  // Breakpoints pour les tablettes
+  @media (min-width: variable.$breakpoint-tablet) {
+    .hero-image {
+      height: 300px; // Augmentation de la taille pour les tablettes
+
+      .overlay .hero-title {
+        font-size: 2.5rem; // Texte plus grand
+        letter-spacing: 1.5px;
+      }
+    }
+
+    .container {
+      max-width: 90%; // Réduction des marges latérales
+      padding: 30px 20px;
+
+      .about-section {
+        h2 {
+          font-size: 1.8rem; // Taille augmentée
+        }
+
+        p {
+          font-size: 1.1rem;
+        }
+
+        ul li {
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+
+  // Breakpoints pour les PC
+  @media (min-width: variable.$breakpoint-desktop) {
+    .hero-image {
+      height: 400px; // Image plus grande pour les grands écrans
+
+      .overlay .hero-title {
+        font-size: 3rem; // Texte encore plus grand
+        letter-spacing: 2px;
+      }
+    }
+
+    .container {
+      max-width: 800px; // Conteneur centré et plus étroit
+      padding: 40px 30px;
+
+      .about-section {
+        h2 {
+          font-size: 2rem; // Texte plus large
+        }
+
+        p {
+          font-size: 1.2rem; // Texte plus confortable pour les grands écrans
+        }
+
+        ul li {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+}
