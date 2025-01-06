@@ -34,7 +34,7 @@ const signup_assoPage = () => {
   });
 
   // State pour les messages d'erreur et de succès
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, _setErrorMessage] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
   const [rnaNumberError, setRnaNumberError] = useState<string>("");
