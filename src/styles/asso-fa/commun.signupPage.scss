@@ -14,6 +14,16 @@
   align-items: center;
 }
 
+/* ==========================================================
+        CHMAP RNA INVALIDE
+    ========================================================== */
+.inputConnexionPage.inputError {
+  border: 2px solid red;
+  border-radius: 4px; /* Ajout d'un arrondi pour un style harmonieux */
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Optionnel : ombre rouge */
+}
+
+
 
 // =============================
 // Style du formulaire d'inscription

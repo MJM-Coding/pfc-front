@@ -13,6 +13,7 @@ import {
   validatePassword,
 } from "../../components/validateForm/validateForm";
 import "../../components/validateForm/validateForm.scss"; // css des message erreur en temps réel
+import { validateRNAapi } from "../../api/validateRNA.api";
 
 const signup_assoPage = () => {
   //! State pour gérer les données du formulaire
@@ -53,6 +54,8 @@ const signup_assoPage = () => {
   // state pour griser le bouton de soumission
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [isRnaInvalid, setIsRnaInvalid] = useState(false);
+
   //! Fonction pour gérer les changements dans les champs du formulaire
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -88,7 +91,8 @@ const signup_assoPage = () => {
       }
 
       if (name === "rna_number") {
-        const normalizedRnaNumber = value.toUpperCase(); // Convertir en majuscule
+        setIsRnaInvalid(false); // Réinitialiser l'état d'erreur
+        const normalizedRnaNumber = value.toUpperCase();
         const rnaNumberError = validateRNA(normalizedRnaNumber);
         setRnaNumberError(rnaNumberError || "");
       }
@@ -127,74 +131,71 @@ const signup_assoPage = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
-
-    // Affichage du formulaire et des erreurs dans la console
-    console.log("formData", formData);
-    console.log("rnaNumberError", rnaNumberError);
-
-    // Réinitialiser les messages d'erreur avant la soumission
-    setPhoneError("");
-    setPostalCodeError("");
-    setEmailError("");
-    setPasswordError("");
-    setPasswordConfirmationError("");
-    setRnaNumberError("");
-
-    // Utilisation de validateForm pour valider tous les champs nécessaires
-    const errors = validateForm(
-      {
-        ...formData,
-        postal_code: formData.association.postal_code,
-        phone: formData.association.phone,
-        email: formData.email,
-        rna_number: formData.association.rna_number,
-        password: formData.password,
-      },
-      ["postal_code", "phone", "email", "rna_number", "password"]
-    );
-
-    // Vérifier s'il y a des erreurs
-    if (Object.keys(errors).length > 0) {
-      // Gérer les erreurs
-      if (errors.postal_code) {
-        setPostalCodeError(errors.postal_code);
-      }
-      if (errors.phone) {
-        setPhoneError(errors.phone);
-      }
-      if (errors.email) {
-        setEmailError(errors.email);
-      }
-      if (errors.rna_number) {
-        setRnaNumberError(errors.rna_number);
-      }
-      if (errors.password) {
-        setPasswordError(errors.password);
-      }
-      setIsSubmitting(false);
-      return; // Sortir si des erreurs existent
-    }
-
-    //! Envoi des données au Backend
+  
     try {
+      // Validation du numéro RNA
+      const rnaNumber = formData.association.rna_number.trim().toUpperCase();
+      const validationResult = await validateRNAapi(rnaNumber);
+  
+      if (!validationResult.valid) {
+        // Mettre à jour l'erreur sous le champ RNA
+        setRnaNumberError(
+          validationResult.error ||
+            "Ce numéro RNA n'est pas répertorié dans le registre des associations."
+        );
+        setIsRnaInvalid(true); // Champ RNA invalide
+        setIsSubmitting(false);
+        return; // Sortir de la fonction si le RNA est invalide
+      }
+  
+      // Réinitialiser les messages d'erreur
+      setIsRnaInvalid(false);
+      setRnaNumberError("");
+      setPhoneError("");
+      setPostalCodeError("");
+      setEmailError("");
+      setPasswordError("");
+      setPasswordConfirmationError("");
+  
+      // Utilisation de validateForm pour valider tous les champs nécessaires
+      const errors = validateForm(
+        {
+          ...formData,
+          postal_code: formData.association.postal_code,
+          phone: formData.association.phone,
+          email: formData.email,
+          rna_number: formData.association.rna_number,
+          password: formData.password,
+        },
+        ["postal_code", "phone", "email", "rna_number", "password"]
+      );
+  
+      if (Object.keys(errors).length > 0) {
+        // Gérer les erreurs sous chaque champ
+        if (errors.postal_code) setPostalCodeError(errors.postal_code);
+        if (errors.phone) setPhoneError(errors.phone);
+        if (errors.email) setEmailError(errors.email);
+        if (errors.rna_number) {
+          setRnaNumberError(errors.rna_number);
+          setIsRnaInvalid(true);
+        }
+        if (errors.password) setPasswordError(errors.password);
+        setIsSubmitting(false);
+        return; // Sortir si des erreurs existent
+      }
+  
+      //! Envoi des données au Backend
       const { passwordConfirmation, ...dataToSend } = formData;
-      await CreateUser(dataToSend); // CreateUser est la fonction dans user.api.tsx
-
-      //! Affichage du message de success avec Toast
-
+      await CreateUser(dataToSend);
+  
+      //! Affichage du message de succès avec Toast
       setToastMessage(
         "Félicitations, votre inscription est presque terminée ! Vérifiez votre boîte mail pour confirmer votre adresse et activer votre compte."
       );
       setToastType("success");
-      setShowToast(true); // Ajout de cette ligne pour afficher le toast
-      setIsSubmitting(false);
-
-      // Retarder la redirection de 5 secondes (5000ms)
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 4000); // 5000ms = 5 secondes
-
-      //!  Reinitialisation du formulaire après soumission résussie
+      setShowToast(true);
+  
+      // Réinitialisation du formulaire après soumission réussie
       setFormData({
         firstname: "",
         lastname: "",
@@ -210,26 +211,35 @@ const signup_assoPage = () => {
           representative: "",
         },
       });
-
-      // Reinitialisation des messages d'erreur
-      setErrorMessage("");
-      setPhoneError("");
-      setPostalCodeError("");
-      setRnaNumberError("");
+  
+      setTimeout(() => {
+        // Redirection vers la page d'accueil après succès
+        window.location.href = "/";
+      }, 4000);
     } catch (error: any) {
-      //! Affichage du message d'erreur avec Toast
-
-      const errorMessage =
-        error?.response?.data?.message ||
-        `Une erreur s'est produite lors de l'inscription: ${error.message}`;
-      setIsSubmitting(false);
-      setToastMessage(`errorMessage : ${errorMessage}`);
-      setToastType("error");
-      setShowToast(true);
+      // Vérifie si l'erreur provient de l'existence du RNA dans la BDD
+      const isRNAError =
+        error?.response?.data?.message &&
+        error.response.data.message.includes(
+          "Ce numéro RNA est déjà associé à un compte existant"
+        );
+  
+      if (isRNAError) {
+        setRnaNumberError("Ce numéro RNA est déjà associé à un compte existant.");
+        setIsRnaInvalid(true); // Champ RNA invalide
+      } else {
+        const errorMessage =
+          error?.response?.data?.message ||
+          `Une erreur s'est produite lors de l'inscription: ${error.message}`;
+        setToastMessage(errorMessage);
+        setToastType("error");
+        setShowToast(true);
+      }
     } finally {
       setIsSubmitting(false); // Réactive le bouton après succès ou échec
     }
   };
+  
 
   //! Affichage du formulaire d'inscription
   return (
@@ -357,7 +367,9 @@ const signup_assoPage = () => {
                     RNA
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      isRnaInvalid ? "inputError" : ""
+                    }`}
                     type="text"
                     name="rna_number"
                     id="rna_number"
@@ -441,7 +453,7 @@ const signup_assoPage = () => {
                     <p className="errorMessage">{passwordConfirmationError}</p>
                   )}
                 </div>
-                
+
                 {/* Bouton de validation */}
                 <button
                   type="submit"
