@@ -34,7 +34,7 @@ $itemCard-hover: #27586E;
   width: 150px; /* Largeur fixe pour mobile */
   
   /* Hauteur automatique pour s'adapter au contenu */
-  height: auto;
+  min-height: 280px;
 
   &:hover {
     transform: translateY(-5px);

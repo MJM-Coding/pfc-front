@@ -137,7 +137,7 @@ $about-color-muted: #666; // Couleur du texte secondaire
   // Breakpoints pour les PC
   @media (min-width: variable.$breakpoint-desktop) {
     .hero-image {
-      height: 400px; // Image plus grande pour les grands écrans
+      height: 350px; // Image plus grande pour les grands écrans
 
       .overlay .hero-title {
         font-size: 3rem; // Texte encore plus grand

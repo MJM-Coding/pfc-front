@@ -39,7 +39,7 @@ const signup_assoPage = () => {
   const [postalCodeError, setPostalCodeError] = useState<string>("");
   const [rnaNumberError, setRnaNumberError] = useState<string>("");
   const [emailError, setEmailError] = useState("");
-  const [_passwordError, setPasswordError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [passwordConfirmationError, setPasswordConfirmationError] =
     useState("");
 
@@ -128,15 +128,15 @@ const signup_assoPage = () => {
   };
 
   //! Fonction de soumission du formulaire
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async  (e: FormEvent)  => {
+    e.preventDefault();
     setIsSubmitting(true);
-  
+
     try {
       // Validation du numéro RNA
       const rnaNumber = formData.association.rna_number.trim().toUpperCase();
       const validationResult = await validateRNAapi(rnaNumber);
-  
+
       if (!validationResult.valid) {
         // Mettre à jour l'erreur sous le champ RNA
         setRnaNumberError(
@@ -147,7 +147,7 @@ const signup_assoPage = () => {
         setIsSubmitting(false);
         return; // Sortir de la fonction si le RNA est invalide
       }
-  
+
       // Réinitialiser les messages d'erreur
       setIsRnaInvalid(false);
       setRnaNumberError("");
@@ -156,7 +156,7 @@ const signup_assoPage = () => {
       setEmailError("");
       setPasswordError("");
       setPasswordConfirmationError("");
-  
+
       // Utilisation de validateForm pour valider tous les champs nécessaires
       const errors = validateForm(
         {
@@ -169,7 +169,7 @@ const signup_assoPage = () => {
         },
         ["postal_code", "phone", "email", "rna_number", "password"]
       );
-  
+
       if (Object.keys(errors).length > 0) {
         // Gérer les erreurs sous chaque champ
         if (errors.postal_code) setPostalCodeError(errors.postal_code);
@@ -183,18 +183,18 @@ const signup_assoPage = () => {
         setIsSubmitting(false);
         return; // Sortir si des erreurs existent
       }
-  
+
       //! Envoi des données au Backend
       const { passwordConfirmation, ...dataToSend } = formData;
       await CreateUser(dataToSend);
-  
+
       //! Affichage du message de succès avec Toast
       setToastMessage(
         "Félicitations, votre inscription est presque terminée ! Vérifiez votre boîte mail pour confirmer votre adresse et activer votre compte."
       );
       setToastType("success");
       setShowToast(true);
-  
+
       // Réinitialisation du formulaire après soumission réussie
       setFormData({
         firstname: "",
@@ -211,7 +211,7 @@ const signup_assoPage = () => {
           representative: "",
         },
       });
-  
+
       setTimeout(() => {
         // Redirection vers la page d'accueil après succès
         window.location.href = "/";
@@ -223,9 +223,11 @@ const signup_assoPage = () => {
         error.response.data.message.includes(
           "Ce numéro RNA est déjà associé à un compte existant"
         );
-  
+
       if (isRNAError) {
-        setRnaNumberError("Ce numéro RNA est déjà associé à un compte existant.");
+        setRnaNumberError(
+          "Ce numéro RNA est déjà associé à un compte existant."
+        );
         setIsRnaInvalid(true); // Champ RNA invalide
       } else {
         const errorMessage =
@@ -239,7 +241,6 @@ const signup_assoPage = () => {
       setIsSubmitting(false); // Réactive le bouton après succès ou échec
     }
   };
-  
 
   //! Affichage du formulaire d'inscription
   return (
@@ -323,21 +324,21 @@ const signup_assoPage = () => {
                   />
                 </div>
 
-                {/* Code postal */}
                 <div className="fieldContainer">
                   <label className="labelConnexionPage" htmlFor="postal_code">
                     Code postal
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      postalCodeError ? "inputError" : ""
+                    }`} // Ajoute la classe inputError si postalCodeError contient une erreur
                     type="text"
                     name="postal_code"
                     id="postal_code"
                     value={formData.association.postal_code}
-                    onChange={handleChange}
+                    onChange={handleChange} // Met à jour le state avec la valeur du champ
                     required
                   />
-
                   {postalCodeError && (
                     <p className="errorMessage">{postalCodeError}</p>
                   )}
@@ -388,12 +389,14 @@ const signup_assoPage = () => {
                     Téléphone
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      phoneError ? "inputError" : ""
+                    }`} // Ajoute la classe inputError si phoneError contient une erreur
                     type="tel"
                     name="phone"
                     id="phone"
                     value={formData.association.phone}
-                    onChange={handleChange}
+                    onChange={handleChange} // Met à jour le state avec la valeur du champ
                     required
                   />
                   {phoneError && <p className="errorMessage">{phoneError}</p>}
@@ -405,12 +408,14 @@ const signup_assoPage = () => {
                     Email
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      emailError ? "inputError" : ""
+                    }`} // Ajoute la classe inputError si emailError contient une erreur
                     type="email"
                     name="email"
                     id="email"
                     value={formData.email}
-                    onChange={handleChange}
+                    onChange={handleChange} // Met à jour le state avec la valeur du champ
                     required
                   />
                   {emailError && <p className="errorMessage">{emailError}</p>}
@@ -422,14 +427,20 @@ const signup_assoPage = () => {
                     Mot de passe
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      passwordError ? "inputError" : ""
+                    }`} // Ajoute la classe inputError si passwordError contient une erreur
                     type="password"
                     name="password"
                     id="password"
                     value={formData.password}
-                    onChange={handleChange}
+                    onChange={handleChange} // Met à jour le state avec la valeur du champ
                     required
                   />
+                   {passwordError && (
+                    <p className="errorMessage">{passwordError}</p>
+                  )}
+                
                 </div>
 
                 {/* Confirmation du mot de passe */}
@@ -441,12 +452,14 @@ const signup_assoPage = () => {
                     Confirmer le mot de passe
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      passwordConfirmationError ? "inputError" : ""
+                    }`} // Ajoute la classe inputError si passwordConfirmationError contient une erreur
                     type="password"
                     name="passwordConfirmation"
                     id="passwordConfirmation"
                     value={formData.passwordConfirmation}
-                    onChange={handleChange}
+                    onChange={handleChange} // Met à jour le state avec la valeur du champ
                     required
                   />
                   {passwordConfirmationError && (

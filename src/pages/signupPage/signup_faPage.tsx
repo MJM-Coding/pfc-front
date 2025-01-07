@@ -32,7 +32,7 @@ const Signup_faPage = () => {
   const [phoneError, setPhoneError] = useState<string>("");
   const [postalCodeError, setPostalCodeError] = useState<string>("");
   const [emailError, setEmailError] = useState("");
-  const [_passwordError, setPasswordError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [passwordConfirmationError, setPasswordConfirmationError] =
     useState("");
 
@@ -243,14 +243,14 @@ const Signup_faPage = () => {
                     required
                   />
                 </div>
-
-                {/* Code postal */}
                 <div className="fieldContainer">
                   <label className="labelConnexionPage" htmlFor="postal_code">
                     Code postal
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      postalCodeError ? "inputError" : ""
+                    }`}
                     type="text"
                     name="postal_code"
                     id="postal_code"
@@ -280,14 +280,16 @@ const Signup_faPage = () => {
                 </div>
               </div>
 
+              {/* Téléphone */}
               <div className="formColumnRight">
-                {/* Téléphone */}
                 <div className="fieldContainer">
                   <label className="labelConnexionPage" htmlFor="phone">
                     Téléphone
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      phoneError ? "inputError" : ""
+                    }`}
                     type="tel"
                     name="phone"
                     id="phone"
@@ -304,7 +306,9 @@ const Signup_faPage = () => {
                     Email
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      emailError ? "inputError" : ""
+                    }`} // Ajoute la classe inputError si emailError contient une erreur
                     type="email"
                     name="email"
                     id="email"
@@ -322,15 +326,21 @@ const Signup_faPage = () => {
                     Mot de passe
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      passwordError ? "inputError" : ""
+                    }`} // Ajoute la classe inputError si passwordError contient une erreur
                     type="password"
                     name="password"
                     id="password"
                     value={formData.password}
-                    onChange={handleChange}
+                    onChange={handleChange} // Met à jour le state avec la valeur du champ
                     required
                   />
+                  {passwordError && (
+                    <p className="errorMessage">{passwordError}</p>
+                  )}
                 </div>
+
                 {/* Confirmation du mot de passe */}
                 <div className="fieldContainer">
                   <label
@@ -340,18 +350,21 @@ const Signup_faPage = () => {
                     Confirmer le mot de passe
                   </label>
                   <input
-                    className="inputConnexionPage"
+                    className={`inputConnexionPage ${
+                      passwordConfirmationError ? "inputError" : ""
+                    }`} // Ajoute la classe inputError si passwordConfirmationError contient une erreur
                     type="password"
                     name="passwordConfirmation"
                     id="passwordConfirmation"
                     value={formData.passwordConfirmation}
-                    onChange={handleChange}
+                    onChange={handleChange} // Met à jour le state avec la valeur du champ
                     required
                   />
                   {passwordConfirmationError && (
                     <p className="errorMessage">{passwordConfirmationError}</p>
                   )}
                 </div>
+
                 {/* Bouton de validation */}
                 <div className="submitContainer">
                   <button

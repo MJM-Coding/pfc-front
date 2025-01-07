@@ -1,12 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
-
 import { useEffect, useState } from "react";
 import { confirmEmail } from "../../api/confirmationMailApi";
 import "./confirmEmail.scss";
 
 const ConfirmEmailPage: React.FC = () => {
   const [status, setStatus] = useState<
-    "verifying" | "success" | "error" | "alreadyConfirmed"
+    "verifying" | "success" | "error" | "alreadyConfirmed" | "expired"
   >("verifying");
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate(); 
@@ -20,6 +19,9 @@ const ConfirmEmailPage: React.FC = () => {
         } catch (error: any) {
           if (error.response?.status === 409) {
             setStatus("alreadyConfirmed");
+          } else if (error.response?.status === 401) {
+            // 401 Unauthorized - Token expiré
+            setStatus("expired");
           } else {
             setStatus("error");
           }
@@ -28,10 +30,10 @@ const ConfirmEmailPage: React.FC = () => {
     };
 
     confirmUserEmail();
-  }, [token]);
-  
+  }, [token]); // Ce useEffect s'exécute dès que le token change ou lors du chargement initial
+
   useEffect(() => {
-    // Redirection après 4 secondes si le statut est "success"
+    // Redirection après 3 secondes si le statut est "success"
     if (status === "success") {
       const timer = setTimeout(() => {
         navigate("/"); // Redirige vers la page d'accueil
@@ -41,8 +43,6 @@ const ConfirmEmailPage: React.FC = () => {
     }
   }, [status, navigate]);
 
-
-  console.log("État actuel :", status);
   return (
     <div className="confirm-email-container">
       <div className={`message-card ${status}`}>
@@ -76,6 +76,22 @@ const ConfirmEmailPage: React.FC = () => {
             </p>
           </>
         )}
+        {status === "expired" && (
+          <>
+            <i className="icon error-icon fa-solid fa-exclamation-triangle"></i>
+            <h2>Token expiré</h2>
+            <p>
+              Le lien de confirmation a expiré. Veuillez demander un nouvel
+              email de confirmation pour valider votre compte.
+            </p>
+            <button
+              onClick={() => navigate("/resend-verification")}
+              className="resend-button"
+            >
+              Renvoyer un email de confirmation
+            </button>
+          </>
+        )}
         {status === "error" && (
           <>
             <i className="icon error-icon fa-solid fa-times-circle"></i>
@@ -87,13 +103,6 @@ const ConfirmEmailPage: React.FC = () => {
           </>
         )}
       </div>
-
-     {/*  bouton de test pour simuler les etats */}
-{/*       <button onClick={() => setStatus("success")}>Simuler Succès</button>
-      <button onClick={() => setStatus("error")}>Simuler Erreur</button>
-      <button onClick={() => setStatus("alreadyConfirmed")}>
-        Simuler Déjà Confirmé
-      </button> */}
     </div>
   );
 };

@@ -103,7 +103,7 @@ const AboutPage: React.FC = () => {
         <section className="about-section">
           <h2>Une initiative passionnée</h2>
           <p>
-            Derrière cette plateforme, une personne animée par une
+            Derrière cette plateforme, des personnes animées par une
             passion profonde pour les animaux et l’envie de faire une
             différence. En combinant technologie et compassion, j’ai voulu créer
             une solution concrète pour aider les associations et les familles
