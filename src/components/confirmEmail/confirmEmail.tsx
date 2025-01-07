@@ -8,7 +8,7 @@ const ConfirmEmailPage: React.FC = () => {
     "verifying" | "success" | "error" | "alreadyConfirmed" | "expired"
   >("verifying");
   const { token } = useParams<{ token: string }>();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const confirmUserEmail = async () => {
@@ -81,15 +81,11 @@ const ConfirmEmailPage: React.FC = () => {
             <i className="icon error-icon fa-solid fa-exclamation-triangle"></i>
             <h2>Token expiré</h2>
             <p>
-              Le lien de confirmation a expiré. Veuillez demander un nouvel
-              email de confirmation pour valider votre compte.
+              Le lien de confirmation a expiré. Il était valide pour une durée
+              de 24 heures. Pour activer votre compte, veuillez recommencer le
+              processus d'inscription.
             </p>
-            <button
-              onClick={() => navigate("/resend-verification")}
-              className="resend-button"
-            >
-              Renvoyer un email de confirmation
-            </button>
+         
           </>
         )}
         {status === "error" && (
