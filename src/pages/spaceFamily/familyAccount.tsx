@@ -12,7 +12,6 @@ const familyAccount = () => {
   const { user, token } = useContext(AuthContext) || {}; // On récupère l'utilisateur et le token du contexte d'authentification
 
   const familyId = user?.id_family; // L'ID de l'family est pris depuis l'utilisateur authentifié
-  console.log("ID de l'family : ", familyId); // Log de l'ID de l'family
 
   //* États pour les données des formulaires d'email et mot de passe
   const [emailFormData, setEmailFormData] = useState<IEmailEditForm>({
@@ -48,7 +47,6 @@ const familyAccount = () => {
     const fetchfamilyData = async () => {
       try {
         const family = await GetFamilyById(familyId, token); // Appel à l'API pour récupérer l'family par son ID
-        console.log("Données de l'family récupérées : ", family); // Log des données récupérées
         setEmailFormData((prevState) => ({
           ...prevState,
           currentEmail: family.user?.email ?? "", // On met à jour l'email actuel dans le formulaire

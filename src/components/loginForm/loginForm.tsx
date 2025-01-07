@@ -25,7 +25,6 @@ const LoginForm: React.FC<ILoginFormProps> = ({ login, onClose }) => {
     try {
       const userData: IAuthContext = await SigninUser({ email, password });
 
-      console.log(userData); // Debug : Affiche les données de l'utilisateur connecté
       login(userData.token ?? "", userData.user); // Appelle la fonction login passée en prop
       navigate("/"); // Redirige vers la page d'accueil
       onClose(); // Ferme la modal après la connexion réussie

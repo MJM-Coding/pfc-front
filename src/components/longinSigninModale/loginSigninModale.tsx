@@ -21,7 +21,6 @@ const ModalLogin: React.FC<IModalLogin> = ({ show, onClose, login }) => {
   };
 
   if (!show) return null;
-  console.log("ModalLogin show:", show);
 
   //! Gestion de la redirection vers la page d'inscription
   const handleRegisterRedirect = () => {

@@ -10,11 +10,9 @@ export const requestPasswordReset = async (email: string) => {
 export const resetPassword = async (token: string, newPassword: string): Promise<void> => {
   const response = await api.post("/password/reset-password", { token, newPassword });
 
-  console.log("Mot de passe réinitialisé avec succès :", response.data);
 
   // Vérifie si un nouveau token est retourné et le sauvegarde
   if (response.data.token) {
     localStorage.setItem("sessionToken", response.data.token);
-    console.log("Nouveau token de session enregistré dans localStorage.");
   }
 };

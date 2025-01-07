@@ -133,7 +133,6 @@ const ModifyAnimal: React.FC = () => {
         formData.append("photos", photo);
       });
 
-      console.log("Données envoyées :", [...formData.entries()]);
 
       // Envoyer les données au backend
       await PatchAnimal(animalId ?? "", formData, token!);

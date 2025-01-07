@@ -19,10 +19,7 @@ const Header: React.FC = () => {
   const safeLogin = login || (() => {});
   const isAuthenticated = !!user && !!token;
 
-  console.log("Utilisateur authentifié ?", isAuthenticated);
-  console.log("User:", user);
-  console.log("Token:", token);
-
+  
   //! Gestion de la déconnexion
   const handleLogout = () => {
     try {
@@ -40,11 +37,8 @@ const Header: React.FC = () => {
     role: string | undefined,
     userId: string | undefined
   ) => {
-    console.log("Rôle de l'utilisateur :", role);
-    console.log("ID utilisateur passé :", userId);
 
     if (!userId) {
-      console.log("Pas d'ID utilisateur trouvé, retour d'un tableau vide.");
       return []; // Si pas d'ID utilisateur, on retourne un tableau vide
     }
 
@@ -53,12 +47,8 @@ const Header: React.FC = () => {
       (user?.role === "association" && user?.id_association) || "";
     const familyId = (user?.role === "family" && user?.id_family) || "";
 
-    console.log("ID de l'association :", associationId);
-    console.log("ID de la famille :", familyId);
-    console.log("Objet user complet : ", user);
 
     if (role === "association") {
-      console.log("Génération des liens pour une association");
       return [
         {
           path: `/espace-association/profil-association/${
@@ -84,7 +74,6 @@ const Header: React.FC = () => {
         },
       ];
     } else if (role === "family") {
-      console.log("Génération des liens pour une famille");
       return [
         {
           path: `/espace-famille/profil-famille/${familyId || userId}`,
@@ -101,7 +90,6 @@ const Header: React.FC = () => {
       ];
     }
 
-    console.log("Rôle non reconnu, retour d'un tableau vide.");
     return []; // Retourne un tableau vide si le rôle ne correspond pas
   };
 

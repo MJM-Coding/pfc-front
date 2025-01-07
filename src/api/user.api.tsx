@@ -27,7 +27,6 @@ export const GetAllUsers = async (): Promise<IUser[]> => {
  export const GetUserById = async (id: string): Promise<IUser> => {
   try {
     const response: AxiosResponse<IUser> = await api.get(`/user/${id}`);
-    console.log(response.data); // Affiche les données reçues pour vérifier leur structure
     return response.data;
   } catch (error) {
     handleApiError(error, `la récupération de l'utilisateur avec l'ID ${id}`);

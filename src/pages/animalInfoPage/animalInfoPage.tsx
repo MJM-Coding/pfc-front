@@ -170,7 +170,6 @@ const AnimalInfoPage: React.FC = () => {
         id_family: authContext.user.family?.id,
       };
 
-      console.log("Données envoyées à CreateAsk :", requestData);
 
       //! Appel API pour créer la demande
       const response = await CreateAsk(requestData, userToken);

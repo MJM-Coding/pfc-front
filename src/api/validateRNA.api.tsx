@@ -3,7 +3,6 @@ import { api } from "../api";
 export const validateRNAapi = async (rnaNumber: string): Promise<{ valid: boolean; error?: string }> => {
     try {
       const response = await api.get(`/validate-rna/${rnaNumber}`);
-      console.log("Réponse du backend :", response.data);
   
       if (response.data.valid) {
         return { valid: true }; // Si le RNA est valide

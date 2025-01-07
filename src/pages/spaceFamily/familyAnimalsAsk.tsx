@@ -256,7 +256,6 @@ const FamilyAnimalAsk: React.FC = () => {
       </div>
     </div>
   );
-  console.log(selectedAnimal);
 
   return (
     <div className="family-asks-container">

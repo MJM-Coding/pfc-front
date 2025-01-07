@@ -16,7 +16,6 @@ const associationAccount = () => {
   const { user, token } = useContext(AuthContext) || {}; // On récupère l'utilisateur et le token du contexte d'authentification
 
   const associationId = user?.id_association; // L'ID de l'association est pris depuis l'utilisateur authentifié
-  console.log("ID de l'association : ", associationId); // Log de l'ID de l'association
 
   //* États pour les données des formulaires d'email et mot de passe
   const [emailFormData, setEmailFormData] = useState<IEmailEditForm>({
@@ -51,7 +50,6 @@ const associationAccount = () => {
     const fetchAssociationData = async () => {
       try {
         const association = await GetAssociationById(associationId, token); // Appel à l'API pour récupérer l'association par son ID
-        console.log("Données de l'association récupérées : ", association); // Log des données récupérées
         setEmailFormData((prevState) => ({
           ...prevState,
           currentEmail: association.user?.email ?? "", // On met à jour l'email actuel dans le formulaire

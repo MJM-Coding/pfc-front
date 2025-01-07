@@ -18,7 +18,6 @@ export const validatePhone = (phone: string): string | null => {
 //* Validation de l'email
 export const validateEmail = (email: string): string | null => {
   email = email.trim();
-  console.log("Email à valider:", email); // Vérifie ce que tu reçois
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailPattern.test(email) ? null : "L'email est invalide.";
 };

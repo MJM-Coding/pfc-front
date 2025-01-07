@@ -59,7 +59,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsActive(false);
         setShowLoginModal(true); // Affiche la modal après déconnexion
         logout(); // Appel de la fonction logout
-        console.log("Utilisateur inactif après 1 heure");
       }, 60 * 60 * 1000); // 1 heure sans activité
     };
 
@@ -83,7 +82,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const timeLeft = tokenExpirationTime - currentTime;
 
         if (timeLeft < 5 * 60 * 1000) { // Si le token expire dans moins de 5 minutes
-          console.log("Token expirant bientôt, rafraîchissement...");
           try {
             const newToken = await refreshToken(token);
             const newExpirationTime = Date.now() + 60 * 60 * 1000; // Nouveau délai d'expiration (1h)
@@ -119,7 +117,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem("tokenExpirationTime", expirationTime.toString());
     localStorage.setItem("authUser", JSON.stringify(userData));
 
-    console.log("Utilisateur connecté");
   };
 
   const logout = () => {
@@ -131,7 +128,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem("tokenExpirationTime");
     localStorage.removeItem("authUser");
 
-    console.log("Utilisateur déconnecté");
   };
 
   const loginAgain = () => {
@@ -139,7 +135,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setTokenExpirationTime(Date.now() + 60 * 60 * 1000); // Réinitialise le délai d'expiration du token
     setShowLoginModal(false); // Ferme la modal après reconnexion
 
-    console.log("Utilisateur reconnecté après inactivité");
   };
 
   return (
