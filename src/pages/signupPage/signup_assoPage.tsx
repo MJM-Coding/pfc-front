@@ -111,19 +111,17 @@ const signup_assoPage = () => {
 
       // Validation pour le mot de passe et sa confirmation
       if (name === "password" || name === "passwordConfirmation") {
-        const passwordError = validatePassword(
-          name === "password" ? value : formData.password,
-          name === "passwordConfirmation"
-            ? value
-            : formData.passwordConfirmation
+        // Validation pour les mots de passe
+        const passwordError = validatePassword(formData.password, value);
+        const passwordConfirmationError = validatePassword(
+          formData.password,
+          name === "passwordConfirmation" ? value : formData.passwordConfirmation
         );
-
-        if (name === "password") {
-          setPasswordError(passwordError || "");
-        } else {
-          setPasswordConfirmationError(passwordError || "");
-        }
+      
+        setPasswordError(passwordError || "");
+        setPasswordConfirmationError(passwordConfirmationError || "");
       }
+      
     }
   };
 

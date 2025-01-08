@@ -75,24 +75,24 @@ const Signup_faPage = () => {
         [name]: value,
       }));
 
-      if (name === "email") {
-        const emailError = validateEmail(value);
-        setEmailError(emailError || "");
-      }
+   // Validation pour l'email
+   if (name === "email") {
+    const emailError = validateEmail(value);
+    setEmailError(emailError || "");
+  }
 
-      if (name === "password" || name === "passwordConfirmation") {
-        const passwordError = validatePassword(
-          name === "password" ? value : formData.password,
-          name === "passwordConfirmation"
-            ? value
-            : formData.passwordConfirmation
-        );
-        if (name === "password") {
-          setPasswordError(passwordError || "");
-        } else {
-          setPasswordConfirmationError(passwordError || "");
-        }
-      }
+  // Validation pour le mot de passe et sa confirmation
+  if (name === "password" || name === "passwordConfirmation") {
+    // Validation pour les mots de passe
+    const passwordError = validatePassword(formData.password, value);
+    const passwordConfirmationError = validatePassword(
+      formData.password,
+      name === "passwordConfirmation" ? value : formData.passwordConfirmation
+    );
+  
+    setPasswordError(passwordError || "");
+    setPasswordConfirmationError(passwordConfirmationError || "");
+  }
     }
   };
 
