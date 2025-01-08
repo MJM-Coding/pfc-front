@@ -79,7 +79,7 @@ const ConfirmEmailPage: React.FC = () => {
         {status === "expired" && (
           <>
             <i className="icon error-icon fa-solid fa-exclamation-triangle"></i>
-            <h2>Token expiré</h2>
+            <h2>Lien expiré</h2>
             <p>
               Le lien de confirmation a expiré. Il était valide pour une durée
               de 24 heures. Pour activer votre compte, veuillez recommencer le
