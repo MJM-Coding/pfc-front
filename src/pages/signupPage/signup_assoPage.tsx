@@ -277,7 +277,7 @@ const signup_assoPage = () => {
                 {/* Nom du representant */}
                 <div className="fieldContainer">
                   <label className="labelConnexionPage" htmlFor="lastname">
-                    Nom
+                    Nom du representant
                   </label>
                   <input
                     className="inputConnexionPage"

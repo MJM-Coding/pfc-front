@@ -189,7 +189,7 @@ function AssociationProfile() {
   //! Gérer la soumission du formulaire sans la photo
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     // Valider tous les champs
     const errors = validateForm(
       {
@@ -200,20 +200,22 @@ function AssociationProfile() {
       },
       ["postal_code", "phone", "rna_number"]
     );
-  
+
     // Mettre à jour les erreurs pour chaque champ
     setPostalCodeError(errors.postal_code || "");
     setPhoneError(errors.phone || "");
     setRnaNumberError(errors.rna_number || "");
-  
+
     // Bloquer la soumission si une erreur existe
     if (Object.keys(errors).length > 0 || isRNAValid === false) {
-      setToastMessage("Veuillez corriger toutes les erreurs avant de soumettre.");
+      setToastMessage(
+        "Veuillez corriger toutes les erreurs avant de soumettre."
+      );
       setToastType("error");
       setShowToast(true);
       return; // Bloque la soumission
     }
-  
+
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("address", formData?.address || "");
@@ -225,25 +227,32 @@ function AssociationProfile() {
       formDataToSend.append("postal_code", formData?.postal_code || "");
       formDataToSend.append("firstname", formData?.user?.firstname || "");
       formDataToSend.append("lastname", formData?.user?.lastname || "");
-  
-      await PatchAssociation(associationId as number, formDataToSend, token as string);
-  
-      const refreshAssociation = await GetAssociationById(Number(associationId), token as string);
+
+      await PatchAssociation(
+        associationId as number,
+        formDataToSend,
+        token as string
+      );
+
+      const refreshAssociation = await GetAssociationById(
+        Number(associationId),
+        token as string
+      );
       setAssociationData(refreshAssociation);
       setFormData(refreshAssociation);
-  
+
       setToastMessage("Mise à jour réussie !");
       setToastType("success");
       setShowToast(true);
       setIsEditable(false);
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error.message || "Erreur inconnue.";
+      const errorMessage =
+        error?.response?.data?.message || error.message || "Erreur inconnue.";
       setToastMessage(errorMessage);
       setToastType("error");
       setShowToast(true);
     }
   };
-  
 
   //! Basculer le mode édition
   const toggleEdit = () => {
@@ -302,6 +311,46 @@ function AssociationProfile() {
                   value={formData?.representative || ""}
                   onChange={(e) =>
                     setFormData({ ...formData, representative: e.target.value })
+                  }
+                  disabled={!isEditable}
+                />
+              </div>
+
+              {/* Nom du representant */}
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="lastname">
+                  Nom du representant
+                </label>
+                <input
+                  className="infoInput"
+                  type="text"
+                  id="lastname"
+                  value={formData?.user?.lastname || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      user: { ...formData?.user, lastname: e.target.value },
+                    })
+                  }
+                  disabled={!isEditable}
+                />
+              </div>
+
+              {/* Prénom du representant */}
+              <div className="infoFieldContainer row">
+                <label className="infoLabel" htmlFor="firstname">
+                  Prénom du representant
+                </label>
+                <input
+                  className="infoInput"
+                  type="text"
+                  id="firstname"
+                  value={formData?.user?.firstname || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      user: { ...formData?.user, firstname: e.target.value },
+                    })
                   }
                   disabled={!isEditable}
                 />
