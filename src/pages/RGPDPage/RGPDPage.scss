@@ -1,0 +1,123 @@
+@use "../../styles/commun/commun.scss";
+@use "../../styles/commun/variable.scss";
+
+// Variables de couleur
+$rgpd-color-primary: #ff6f61;
+$rgpd-color-secondary: #444;
+$rgpd-color-background: #ffffff;
+$rgpd-color-text: #333;
+$rgpd-color-muted: #666;
+$separator-color: #ddd; // Couleur du séparateur
+
+.rgpd-page {
+  height: auto;
+  color: $rgpd-color-text;
+
+  // Image de couverture
+  .hero-image {
+    position: relative;
+    width: 100%;
+    height: 200px; // Taille pour mobile
+    background-image: url('/images/rgpd-banner.webp');
+    background-size: cover;
+    background-position: center;
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .hero-title {
+        color: white;
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      }
+    }
+  }
+  span{
+    color: rgb(187, 30, 30);
+    font-weight:500;
+  }
+
+  // Conteneur principal
+  .container {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px 10px;
+    background-color: $rgpd-color-background;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    .rgpd-section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      position: relative;
+
+      h2 {
+        font-size: 1.5rem;
+        color: $rgpd-color-secondary;
+        margin-bottom: 10px;
+        font-weight: 600;
+
+        &::after {
+          content: "";
+          display: block;
+          width: 50px;
+          height: 3px;
+          background-color: $rgpd-color-primary;
+          margin-top: 8px;
+        }
+      }
+
+      p {
+        font-size: 1rem;
+        color: $rgpd-color-muted;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      ul {
+        margin: 10px 0;
+        padding-left: 20px;
+
+        li {
+          font-size: 1rem;
+          color: $rgpd-color-text;
+          margin-bottom: 10px;
+
+          &::before {
+            content: "✔";
+            color: $rgpd-color-primary;
+            font-size: 1.2rem;
+            margin-right: 8px;
+          }
+        }
+      }
+
+      // Ajout du séparateur centré (30% de largeur)
+      &::after {
+        content: "";
+        display: block;
+        width: 30%;  // Largeur réduite à 30%
+        height: 1px;
+        background-color: $separator-color;
+        margin: 20px auto 0 auto; // Centrage horizontal
+      }
+
+      // Supprimer le trait sous la dernière section
+      &:last-child::after {
+        display: none;
+      }
+    }
+  }
+}

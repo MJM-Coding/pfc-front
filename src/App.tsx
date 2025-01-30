@@ -30,6 +30,7 @@ import FamilyAnimalsAsk from "./pages/spaceFamily/familyAnimalsAsk"; // page de 
 
 import Footer from "./components/footer/footer";
 import AboutPage from "./pages/aboutPage/aboutPage";
+import RGPDPage from "./pages/RGPDPage/RGPDPage";
 
 const App: React.FC = () => {
   return (
@@ -64,6 +65,7 @@ const App: React.FC = () => {
         <Route path="/espace-famille/demandes-famille/:familyId" element={<FamilyAnimalsAsk />} /> {/* page récapitulatif des demandes accueil famille*/}
 
         <Route path="/a-propos" element={<AboutPage />} /> {/* Page à propos*/}
+        <Route path="/politique-confidentialite" element={<RGPDPage />} /> {/* Page RGPD*/}
         <Route path="*" element={<NotFoundPage />} />   {/* Route pour la page 404 */}
 
       </Routes>

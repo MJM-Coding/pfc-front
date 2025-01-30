@@ -47,6 +47,16 @@ const Signup_faPage = () => {
   // state pour griser le bouton de soumission
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // state pour gérer le consentement RGPD
+  const [rgpdConsent, setRgpdConsent] = useState(false);
+  const [rgpdError, setRgpdError] = useState("");
+
+  //! Gère les changements dans la case de consentement RGPD
+  const handleRgpdChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setRgpdConsent(e.target.checked);
+    setRgpdError(""); // Supprime l'erreur lorsque la case est cochée
+  };
+
   //! Gère les changements dans les champs du formulaire
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -75,31 +85,40 @@ const Signup_faPage = () => {
         [name]: value,
       }));
 
-   // Validation pour l'email
-   if (name === "email") {
-    const emailError = validateEmail(value);
-    setEmailError(emailError || "");
-  }
+      // Validation pour l'email
+      if (name === "email") {
+        const emailError = validateEmail(value);
+        setEmailError(emailError || "");
+      }
 
-  // Validation pour le mot de passe et sa confirmation
-  if (name === "password" || name === "passwordConfirmation") {
-    // Validation pour les mots de passe
-    const passwordError = validatePassword(formData.password, value);
-    const passwordConfirmationError = validatePassword(
-      formData.password,
-      name === "passwordConfirmation" ? value : formData.passwordConfirmation
-    );
-  
-    setPasswordError(passwordError || "");
-    setPasswordConfirmationError(passwordConfirmationError || "");
-  }
+      // Validation pour le mot de passe et sa confirmation
+      if (name === "password" || name === "passwordConfirmation") {
+        // Validation pour les mots de passe
+        const passwordError = validatePassword(formData.password, value);
+        const passwordConfirmationError = validatePassword(
+          formData.password,
+          name === "passwordConfirmation"
+            ? value
+            : formData.passwordConfirmation
+        );
+
+        setPasswordError(passwordError || "");
+        setPasswordConfirmationError(passwordConfirmationError || "");
+      }
     }
   };
 
-  // Soumission du formulaire
+  //! Soumission du formulaire
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    //! Vérification du consentement RGPD
+    if (!rgpdConsent) {
+      setRgpdError("Vous devez accepter la politique de confidentialité.");
+      setIsSubmitting(false);
+      return;
+    }
 
     //! Utilisation de validateForm pour valider tous les champs nécessaires
     const errors = validateForm(
@@ -127,20 +146,26 @@ const Signup_faPage = () => {
         setPasswordError(errors.password);
         setPasswordConfirmationError(errors.password);
       }
+
       setIsSubmitting(false);
       return;
     }
 
-    // Envoi du formulaire
+    //! Envoi du formulaire
     try {
       const { passwordConfirmation, ...dataToSend } = formData;
-      await CreateUser(dataToSend);
+      const finalData = {
+        ...dataToSend,
+        rgpd_consent: rgpdConsent, // ✅ Ajout du consentement RGPD
+      };
+
+      await CreateUser(finalData); // ✅ Envoi des données avec rgpd_consent
 
       setToastMessage(
         "Félicitations, votre inscription est presque terminée ! Vérifiez votre boîte mail pour confirmer votre adresse et activer votre compte."
       );
       setToastType("success");
-      setShowToast(true); // Ajout de cette ligne pour afficher le toast
+      setShowToast(true);
       setIsSubmitting(false);
 
       // Retarder la redirection de 5 secondes (5000ms)
@@ -363,6 +388,24 @@ const Signup_faPage = () => {
                   {passwordConfirmationError && (
                     <p className="errorMessage">{passwordConfirmationError}</p>
                   )}
+                </div>
+
+                {/* Consentement RGPD */}
+                <div className="fieldContainerRGPD">
+                  <label className="checkboxLabel">
+                    <input
+                      type="checkbox"
+                      checked={rgpdConsent}
+                      onChange={handleRgpdChange}
+                      required
+                    />
+                    J'accepte la{" "}
+                    <a href="/politique-confidentialite" target="_blank" rel="noopener noreferrer">
+                      politique de confidentialité
+                    </a>{" "}
+                    et le traitement de mes données personnelles.
+                  </label>
+                  {rgpdError && <p className="errorMessage">{rgpdError}</p>}
                 </div>
 
                 {/* Bouton de validation */}

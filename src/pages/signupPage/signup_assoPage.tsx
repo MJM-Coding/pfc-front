@@ -56,6 +56,16 @@ const signup_assoPage = () => {
 
   const [isRnaInvalid, setIsRnaInvalid] = useState(false);
 
+  // ✅ Ajout du consentement RGPD
+  const [rgpdConsent, setRgpdConsent] = useState(false);
+  const [rgpdError, setRgpdError] = useState("");
+
+  //! Gère les changements dans la case de consentement RGPD
+  const handleRgpdChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setRgpdConsent(e.target.checked);
+    setRgpdError(""); // Supprime l'erreur lorsque la case est cochée
+  };
+
   //! Fonction pour gérer les changements dans les champs du formulaire
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -115,20 +125,28 @@ const signup_assoPage = () => {
         const passwordError = validatePassword(formData.password, value);
         const passwordConfirmationError = validatePassword(
           formData.password,
-          name === "passwordConfirmation" ? value : formData.passwordConfirmation
+          name === "passwordConfirmation"
+            ? value
+            : formData.passwordConfirmation
         );
-      
+
         setPasswordError(passwordError || "");
         setPasswordConfirmationError(passwordConfirmationError || "");
       }
-      
     }
   };
 
   //! Fonction de soumission du formulaire
-  const handleSubmit = async  (e: FormEvent)  => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // ✅ Vérification du consentement RGPD
+    if (!rgpdConsent) {
+      setRgpdError("Vous devez accepter la politique de confidentialité.");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       // Validation du numéro RNA
@@ -182,9 +200,14 @@ const signup_assoPage = () => {
         return; // Sortir si des erreurs existent
       }
 
-      //! Envoi des données au Backend
+      //! ✅ Envoi des données avec RGPD
       const { passwordConfirmation, ...dataToSend } = formData;
-      await CreateUser(dataToSend);
+      const finalData = {
+        ...dataToSend,
+        rgpd_consent: rgpdConsent,
+      };
+
+      await CreateUser(finalData);
 
       //! Affichage du message de succès avec Toast
       setToastMessage(
@@ -435,10 +458,9 @@ const signup_assoPage = () => {
                     onChange={handleChange} // Met à jour le state avec la valeur du champ
                     required
                   />
-                   {passwordError && (
+                  {passwordError && (
                     <p className="errorMessage">{passwordError}</p>
                   )}
-                
                 </div>
 
                 {/* Confirmation du mot de passe */}
@@ -464,6 +486,15 @@ const signup_assoPage = () => {
                     <p className="errorMessage">{passwordConfirmationError}</p>
                   )}
                 </div>
+
+              {  /* ✅ Consentement RGPD */}
+        <div className="fieldContainerRGPD">
+          <label className="checkboxLabel">
+            <input type="checkbox" checked={rgpdConsent} onChange={handleRgpdChange} required />
+            J'accepte la <a href="/politique-confidentialite" target="_blank">politique de confidentialité</a>.
+            et le traitement de mes données personnelles.</label>
+          {rgpdError && <p className="errorMessage">{rgpdError}</p>}
+        </div>
 
                 {/* Bouton de validation */}
                 <button

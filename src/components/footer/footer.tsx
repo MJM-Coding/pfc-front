@@ -29,9 +29,17 @@ const Footer: React.FC = () => {
           </a>
         </div>
 
-        {/* Liens */}
+        {/* Liens RGPD et A propos*/}
         <div className="footer-links">
-     
+          <NavLink
+            to="/politique-confidentialite"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Politique de confidentialité
+          </NavLink>
+
           <NavLink
             to="/a-propos"
             className={({ isActive }) =>
